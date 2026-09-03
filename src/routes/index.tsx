@@ -1,24 +1,42 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Navbar } from "@/components/landing/navbar";
+import { Hero } from "@/components/landing/hero";
+import { HowItWorks } from "@/components/landing/how-it-works";
+import { FeaturedListings } from "@/components/landing/featured-listings";
+import { About } from "@/components/landing/about";
+import { Footer } from "@/components/landing/footer";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "LeadLink — Find Trusted Local Suppliers" },
+      {
+        name: "description",
+        content:
+          "LeadLink connects customers with verified local suppliers. List your business, get verified, and start receiving enquiries via WhatsApp or in-app chat.",
+      },
+      { property: "og:title", content: "LeadLink — Find Trusted Local Suppliers" },
+      {
+        property: "og:description",
+        content:
+          "LeadLink connects customers with verified local suppliers. List your business, get verified, and start receiving enquiries via WhatsApp or in-app chat.",
+      },
+    ],
+  }),
+  component: LandingPage,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function LandingPage() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="flex min-h-screen flex-col bg-background">
+      <Navbar />
+      <main className="flex-1">
+        <Hero />
+        <HowItWorks />
+        <FeaturedListings />
+        <About />
+      </main>
+      <Footer />
     </div>
   );
 }
