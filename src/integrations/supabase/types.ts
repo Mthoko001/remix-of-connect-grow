@@ -14,7 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      tb_supplier_account: {
+        Row: {
+          created_at: string
+          email: string
+          status: string
+          supplier_account_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          status?: string
+          supplier_account_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          status?: string
+          supplier_account_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
