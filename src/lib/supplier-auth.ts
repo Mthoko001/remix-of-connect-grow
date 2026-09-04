@@ -1,5 +1,4 @@
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 
 export type SignUpWithEmailInput = {
   email: string;
@@ -30,7 +29,9 @@ export async function signUpSupplierWithEmail({
 
 /** Starts the Google OAuth flow for supplier sign-up / sign-in. */
 export async function signUpSupplierWithGoogle(): Promise<void> {
-  await lovable.auth.signInWithOAuth("google", {
-    redirect_uri: window.location.origin,
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: { redirectTo: `${window.location.origin}/supplier/onboarding` },
   });
+  if (error) throw error;
 }
