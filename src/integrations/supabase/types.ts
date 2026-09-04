@@ -38,6 +38,62 @@ export type Database = {
         }
         Relationships: []
       }
+      tb_supplier_profile: {
+        Row: {
+          address: string | null
+          business_description: string | null
+          business_logo: string | null
+          business_name: string
+          cell_no: string | null
+          date_created: string
+          date_updated: string
+          notes: string | null
+          product_images: Json
+          status: string
+          supplier_account_id: string
+          supplier_profile_id: number
+          updated_by: string | null
+        }
+        Insert: {
+          address?: string | null
+          business_description?: string | null
+          business_logo?: string | null
+          business_name?: string
+          cell_no?: string | null
+          date_created?: string
+          date_updated?: string
+          notes?: string | null
+          product_images?: Json
+          status?: string
+          supplier_account_id: string
+          supplier_profile_id?: never
+          updated_by?: string | null
+        }
+        Update: {
+          address?: string | null
+          business_description?: string | null
+          business_logo?: string | null
+          business_name?: string
+          cell_no?: string | null
+          date_created?: string
+          date_updated?: string
+          notes?: string | null
+          product_images?: Json
+          status?: string
+          supplier_account_id?: string
+          supplier_profile_id?: never
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tb_supplier_profile_supplier_account_id_fkey"
+            columns: ["supplier_account_id"]
+            isOneToOne: true
+            referencedRelation: "tb_supplier_account"
+            referencedColumns: ["supplier_account_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
