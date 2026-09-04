@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SupplierOnboardingRouteImport } from './routes/supplier/onboarding'
+import { Route as SupplierSignupRouteImport } from './routes/supplier/signup'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupplierOnboardingRoute = SupplierOnboardingRouteImport.update({
+  id: '/supplier/onboarding',
+  path: '/supplier/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupplierSignupRoute = SupplierSignupRouteImport.update({
+  id: '/supplier/signup',
+  path: '/supplier/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/supplier/onboarding': typeof SupplierOnboardingRoute
+  '/supplier/signup': typeof SupplierSignupRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/supplier/onboarding': typeof SupplierOnboardingRoute
+  '/supplier/signup': typeof SupplierSignupRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/supplier/onboarding': typeof SupplierOnboardingRoute
+  '/supplier/signup': typeof SupplierSignupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/supplier/onboarding' | '/supplier/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/supplier/onboarding' | '/supplier/signup'
+  id: '__root__' | '/' | '/supplier/onboarding' | '/supplier/signup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SupplierOnboardingRoute: typeof SupplierOnboardingRoute
+  SupplierSignupRoute: typeof SupplierSignupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/supplier/onboarding': {
+      id: '/supplier/onboarding'
+      path: '/supplier/onboarding'
+      fullPath: '/supplier/onboarding'
+      preLoaderRoute: typeof SupplierOnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/supplier/signup': {
+      id: '/supplier/signup'
+      path: '/supplier/signup'
+      fullPath: '/supplier/signup'
+      preLoaderRoute: typeof SupplierSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SupplierOnboardingRoute: SupplierOnboardingRoute,
+  SupplierSignupRoute: SupplierSignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
