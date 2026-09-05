@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SupplierOnboardingRouteImport } from './routes/supplier/onboarding'
 import { Route as SupplierSignupRouteImport } from './routes/supplier/signup'
@@ -17,6 +18,11 @@ import { Route as SupplierSignupRouteImport } from './routes/supplier/signup'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -37,12 +43,14 @@ const SupplierSignupRoute = SupplierSignupRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/supplier/onboarding': typeof SupplierOnboardingRoute
   '/supplier/signup': typeof SupplierSignupRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/supplier/onboarding': typeof SupplierOnboardingRoute
   '/supplier/signup': typeof SupplierSignupRoute
@@ -50,20 +58,38 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
   '/supplier/onboarding': typeof SupplierOnboardingRoute
   '/supplier/signup': typeof SupplierSignupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/supplier/onboarding' | '/supplier/signup'
+  fullPaths:
+    | '/'
+    | '/forgot-password'
+    | '/login'
+    | '/supplier/onboarding'
+    | '/supplier/signup'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/supplier/onboarding' | '/supplier/signup'
-  id: '__root__' | '/' | '/login' | '/supplier/onboarding' | '/supplier/signup'
+  to:
+    | '/'
+    | '/forgot-password'
+    | '/login'
+    | '/supplier/onboarding'
+    | '/supplier/signup'
+  id:
+    | '__root__'
+    | '/'
+    | '/forgot-password'
+    | '/login'
+    | '/supplier/onboarding'
+    | '/supplier/signup'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
   SupplierOnboardingRoute: typeof SupplierOnboardingRoute
   SupplierSignupRoute: typeof SupplierSignupRoute
@@ -76,6 +102,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -104,6 +137,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
   SupplierOnboardingRoute: SupplierOnboardingRoute,
   SupplierSignupRoute: SupplierSignupRoute,
