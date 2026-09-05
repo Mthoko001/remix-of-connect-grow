@@ -66,7 +66,7 @@ function SupplierSignupPage() {
       if (needsEmailConfirmation) {
         setConfirmEmail(true);
       } else {
-        navigate({ to: "/supplier/onboarding" });
+        navigate({ to: "/supplier/dashboard" });
       }
     } catch (err) {
       setErrors({

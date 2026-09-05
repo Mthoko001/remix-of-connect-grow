@@ -72,8 +72,7 @@ function LoginPage() {
         setErrors({ form: "Incorrect email or password." });
         return;
       }
-      // TODO: point this at /supplier/dashboard once that route exists.
-      navigate({ to: "/supplier/onboarding" });
+      navigate({ to: "/supplier/dashboard" });
     } catch {
       setErrors({ form: "Something went wrong. Please try again." });
     } finally {

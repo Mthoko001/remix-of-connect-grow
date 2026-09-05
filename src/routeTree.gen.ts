@@ -12,8 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as SupplierAnalyticsRouteImport } from './routes/supplier/analytics'
+import { Route as SupplierDashboardRouteImport } from './routes/supplier/dashboard'
+import { Route as SupplierEnquiriesRouteImport } from './routes/supplier/enquiries'
 import { Route as SupplierOnboardingRouteImport } from './routes/supplier/onboarding'
+import { Route as SupplierProfileRouteImport } from './routes/supplier/profile'
+import { Route as SupplierReviewsRouteImport } from './routes/supplier/reviews'
+import { Route as SupplierSettingsRouteImport } from './routes/supplier/settings'
 import { Route as SupplierSignupRouteImport } from './routes/supplier/signup'
+import { Route as SupplierSubscriptionRouteImport } from './routes/supplier/subscription'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -30,9 +37,39 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupplierAnalyticsRoute = SupplierAnalyticsRouteImport.update({
+  id: '/supplier/analytics',
+  path: '/supplier/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupplierDashboardRoute = SupplierDashboardRouteImport.update({
+  id: '/supplier/dashboard',
+  path: '/supplier/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupplierEnquiriesRoute = SupplierEnquiriesRouteImport.update({
+  id: '/supplier/enquiries',
+  path: '/supplier/enquiries',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupplierOnboardingRoute = SupplierOnboardingRouteImport.update({
   id: '/supplier/onboarding',
   path: '/supplier/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupplierProfileRoute = SupplierProfileRouteImport.update({
+  id: '/supplier/profile',
+  path: '/supplier/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupplierReviewsRoute = SupplierReviewsRouteImport.update({
+  id: '/supplier/reviews',
+  path: '/supplier/reviews',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupplierSettingsRoute = SupplierSettingsRouteImport.update({
+  id: '/supplier/settings',
+  path: '/supplier/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SupplierSignupRoute = SupplierSignupRouteImport.update({
@@ -40,28 +77,54 @@ const SupplierSignupRoute = SupplierSignupRouteImport.update({
   path: '/supplier/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupplierSubscriptionRoute = SupplierSubscriptionRouteImport.update({
+  id: '/supplier/subscription',
+  path: '/supplier/subscription',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/supplier/analytics': typeof SupplierAnalyticsRoute
+  '/supplier/dashboard': typeof SupplierDashboardRoute
+  '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/onboarding': typeof SupplierOnboardingRoute
+  '/supplier/profile': typeof SupplierProfileRoute
+  '/supplier/reviews': typeof SupplierReviewsRoute
+  '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
+  '/supplier/subscription': typeof SupplierSubscriptionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/supplier/analytics': typeof SupplierAnalyticsRoute
+  '/supplier/dashboard': typeof SupplierDashboardRoute
+  '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/onboarding': typeof SupplierOnboardingRoute
+  '/supplier/profile': typeof SupplierProfileRoute
+  '/supplier/reviews': typeof SupplierReviewsRoute
+  '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
+  '/supplier/subscription': typeof SupplierSubscriptionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/supplier/analytics': typeof SupplierAnalyticsRoute
+  '/supplier/dashboard': typeof SupplierDashboardRoute
+  '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/onboarding': typeof SupplierOnboardingRoute
+  '/supplier/profile': typeof SupplierProfileRoute
+  '/supplier/reviews': typeof SupplierReviewsRoute
+  '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
+  '/supplier/subscription': typeof SupplierSubscriptionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -69,30 +132,58 @@ export interface FileRouteTypes {
     | '/'
     | '/forgot-password'
     | '/login'
+    | '/supplier/analytics'
+    | '/supplier/dashboard'
+    | '/supplier/enquiries'
     | '/supplier/onboarding'
+    | '/supplier/profile'
+    | '/supplier/reviews'
+    | '/supplier/settings'
     | '/supplier/signup'
+    | '/supplier/subscription'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/forgot-password'
     | '/login'
+    | '/supplier/analytics'
+    | '/supplier/dashboard'
+    | '/supplier/enquiries'
     | '/supplier/onboarding'
+    | '/supplier/profile'
+    | '/supplier/reviews'
+    | '/supplier/settings'
     | '/supplier/signup'
+    | '/supplier/subscription'
   id:
     | '__root__'
     | '/'
     | '/forgot-password'
     | '/login'
+    | '/supplier/analytics'
+    | '/supplier/dashboard'
+    | '/supplier/enquiries'
     | '/supplier/onboarding'
+    | '/supplier/profile'
+    | '/supplier/reviews'
+    | '/supplier/settings'
     | '/supplier/signup'
+    | '/supplier/subscription'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  SupplierAnalyticsRoute: typeof SupplierAnalyticsRoute
+  SupplierDashboardRoute: typeof SupplierDashboardRoute
+  SupplierEnquiriesRoute: typeof SupplierEnquiriesRoute
   SupplierOnboardingRoute: typeof SupplierOnboardingRoute
+  SupplierProfileRoute: typeof SupplierProfileRoute
+  SupplierReviewsRoute: typeof SupplierReviewsRoute
+  SupplierSettingsRoute: typeof SupplierSettingsRoute
   SupplierSignupRoute: typeof SupplierSignupRoute
+  SupplierSubscriptionRoute: typeof SupplierSubscriptionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -118,11 +209,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/supplier/analytics': {
+      id: '/supplier/analytics'
+      path: '/supplier/analytics'
+      fullPath: '/supplier/analytics'
+      preLoaderRoute: typeof SupplierAnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/supplier/dashboard': {
+      id: '/supplier/dashboard'
+      path: '/supplier/dashboard'
+      fullPath: '/supplier/dashboard'
+      preLoaderRoute: typeof SupplierDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/supplier/enquiries': {
+      id: '/supplier/enquiries'
+      path: '/supplier/enquiries'
+      fullPath: '/supplier/enquiries'
+      preLoaderRoute: typeof SupplierEnquiriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/supplier/onboarding': {
       id: '/supplier/onboarding'
       path: '/supplier/onboarding'
       fullPath: '/supplier/onboarding'
       preLoaderRoute: typeof SupplierOnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/supplier/profile': {
+      id: '/supplier/profile'
+      path: '/supplier/profile'
+      fullPath: '/supplier/profile'
+      preLoaderRoute: typeof SupplierProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/supplier/reviews': {
+      id: '/supplier/reviews'
+      path: '/supplier/reviews'
+      fullPath: '/supplier/reviews'
+      preLoaderRoute: typeof SupplierReviewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/supplier/settings': {
+      id: '/supplier/settings'
+      path: '/supplier/settings'
+      fullPath: '/supplier/settings'
+      preLoaderRoute: typeof SupplierSettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/supplier/signup': {
@@ -132,6 +265,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplierSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/supplier/subscription': {
+      id: '/supplier/subscription'
+      path: '/supplier/subscription'
+      fullPath: '/supplier/subscription'
+      preLoaderRoute: typeof SupplierSubscriptionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -139,8 +279,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  SupplierAnalyticsRoute: SupplierAnalyticsRoute,
+  SupplierDashboardRoute: SupplierDashboardRoute,
+  SupplierEnquiriesRoute: SupplierEnquiriesRoute,
   SupplierOnboardingRoute: SupplierOnboardingRoute,
+  SupplierProfileRoute: SupplierProfileRoute,
+  SupplierReviewsRoute: SupplierReviewsRoute,
+  SupplierSettingsRoute: SupplierSettingsRoute,
   SupplierSignupRoute: SupplierSignupRoute,
+  SupplierSubscriptionRoute: SupplierSubscriptionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

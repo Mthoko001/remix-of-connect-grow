@@ -18,7 +18,7 @@ export async function signUpSupplierWithEmail({
     email,
     password,
     options: {
-      emailRedirectTo: `${window.location.origin}/supplier/onboarding`,
+      emailRedirectTo: `${window.location.origin}/supplier/dashboard`,
     },
   });
 
@@ -31,7 +31,7 @@ export async function signUpSupplierWithEmail({
 export async function signUpSupplierWithGoogle(): Promise<void> {
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo: `${window.location.origin}/supplier/onboarding` },
+    options: { redirectTo: `${window.location.origin}/supplier/dashboard` },
   });
   if (error) throw error;
 }
