@@ -23,6 +23,7 @@ import { Route as SupplierReviewsRouteImport } from './routes/supplier/reviews'
 import { Route as SupplierSettingsRouteImport } from './routes/supplier/settings'
 import { Route as SupplierSignupRouteImport } from './routes/supplier/signup'
 import { Route as SupplierSubscriptionRouteImport } from './routes/supplier/subscription'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -95,6 +96,11 @@ const SupplierSubscriptionRoute = SupplierSubscriptionRouteImport.update({
   path: '/supplier/subscription',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -162,6 +171,7 @@ export interface FileRouteTypes {
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
+    | '/.lovable/oauth/consent'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
+    | '/.lovable/oauth/consent'
   id:
     | '__root__'
     | '/'
@@ -194,6 +205,7 @@ export interface FileRouteTypes {
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
+    | '/.lovable/oauth/consent'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -211,6 +223,7 @@ export interface RootRouteChildren {
   SupplierSettingsRoute: typeof SupplierSettingsRoute
   SupplierSignupRoute: typeof SupplierSignupRoute
   SupplierSubscriptionRoute: typeof SupplierSubscriptionRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -313,6 +326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplierSubscriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -332,6 +352,7 @@ const rootRouteChildren: RootRouteChildren = {
   SupplierSettingsRoute: SupplierSettingsRoute,
   SupplierSignupRoute: SupplierSignupRoute,
   SupplierSubscriptionRoute: SupplierSubscriptionRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
