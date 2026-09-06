@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as SupplierAnalyticsRouteImport } from './routes/supplier/analytics'
 import { Route as SupplierDashboardRouteImport } from './routes/supplier/dashboard'
 import { Route as SupplierEnquiriesRouteImport } from './routes/supplier/enquiries'
@@ -37,6 +39,17 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const SupplierAnalyticsRoute = SupplierAnalyticsRouteImport.update({
   id: '/supplier/analytics',
   path: '/supplier/analytics',
@@ -87,6 +100,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
@@ -101,6 +116,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
@@ -116,6 +133,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
@@ -132,6 +151,8 @@ export interface FileRouteTypes {
     | '/'
     | '/forgot-password'
     | '/login'
+    | '/mcp'
+    | '/.well-known/oauth-protected-resource'
     | '/supplier/analytics'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
@@ -146,6 +167,8 @@ export interface FileRouteTypes {
     | '/'
     | '/forgot-password'
     | '/login'
+    | '/mcp'
+    | '/.well-known/oauth-protected-resource'
     | '/supplier/analytics'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
@@ -160,6 +183,8 @@ export interface FileRouteTypes {
     | '/'
     | '/forgot-password'
     | '/login'
+    | '/mcp'
+    | '/.well-known/oauth-protected-resource'
     | '/supplier/analytics'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
@@ -175,6 +200,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  McpRoute: typeof McpRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   SupplierAnalyticsRoute: typeof SupplierAnalyticsRoute
   SupplierDashboardRoute: typeof SupplierDashboardRoute
   SupplierEnquiriesRoute: typeof SupplierEnquiriesRoute
@@ -207,6 +234,20 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/supplier/analytics': {
@@ -279,6 +320,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  McpRoute: McpRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   SupplierAnalyticsRoute: SupplierAnalyticsRoute,
   SupplierDashboardRoute: SupplierDashboardRoute,
   SupplierEnquiriesRoute: SupplierEnquiriesRoute,
