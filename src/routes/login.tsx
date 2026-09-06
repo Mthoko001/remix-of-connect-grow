@@ -82,6 +82,10 @@ function LoginPage() {
         setErrors({ form: "Incorrect email or password." });
         return;
       }
+      if (next) {
+        window.location.href = next;
+        return;
+      }
       navigate({ to: "/supplier/dashboard" });
     } catch {
       setErrors({ form: "Something went wrong. Please try again." });
