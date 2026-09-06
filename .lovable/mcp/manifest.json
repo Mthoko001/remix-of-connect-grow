@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "sdk_version": "2.0.2",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://vjhfmhjsgrkzeupoafcn.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "remix-of-connect-grow",
+      "version": "0.1.0",
+      "title": "Remix of Connect & Grow"
+    },
+    "tools": [
+      {
+        "name": "get_my_account",
+        "title": "Get my supplier account",
+        "description": "Return the signed-in supplier's LeadLink account: email, onboarding status and timestamps.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_my_business_profile",
+        "title": "Get my business profile",
+        "description": "Return the signed-in supplier's LeadLink business profile: name, description, address, cell number, media paths and status.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "update_my_business_profile",
+        "title": "Update my business profile",
+        "description": "Create or update the signed-in supplier's LeadLink business profile text fields. Only provided fields are changed. Images are managed in the app.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "business_name": {
+              "description": "Trading name of the business.",
+              "type": "string"
+            },
+            "business_description": {
+              "description": "What the business offers, in a short paragraph.",
+              "type": "string"
+            },
+            "address": {
+              "description": "Business address.",
+              "type": "string"
+            },
+            "cell_no": {
+              "description": "Contact cell number.",
+              "type": "string"
+            }
+          }
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
