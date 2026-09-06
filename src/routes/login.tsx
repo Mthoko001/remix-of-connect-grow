@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useSearch, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,6 +44,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { next: redirectTo } = useSearch({ from: "/login" });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -65,11 +66,11 @@ function LoginPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const next: typeof errors = {};
-    if (!EMAIL_RE.test(email)) next.email = "Enter a valid email address.";
-    if (!password) next.password = "Enter your password.";
-    setErrors(next);
-    if (next.email || next.password) return;
+    const fieldErrors: typeof errors = {};
+    if (!EMAIL_RE.test(email)) fieldErrors.email = "Enter a valid email address.";
+    if (!password) fieldErrors.password = "Enter your password.";
+    setErrors(fieldErrors);
+    if (fieldErrors.email || fieldErrors.password) return;
 
     setSubmitting(true);
     try {
@@ -82,8 +83,8 @@ function LoginPage() {
         setErrors({ form: "Incorrect email or password." });
         return;
       }
-      if (next) {
-        window.location.href = next;
+      if (redirectTo) {
+        window.location.href = redirectTo;
         return;
       }
       navigate({ to: "/supplier/dashboard" });
