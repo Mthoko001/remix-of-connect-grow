@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as SupplierAnalyticsRouteImport } from './routes/supplier/analytics'
 import { Route as SupplierDashboardRouteImport } from './routes/supplier/dashboard'
 import { Route as SupplierEnquiriesRouteImport } from './routes/supplier/enquiries'
@@ -21,6 +23,7 @@ import { Route as SupplierReviewsRouteImport } from './routes/supplier/reviews'
 import { Route as SupplierSettingsRouteImport } from './routes/supplier/settings'
 import { Route as SupplierSignupRouteImport } from './routes/supplier/signup'
 import { Route as SupplierSubscriptionRouteImport } from './routes/supplier/subscription'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -37,6 +40,17 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const SupplierAnalyticsRoute = SupplierAnalyticsRouteImport.update({
   id: '/supplier/analytics',
   path: '/supplier/analytics',
@@ -82,11 +96,18 @@ const SupplierSubscriptionRoute = SupplierSubscriptionRouteImport.update({
   path: '/supplier/subscription',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
@@ -96,11 +117,14 @@ export interface FileRoutesByFullPath {
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
@@ -110,12 +134,15 @@ export interface FileRoutesByTo {
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/mcp': typeof McpRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
@@ -125,6 +152,7 @@ export interface FileRoutesById {
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -132,6 +160,8 @@ export interface FileRouteTypes {
     | '/'
     | '/forgot-password'
     | '/login'
+    | '/mcp'
+    | '/.well-known/oauth-protected-resource'
     | '/supplier/analytics'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
@@ -141,11 +171,14 @@ export interface FileRouteTypes {
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
+    | '/.lovable/oauth/consent'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/forgot-password'
     | '/login'
+    | '/mcp'
+    | '/.well-known/oauth-protected-resource'
     | '/supplier/analytics'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
@@ -155,11 +188,14 @@ export interface FileRouteTypes {
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
+    | '/.lovable/oauth/consent'
   id:
     | '__root__'
     | '/'
     | '/forgot-password'
     | '/login'
+    | '/mcp'
+    | '/.well-known/oauth-protected-resource'
     | '/supplier/analytics'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
@@ -169,12 +205,15 @@ export interface FileRouteTypes {
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
+    | '/.lovable/oauth/consent'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  McpRoute: typeof McpRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   SupplierAnalyticsRoute: typeof SupplierAnalyticsRoute
   SupplierDashboardRoute: typeof SupplierDashboardRoute
   SupplierEnquiriesRoute: typeof SupplierEnquiriesRoute
@@ -184,6 +223,7 @@ export interface RootRouteChildren {
   SupplierSettingsRoute: typeof SupplierSettingsRoute
   SupplierSignupRoute: typeof SupplierSignupRoute
   SupplierSubscriptionRoute: typeof SupplierSubscriptionRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -207,6 +247,20 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/supplier/analytics': {
@@ -272,6 +326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplierSubscriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -279,6 +340,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  McpRoute: McpRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   SupplierAnalyticsRoute: SupplierAnalyticsRoute,
   SupplierDashboardRoute: SupplierDashboardRoute,
   SupplierEnquiriesRoute: SupplierEnquiriesRoute,
@@ -288,6 +352,7 @@ const rootRouteChildren: RootRouteChildren = {
   SupplierSettingsRoute: SupplierSettingsRoute,
   SupplierSignupRoute: SupplierSignupRoute,
   SupplierSubscriptionRoute: SupplierSubscriptionRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
