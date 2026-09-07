@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      tb_admin_account: {
+        Row: {
+          admin_account_id: string
+          created_at: string
+          email: string
+          full_name: string | null
+          is_active: boolean
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          admin_account_id: string
+          created_at?: string
+          email: string
+          full_name?: string | null
+          is_active?: boolean
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_account_id?: string
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          is_active?: boolean
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tb_supplier_account: {
         Row: {
           created_at: string
@@ -99,7 +129,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
