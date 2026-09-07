@@ -14,8 +14,12 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AdminAuditLogRouteImport } from './routes/admin/audit-log'
+import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as AdminSuppliersRouteImport } from './routes/admin/suppliers'
+import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
 import { Route as SupplierAnalyticsRouteImport } from './routes/supplier/analytics'
 import { Route as SupplierDashboardRouteImport } from './routes/supplier/dashboard'
 import { Route as SupplierEnquiriesRouteImport } from './routes/supplier/enquiries'
@@ -53,6 +57,16 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
     path: '/.well-known/oauth-protected-resource',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AdminAuditLogRoute = AdminAuditLogRouteImport.update({
+  id: '/admin/audit-log',
+  path: '/admin/audit-log',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/admin/categories',
+  path: '/admin/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/admin/dashboard',
   path: '/admin/dashboard',
@@ -61,6 +75,16 @@ const AdminDashboardRoute = AdminDashboardRouteImport.update({
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin/login',
   path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSuppliersRoute = AdminSuppliersRouteImport.update({
+  id: '/admin/suppliers',
+  path: '/admin/suppliers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminVerificationRoute = AdminVerificationRouteImport.update({
+  id: '/admin/verification',
+  path: '/admin/verification',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SupplierAnalyticsRoute = SupplierAnalyticsRouteImport.update({
@@ -120,8 +144,12 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/suppliers': typeof AdminSuppliersRoute
+  '/admin/verification': typeof AdminVerificationRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
@@ -139,8 +167,12 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/suppliers': typeof AdminSuppliersRoute
+  '/admin/verification': typeof AdminVerificationRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
@@ -159,8 +191,12 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/admin/audit-log': typeof AdminAuditLogRoute
+  '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/suppliers': typeof AdminSuppliersRoute
+  '/admin/verification': typeof AdminVerificationRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
@@ -180,8 +216,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/mcp'
     | '/.well-known/oauth-protected-resource'
+    | '/admin/audit-log'
+    | '/admin/categories'
     | '/admin/dashboard'
     | '/admin/login'
+    | '/admin/suppliers'
+    | '/admin/verification'
     | '/supplier/analytics'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
@@ -199,8 +239,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/mcp'
     | '/.well-known/oauth-protected-resource'
+    | '/admin/audit-log'
+    | '/admin/categories'
     | '/admin/dashboard'
     | '/admin/login'
+    | '/admin/suppliers'
+    | '/admin/verification'
     | '/supplier/analytics'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
@@ -218,8 +262,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/mcp'
     | '/.well-known/oauth-protected-resource'
+    | '/admin/audit-log'
+    | '/admin/categories'
     | '/admin/dashboard'
     | '/admin/login'
+    | '/admin/suppliers'
+    | '/admin/verification'
     | '/supplier/analytics'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
@@ -238,8 +286,12 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  AdminAuditLogRoute: typeof AdminAuditLogRoute
+  AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminSuppliersRoute: typeof AdminSuppliersRoute
+  AdminVerificationRoute: typeof AdminVerificationRoute
   SupplierAnalyticsRoute: typeof SupplierAnalyticsRoute
   SupplierDashboardRoute: typeof SupplierDashboardRoute
   SupplierEnquiriesRoute: typeof SupplierEnquiriesRoute
@@ -289,6 +341,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/audit-log': {
+      id: '/admin/audit-log'
+      path: '/admin/audit-log'
+      fullPath: '/admin/audit-log'
+      preLoaderRoute: typeof AdminAuditLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/admin/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/dashboard': {
       id: '/admin/dashboard'
       path: '/admin/dashboard'
@@ -301,6 +367,20 @@ declare module '@tanstack/react-router' {
       path: '/admin/login'
       fullPath: '/admin/login'
       preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/suppliers': {
+      id: '/admin/suppliers'
+      path: '/admin/suppliers'
+      fullPath: '/admin/suppliers'
+      preLoaderRoute: typeof AdminSuppliersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/verification': {
+      id: '/admin/verification'
+      path: '/admin/verification'
+      fullPath: '/admin/verification'
+      preLoaderRoute: typeof AdminVerificationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/supplier/analytics': {
@@ -383,8 +463,12 @@ const rootRouteChildren: RootRouteChildren = {
   McpRoute: McpRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  AdminAuditLogRoute: AdminAuditLogRoute,
+  AdminCategoriesRoute: AdminCategoriesRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminSuppliersRoute: AdminSuppliersRoute,
+  AdminVerificationRoute: AdminVerificationRoute,
   SupplierAnalyticsRoute: SupplierAnalyticsRoute,
   SupplierDashboardRoute: SupplierDashboardRoute,
   SupplierEnquiriesRoute: SupplierEnquiriesRoute,
