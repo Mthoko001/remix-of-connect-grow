@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      tb_admin_account: {
+        Row: {
+          admin_account_id: string
+          created_at: string
+          email: string
+        }
+        Insert: {
+          admin_account_id: string
+          created_at?: string
+          email: string
+        }
+        Update: {
+          admin_account_id?: string
+          created_at?: string
+          email?: string
+        }
+        Relationships: []
+      }
       tb_supplier_account: {
         Row: {
           created_at: string
@@ -92,6 +110,13 @@ export type Database = {
             referencedRelation: "tb_supplier_account"
             referencedColumns: ["supplier_account_id"]
           },
+          {
+            foreignKeyName: "tb_supplier_profile_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "tb_supplier_account"
+            referencedColumns: ["supplier_account_id"]
+          },
         ]
       }
     }
@@ -99,7 +124,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

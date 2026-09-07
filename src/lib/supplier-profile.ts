@@ -37,7 +37,9 @@ export const REQUIRED_FIELDS = [
 export const TOTAL_TRACKED_FIELDS = REQUIRED_FIELDS.length + 2;
 
 export function countCompleteFields(draft: SupplierProfileDraft): number {
-  let count = REQUIRED_FIELDS.filter((field) => String(draft[field] ?? "").trim().length > 0).length;
+  let count = REQUIRED_FIELDS.filter(
+    (field) => String(draft[field] ?? "").trim().length > 0,
+  ).length;
   if (draft.business_logo) count += 1;
   if (draft.product_images.length > 0) count += 1;
   return count;
@@ -70,6 +72,20 @@ export async function fetchMyProfile(): Promise<SupplierProfileRow | null> {
     .maybeSingle();
   if (error) throw error;
   return data;
+}
+
+export type SupplierAccountStatus = "pending" | "verified" | "rejected";
+
+/** The admin-facing verification status of the current supplier's account. */
+export async function fetchMyAccountStatus(): Promise<SupplierAccountStatus> {
+  const supplierAccountId = await getCurrentUserId();
+  const { data, error } = await supabase
+    .from("tb_supplier_account")
+    .select("status")
+    .eq("supplier_account_id", supplierAccountId)
+    .single();
+  if (error) throw error;
+  return data.status as SupplierAccountStatus;
 }
 
 /**

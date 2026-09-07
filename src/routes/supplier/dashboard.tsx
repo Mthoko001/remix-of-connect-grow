@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, ArrowRight, CheckCircle2 } from "lucide-react";
 import { useSupplierSession } from "@/hooks/use-supplier-session";
 import {
   DashboardShell,
@@ -11,9 +11,11 @@ import {
 } from "@/components/supplier/dashboard-shell";
 import {
   countCompleteFields,
+  fetchMyAccountStatus,
   fetchMyProfile,
   toDraft,
   TOTAL_TRACKED_FIELDS,
+  type SupplierAccountStatus,
 } from "@/lib/supplier-profile";
 
 export const Route = createFileRoute("/supplier/dashboard")({
@@ -27,20 +29,26 @@ function SupplierDashboardPage() {
   const navigate = useNavigate();
   const { email, checking } = useSupplierSession();
   const [completeFields, setCompleteFields] = useState<number | null>(null);
+  const [status, setStatus] = useState<SupplierAccountStatus | null>(null);
 
   useEffect(() => {
+    if (checking) return;
     let active = true;
-    fetchMyProfile()
-      .then((row) => {
-        if (active) setCompleteFields(countCompleteFields(toDraft(row)));
+    Promise.all([fetchMyProfile(), fetchMyAccountStatus()])
+      .then(([row, accountStatus]) => {
+        if (!active) return;
+        setCompleteFields(countCompleteFields(toDraft(row)));
+        setStatus(accountStatus);
       })
       .catch(() => {
-        if (active) setCompleteFields(0);
+        if (!active) return;
+        setCompleteFields(0);
+        setStatus("pending");
       });
     return () => {
       active = false;
     };
-  }, []);
+  }, [checking]);
 
   const profileComplete = completeFields === TOTAL_TRACKED_FIELDS;
 
@@ -59,7 +67,39 @@ function SupplierDashboardPage() {
         subtitle="Here's what's happening with your business on LeadLink."
       />
 
-      {profileComplete ? (
+      {status === "verified" ? (
+        <div className="mb-6 flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6">
+          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+          <div>
+            <p className="text-sm font-semibold text-foreground">
+              Your business profile is verified
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              You're all set — head to Subscription to activate your plan.
+            </p>
+          </div>
+        </div>
+      ) : status === "rejected" ? (
+        <div className="mb-6 flex flex-col gap-4 rounded-2xl border border-destructive/20 bg-destructive/5 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+            <div>
+              <p className="text-sm font-semibold text-foreground">Your profile wasn't approved</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Please review and update your business profile, then we'll take another look.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/supplier/profile" })}
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-muted/60 active:scale-[0.99]"
+          >
+            Update profile
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
+      ) : profileComplete ? (
         <div className="mb-6 flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6">
           <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
           <div>
