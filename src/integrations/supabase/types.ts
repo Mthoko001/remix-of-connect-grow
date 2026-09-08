@@ -67,6 +67,7 @@ export type Database = {
           date_updated: string
           notes: string | null
           product_images: Json
+          rejection_reason: string | null
           status: string
           supplier_account_id: string
           supplier_profile_id: number
@@ -82,6 +83,7 @@ export type Database = {
           date_updated?: string
           notes?: string | null
           product_images?: Json
+          rejection_reason?: string | null
           status?: string
           supplier_account_id: string
           supplier_profile_id?: never
@@ -97,6 +99,7 @@ export type Database = {
           date_updated?: string
           notes?: string | null
           product_images?: Json
+          rejection_reason?: string | null
           status?: string
           supplier_account_id?: string
           supplier_profile_id?: never

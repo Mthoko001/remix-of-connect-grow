@@ -74,23 +74,22 @@ export async function fetchMyProfile(): Promise<SupplierProfileRow | null> {
   return data;
 }
 
-export type SupplierAccountStatus = "pending" | "verified" | "rejected";
+export type SupplierProfileStatus = "draft" | "pending_verification" | "validated" | "rejected";
 
-/** The admin-facing verification status of the current supplier's account. */
-export async function fetchMyAccountStatus(): Promise<SupplierAccountStatus> {
-  const supplierAccountId = await getCurrentUserId();
-  const { data, error } = await supabase
-    .from("tb_supplier_account")
-    .select("status")
-    .eq("supplier_account_id", supplierAccountId)
-    .single();
-  if (error) throw error;
-  return data.status as SupplierAccountStatus;
+/**
+ * The supplier's own verification status, read from their profile row.
+ * A supplier with no profile yet is treated as 'draft'.
+ */
+export async function fetchMyProfileStatus(): Promise<SupplierProfileStatus> {
+  const row = await fetchMyProfile();
+  return (row?.status as SupplierProfileStatus) ?? "draft";
 }
 
 /**
- * Upserts the supplier's single profile row, keeping status as 'draft'.
- * Submit-for-verification is handled in a later prompt.
+ * Upserts the supplier's single profile row. Does NOT touch `status` — a
+ * brand new row gets the column default ('draft'); an existing row keeps
+ * whatever status it currently has, so autosaving edits never silently
+ * reverts a submitted, validated, or rejected profile back to draft.
  */
 export async function saveProfileDraft(draft: SupplierProfileDraft): Promise<SupplierProfileRow> {
   const supplierAccountId = await getCurrentUserId();
@@ -105,7 +104,6 @@ export async function saveProfileDraft(draft: SupplierProfileDraft): Promise<Sup
         cell_no: draft.cell_no || null,
         business_logo: draft.business_logo,
         product_images: draft.product_images,
-        status: "draft",
         updated_by: supplierAccountId,
         date_updated: new Date().toISOString(),
       },
@@ -115,6 +113,16 @@ export async function saveProfileDraft(draft: SupplierProfileDraft): Promise<Sup
     .single();
   if (error) throw error;
   return data;
+}
+
+/** Moves the supplier's profile from 'draft' into the admin review queue. */
+export async function submitProfileForReview(): Promise<void> {
+  const supplierAccountId = await getCurrentUserId();
+  const { error } = await supabase
+    .from("tb_supplier_profile")
+    .update({ status: "pending_verification", date_updated: new Date().toISOString() })
+    .eq("supplier_account_id", supplierAccountId);
+  if (error) throw error;
 }
 
 function safeFileName(name: string): string {

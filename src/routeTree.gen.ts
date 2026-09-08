@@ -29,6 +29,7 @@ import { Route as SupplierReviewsRouteImport } from './routes/supplier/reviews'
 import { Route as SupplierSettingsRouteImport } from './routes/supplier/settings'
 import { Route as SupplierSignupRouteImport } from './routes/supplier/signup'
 import { Route as SupplierSubscriptionRouteImport } from './routes/supplier/subscription'
+import { Route as SuppliersSlugRouteImport } from './routes/suppliers/$slug'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
 const IndexRoute = IndexRouteImport.update({
@@ -132,6 +133,11 @@ const SupplierSubscriptionRoute = SupplierSubscriptionRouteImport.update({
   path: '/supplier/subscription',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuppliersSlugRoute = SuppliersSlugRouteImport.update({
+  id: '/suppliers/$slug',
+  path: '/suppliers/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   id: '/.lovable/oauth/consent',
   path: '/.lovable/oauth/consent',
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
+  '/suppliers/$slug': typeof SuppliersSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRoutesByTo {
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
+  '/suppliers/$slug': typeof SuppliersSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRoutesById {
@@ -206,6 +214,7 @@ export interface FileRoutesById {
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
+  '/suppliers/$slug': typeof SuppliersSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRouteTypes {
@@ -231,6 +240,7 @@ export interface FileRouteTypes {
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
+    | '/suppliers/$slug'
     | '/.lovable/oauth/consent'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -254,6 +264,7 @@ export interface FileRouteTypes {
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
+    | '/suppliers/$slug'
     | '/.lovable/oauth/consent'
   id:
     | '__root__'
@@ -277,6 +288,7 @@ export interface FileRouteTypes {
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
+    | '/suppliers/$slug'
     | '/.lovable/oauth/consent'
   fileRoutesById: FileRoutesById
 }
@@ -301,6 +313,7 @@ export interface RootRouteChildren {
   SupplierSettingsRoute: typeof SupplierSettingsRoute
   SupplierSignupRoute: typeof SupplierSignupRoute
   SupplierSubscriptionRoute: typeof SupplierSubscriptionRoute
+  SuppliersSlugRoute: typeof SuppliersSlugRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
@@ -446,6 +459,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplierSubscriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/suppliers/$slug': {
+      id: '/suppliers/$slug'
+      path: '/suppliers/$slug'
+      fullPath: '/suppliers/$slug'
+      preLoaderRoute: typeof SuppliersSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/.lovable/oauth/consent': {
       id: '/.lovable/oauth/consent'
       path: '/.lovable/oauth/consent'
@@ -478,6 +498,7 @@ const rootRouteChildren: RootRouteChildren = {
   SupplierSettingsRoute: SupplierSettingsRoute,
   SupplierSignupRoute: SupplierSignupRoute,
   SupplierSubscriptionRoute: SupplierSubscriptionRoute,
+  SuppliersSlugRoute: SuppliersSlugRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport

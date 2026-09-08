@@ -1,18 +1,5 @@
-type Supplier = {
-  initials: string;
-  name: string;
-  category: string;
-  rating: number;
-  reviews: number;
-  location: string;
-};
-
-const SUPPLIERS: Supplier[] = [
-  { initials: "BS", name: "Bright Solar Solutions", category: "Solar & Energy", rating: 4.9, reviews: 128, location: "Cape Town" },
-  { initials: "AP", name: "Apex Plumbing Co.", category: "Plumbing", rating: 4.8, reviews: 94, location: "Johannesburg" },
-  { initials: "LE", name: "Lumen Electrical", category: "Electrical", rating: 4.9, reviews: 76, location: "Durban" },
-  { initials: "GL", name: "GreenLeaf Landscaping", category: "Landscaping", rating: 4.7, reviews: 58, location: "Pretoria" },
-];
+import { Link } from "@tanstack/react-router";
+import { MOCK_SUPPLIERS } from "@/lib/mock-suppliers";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -56,30 +43,55 @@ export function FeaturedListings() {
             className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-brand hover:underline"
           >
             Browse all suppliers
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </a>
         </div>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {SUPPLIERS.map((s) => (
-            <a
-              key={s.name}
-              href="/search"
+          {MOCK_SUPPLIERS.map((s) => (
+            <Link
+              key={s.slug}
+              to="/suppliers/$slug"
+              params={{ slug: s.slug }}
               className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/10"
             >
               <div className="flex items-center justify-between">
-                <span className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-brand to-brand-glow text-base font-bold text-brand-foreground">
+                <span
+                  className={`grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${s.gradient} text-base font-bold text-white`}
+                >
                   {s.initials}
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-verified/10 px-2 py-0.5 text-xs font-semibold text-verified">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="m9 12 2 2 4-4" />
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-                  </svg>
-                  Verified
-                </span>
+                {s.verified && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-verified/10 px-2 py-0.5 text-xs font-semibold text-verified">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="m9 12 2 2 4-4" />
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                    </svg>
+                    Verified
+                  </span>
+                )}
               </div>
 
               <h3 className="mt-4 min-w-0 truncate text-base font-bold text-foreground">
@@ -94,13 +106,23 @@ export function FeaturedListings() {
               </div>
 
               <div className="mt-4 flex items-center gap-1.5 border-t border-border pt-4 text-xs text-muted-foreground">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
                   <circle cx="12" cy="10" r="3" />
                 </svg>
                 {s.location}
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

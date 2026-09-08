@@ -5,7 +5,7 @@ import { CreditCard } from "lucide-react";
 import { useSupplierSession } from "@/hooks/use-supplier-session";
 import { DashboardShell, PageHeader, Panel } from "@/components/supplier/dashboard-shell";
 import { Button } from "@/components/ui/button";
-import { fetchMyAccountStatus, type SupplierAccountStatus } from "@/lib/supplier-profile";
+import { fetchMyProfile, type SupplierProfileStatus } from "@/lib/supplier-profile";
 
 export const Route = createFileRoute("/supplier/subscription")({
   head: () => ({
@@ -16,13 +16,13 @@ export const Route = createFileRoute("/supplier/subscription")({
 
 function SupplierSubscriptionPage() {
   const { checking } = useSupplierSession();
-  const [status, setStatus] = useState<SupplierAccountStatus | null>(null);
+  const [status, setStatus] = useState<SupplierProfileStatus | null>(null);
 
   useEffect(() => {
     if (checking) return;
-    fetchMyAccountStatus()
-      .then(setStatus)
-      .catch(() => setStatus("pending"));
+    fetchMyProfile()
+      .then((row) => setStatus((row?.status as SupplierProfileStatus) ?? "draft"))
+      .catch(() => setStatus("draft"));
   }, [checking]);
 
   if (checking || status === null) {
@@ -33,7 +33,7 @@ function SupplierSubscriptionPage() {
     );
   }
 
-  const verified = status === "verified";
+  const verified = status === "validated";
 
   // No real payment processing yet — this just unlocks the button once an
   // admin has verified the profile, matching the "coming soon" pattern used
@@ -70,9 +70,12 @@ function SupplierSubscriptionPage() {
           </Button>
         </div>
 
-        {status === "pending" && (
+        {(status === "draft" || status === "pending_verification") && (
           <p className="mt-4 text-sm text-muted-foreground">
-            Available once your profile is verified. We're reviewing it now.
+            Available once your profile is verified.{" "}
+            {status === "pending_verification"
+              ? "We're reviewing it now."
+              : "Submit your Business Profile for review to get started."}
           </p>
         )}
         {status === "rejected" && (

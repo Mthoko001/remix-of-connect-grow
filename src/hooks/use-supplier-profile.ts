@@ -3,8 +3,10 @@ import {
   EMPTY_DRAFT,
   fetchMyProfile,
   saveProfileDraft,
+  submitProfileForReview,
   toDraft,
   type SupplierProfileDraft,
+  type SupplierProfileStatus,
 } from "@/lib/supplier-profile";
 
 export type SaveState = "idle" | "saving" | "saved" | "error";
@@ -17,10 +19,13 @@ const AUTOSAVE_DELAY_MS = 1200;
  */
 export function useSupplierProfile() {
   const [draft, setDraft] = useState<SupplierProfileDraft>(EMPTY_DRAFT);
+  const [status, setStatus] = useState<SupplierProfileStatus>("draft");
+  const [rejectionReason, setRejectionReason] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [error, setError] = useState<string | null>(null);
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const dirtyRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -33,7 +38,11 @@ export function useSupplierProfile() {
       .then((row) => {
         if (!active) return;
         setDraft(toDraft(row));
-        if (row) setLastSavedAt(new Date(row.date_updated));
+        if (row) {
+          setLastSavedAt(new Date(row.date_updated));
+          setStatus((row.status as SupplierProfileStatus) ?? "draft");
+          setRejectionReason(row.rejection_reason);
+        }
       })
       .catch((err: unknown) => {
         if (active) setError(err instanceof Error ? err.message : "Could not load your profile.");
@@ -76,6 +85,21 @@ export function useSupplierProfile() {
     await save();
   }, [save]);
 
+  const submitForReview = useCallback(async () => {
+    setSubmitting(true);
+    setError(null);
+    try {
+      await saveNow();
+      await submitProfileForReview();
+      setStatus("pending_verification");
+      setLastSavedAt(new Date());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not submit your profile.");
+    } finally {
+      setSubmitting(false);
+    }
+  }, [saveNow]);
+
   useEffect(
     () => () => {
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -83,5 +107,17 @@ export function useSupplierProfile() {
     [],
   );
 
-  return { draft, loading, saveState, error, lastSavedAt, updateField, saveNow };
+  return {
+    draft,
+    status,
+    rejectionReason,
+    loading,
+    saveState,
+    error,
+    lastSavedAt,
+    updateField,
+    saveNow,
+    submitting,
+    submitForReview,
+  };
 }

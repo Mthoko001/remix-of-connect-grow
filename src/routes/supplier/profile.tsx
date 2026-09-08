@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ImagePlus, Loader2, LocateFixed, Upload } from "lucide-react";
+import { CheckCircle2, Clock, ImagePlus, Loader2, LocateFixed, Send, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { useSupplierSession } from "@/hooks/use-supplier-session";
 import { useSupplierProfile, type SaveState } from "@/hooks/use-supplier-profile";
@@ -12,6 +12,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
   MAX_PRODUCT_IMAGES,
+  TOTAL_TRACKED_FIELDS,
+  countCompleteFields,
   removeSupplierMedia,
   uploadSupplierMedia,
 } from "@/lib/supplier-profile";
@@ -25,8 +27,19 @@ export const Route = createFileRoute("/supplier/profile")({
 
 function SupplierProfilePage() {
   const { checking } = useSupplierSession();
-  const { draft, loading, saveState, error, lastSavedAt, updateField, saveNow } =
-    useSupplierProfile();
+  const {
+    draft,
+    status,
+    rejectionReason,
+    loading,
+    saveState,
+    error,
+    lastSavedAt,
+    updateField,
+    saveNow,
+    submitting,
+    submitForReview,
+  } = useSupplierProfile();
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadingProducts, setUploadingProducts] = useState(false);
   const [locating, setLocating] = useState(false);
@@ -149,6 +162,8 @@ function SupplierProfilePage() {
         </p>
       )}
 
+      <StatusBanner status={status} rejectionReason={rejectionReason} />
+
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           <Panel title="Business details">
@@ -208,7 +223,28 @@ function SupplierProfilePage() {
             </div>
           </Panel>
 
-          <div className="flex justify-end">
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            {status === "draft" && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => void submitForReview()}
+                disabled={submitting || countCompleteFields(draft) < TOTAL_TRACKED_FIELDS}
+                className="gap-2"
+                title={
+                  countCompleteFields(draft) < TOTAL_TRACKED_FIELDS
+                    ? "Complete all fields before submitting for review."
+                    : undefined
+                }
+              >
+                {submitting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+                {submitting ? "Submitting…" : "Submit for Review"}
+              </Button>
+            )}
             <Button
               type="button"
               onClick={() => void saveNow()}
@@ -298,6 +334,44 @@ function SupplierProfilePage() {
       </div>
     </DashboardShell>
   );
+}
+
+function StatusBanner({
+  status,
+  rejectionReason,
+}: {
+  status: "draft" | "pending_verification" | "validated" | "rejected";
+  rejectionReason: string | null;
+}) {
+  if (status === "pending_verification") {
+    return (
+      <div className="mb-6 flex items-center gap-3 rounded-2xl border border-brand/20 bg-brand/5 p-4">
+        <Clock className="h-5 w-5 shrink-0 text-brand" />
+        <p className="text-sm text-foreground">
+          Submitted — awaiting review. You can still edit your details below.
+        </p>
+      </div>
+    );
+  }
+  if (status === "validated") {
+    return (
+      <div className="mb-6 flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4">
+        <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" />
+        <p className="text-sm text-foreground">Your profile is verified.</p>
+      </div>
+    );
+  }
+  if (status === "rejected") {
+    return (
+      <div className="mb-6 rounded-2xl border border-destructive/20 bg-destructive/5 p-4">
+        <p className="text-sm font-semibold text-foreground">Your profile wasn't approved</p>
+        {rejectionReason && (
+          <p className="mt-1 text-sm text-muted-foreground">Reason: {rejectionReason}</p>
+        )}
+      </div>
+    );
+  }
+  return null;
 }
 
 function SaveStatusLabel({
