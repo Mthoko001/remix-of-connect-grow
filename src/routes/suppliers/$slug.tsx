@@ -5,6 +5,7 @@ import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { Button } from "@/components/ui/button";
 import { SupplierChatDialog } from "@/components/customer/supplier-chat-dialog";
+import { WhatsAppEnquiryDialog } from "@/components/customer/whatsapp-enquiry-dialog";
 import { getSupplierBySlug, mockProductImages, MOCK_SUPPLIERS } from "@/lib/mock-suppliers";
 
 export const Route = createFileRoute("/suppliers/$slug")({
@@ -41,11 +42,8 @@ function StarRating({ rating }: { rating: number }) {
 function SupplierPublicProfilePage() {
   const supplier = Route.useLoaderData();
   const [chatOpen, setChatOpen] = useState(false);
+  const [whatsappOpen, setWhatsappOpen] = useState(false);
   const productImages = mockProductImages(supplier.slug);
-
-  const whatsappHref = `https://wa.me/${supplier.whatsappNumber}?text=${encodeURIComponent(
-    `Hi ${supplier.name}, I found you on LeadLink and I'm interested in your services.`,
-  )}`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -89,15 +87,14 @@ function SupplierPublicProfilePage() {
 
           {/* Contact actions */}
           <div className="flex w-full flex-col gap-2 sm:w-auto">
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={() => setWhatsappOpen(true)}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:brightness-105 active:scale-[0.99]"
             >
               <MessageCircle className="h-4 w-4" />
               Chat on WhatsApp
-            </a>
+            </button>
             <Button variant="outline" onClick={() => setChatOpen(true)} className="gap-2">
               <MessageCircle className="h-4 w-4" />
               Chat in App
@@ -179,6 +176,11 @@ function SupplierPublicProfilePage() {
       <Footer />
 
       <SupplierChatDialog open={chatOpen} onOpenChange={setChatOpen} supplierName={supplier.name} />
+      <WhatsAppEnquiryDialog
+        open={whatsappOpen}
+        onOpenChange={setWhatsappOpen}
+        supplierName={supplier.name}
+      />
     </div>
   );
 }
