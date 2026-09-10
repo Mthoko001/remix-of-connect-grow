@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { MapPin, MessageCircle, Phone, ShieldCheck, Star } from "lucide-react";
+import { MapPin, MessageCircle, Phone, Send, ShieldCheck, Star } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { Button } from "@/components/ui/button";
-import { SupplierChatDialog } from "@/components/customer/supplier-chat-dialog";
+import { InAppEnquiryDialog } from "@/components/customer/in-app-enquiry-dialog";
 import { WhatsAppEnquiryDialog } from "@/components/customer/whatsapp-enquiry-dialog";
 import { getSupplierBySlug, mockProductImages, MOCK_SUPPLIERS } from "@/lib/mock-suppliers";
 
@@ -41,7 +41,7 @@ function StarRating({ rating }: { rating: number }) {
 
 function SupplierPublicProfilePage() {
   const supplier = Route.useLoaderData();
-  const [chatOpen, setChatOpen] = useState(false);
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
   const [whatsappOpen, setWhatsappOpen] = useState(false);
   const productImages = mockProductImages(supplier.slug);
 
@@ -95,9 +95,9 @@ function SupplierPublicProfilePage() {
               <MessageCircle className="h-4 w-4" />
               Chat on WhatsApp
             </button>
-            <Button variant="outline" onClick={() => setChatOpen(true)} className="gap-2">
-              <MessageCircle className="h-4 w-4" />
-              Chat in App
+            <Button variant="outline" onClick={() => setEnquiryOpen(true)} className="gap-2">
+              <Send className="h-4 w-4" />
+              Send an Enquiry
             </Button>
           </div>
         </div>
@@ -175,7 +175,12 @@ function SupplierPublicProfilePage() {
 
       <Footer />
 
-      <SupplierChatDialog open={chatOpen} onOpenChange={setChatOpen} supplierName={supplier.name} />
+      <InAppEnquiryDialog
+        open={enquiryOpen}
+        onOpenChange={setEnquiryOpen}
+        supplierAccountId={supplier.supplierAccountId}
+        supplierName={supplier.name}
+      />
       <WhatsAppEnquiryDialog
         open={whatsappOpen}
         onOpenChange={setWhatsappOpen}
