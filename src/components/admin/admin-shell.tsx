@@ -6,6 +6,7 @@ import {
   History,
   LayoutDashboard,
   LogOut,
+  Mail,
   Menu,
   ShieldCheck,
   Store,
@@ -18,6 +19,7 @@ import { Logo } from "@/components/landing/logo";
 export const ADMIN_NAV_ITEMS = [
   { label: "Overview", to: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Verification Queue", to: "/admin/verification", icon: ClipboardCheck },
+  { label: "Enquiries", to: "/admin/enquiries", icon: Mail },
   { label: "Live Suppliers", to: "/admin/suppliers", icon: Store },
   { label: "Categories", to: "/admin/categories", icon: Tags },
   { label: "Audit Log", to: "/admin/audit-log", icon: History },

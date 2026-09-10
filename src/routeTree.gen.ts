@@ -17,6 +17,7 @@ import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } fr
 import { Route as AdminAuditLogRouteImport } from './routes/admin/audit-log'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
+import { Route as AdminEnquiriesRouteImport } from './routes/admin/enquiries'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminSuppliersRouteImport } from './routes/admin/suppliers'
 import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
@@ -71,6 +72,11 @@ const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
 const AdminDashboardRoute = AdminDashboardRouteImport.update({
   id: '/admin/dashboard',
   path: '/admin/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminEnquiriesRoute = AdminEnquiriesRouteImport.update({
+  id: '/admin/enquiries',
+  path: '/admin/enquiries',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
@@ -153,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/admin/verification': typeof AdminVerificationRoute
@@ -177,6 +184,7 @@ export interface FileRoutesByTo {
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/admin/verification': typeof AdminVerificationRoute
@@ -202,6 +210,7 @@ export interface FileRoutesById {
   '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/admin/verification': typeof AdminVerificationRoute
@@ -228,6 +237,7 @@ export interface FileRouteTypes {
     | '/admin/audit-log'
     | '/admin/categories'
     | '/admin/dashboard'
+    | '/admin/enquiries'
     | '/admin/login'
     | '/admin/suppliers'
     | '/admin/verification'
@@ -252,6 +262,7 @@ export interface FileRouteTypes {
     | '/admin/audit-log'
     | '/admin/categories'
     | '/admin/dashboard'
+    | '/admin/enquiries'
     | '/admin/login'
     | '/admin/suppliers'
     | '/admin/verification'
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
     | '/admin/audit-log'
     | '/admin/categories'
     | '/admin/dashboard'
+    | '/admin/enquiries'
     | '/admin/login'
     | '/admin/suppliers'
     | '/admin/verification'
@@ -301,6 +313,7 @@ export interface RootRouteChildren {
   AdminAuditLogRoute: typeof AdminAuditLogRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminEnquiriesRoute: typeof AdminEnquiriesRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminSuppliersRoute: typeof AdminSuppliersRoute
   AdminVerificationRoute: typeof AdminVerificationRoute
@@ -373,6 +386,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/dashboard'
       fullPath: '/admin/dashboard'
       preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/enquiries': {
+      id: '/admin/enquiries'
+      path: '/admin/enquiries'
+      fullPath: '/admin/enquiries'
+      preLoaderRoute: typeof AdminEnquiriesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/login': {
@@ -486,6 +506,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminAuditLogRoute: AdminAuditLogRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminDashboardRoute: AdminDashboardRoute,
+  AdminEnquiriesRoute: AdminEnquiriesRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminSuppliersRoute: AdminSuppliersRoute,
   AdminVerificationRoute: AdminVerificationRoute,
