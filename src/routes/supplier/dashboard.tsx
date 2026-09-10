@@ -16,6 +16,7 @@ import {
   TOTAL_TRACKED_FIELDS,
   type SupplierProfileStatus,
 } from "@/lib/supplier-profile";
+import { fetchMyEnquiries, type EnquiryRow } from "@/lib/enquiries";
 
 export const Route = createFileRoute("/supplier/dashboard")({
   head: () => ({
@@ -29,6 +30,7 @@ function SupplierDashboardPage() {
   const { email, checking } = useSupplierSession();
   const [completeFields, setCompleteFields] = useState<number | null>(null);
   const [status, setStatus] = useState<SupplierProfileStatus | null>(null);
+  const [enquiries, setEnquiries] = useState<EnquiryRow[]>([]);
 
   useEffect(() => {
     if (checking) return;
@@ -43,6 +45,13 @@ function SupplierDashboardPage() {
         if (!active) return;
         setCompleteFields(0);
         setStatus("draft");
+      });
+    fetchMyEnquiries()
+      .then((rows) => {
+        if (active) setEnquiries(rows);
+      })
+      .catch(() => {
+        if (active) setEnquiries([]);
       });
     return () => {
       active = false;
@@ -151,16 +160,40 @@ function SupplierDashboardPage() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Profile Views" value="0" />
-        <MetricCard label="Enquiries" value="0" />
+        <MetricCard label="Enquiries" value={String(enquiries.length)} />
         <MetricCard label="Conversion Rate" value="—" />
         <MetricCard label="Subscription Status" value="Unpaid" />
       </div>
 
       <Panel title="Recent enquiries" className="mt-6">
-        <EmptyState
-          title="No enquiries yet"
-          description="When customers reach out, they'll show up here."
-        />
+        {enquiries.length === 0 ? (
+          <EmptyState
+            title="No enquiries yet"
+            description="When customers reach out, they'll show up here."
+          />
+        ) : (
+          <div className="divide-y divide-border">
+            {enquiries.slice(0, 5).map((enquiry) => (
+              <div
+                key={enquiry.enquiry_id}
+                className="flex items-center justify-between py-3 first:pt-0 last:pb-0"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-foreground">
+                    {enquiry.customer_name}
+                  </p>
+                  <p className="truncate text-xs text-muted-foreground">{enquiry.message}</p>
+                </div>
+                <span className="shrink-0 pl-3 text-xs text-muted-foreground">
+                  {new Date(enquiry.created_at).toLocaleDateString([], {
+                    day: "numeric",
+                    month: "short",
+                  })}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </Panel>
     </DashboardShell>
   );

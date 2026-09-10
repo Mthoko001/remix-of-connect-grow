@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { buildWhatsAppEnquiryMessage, buildWhatsAppUrl } from "@/lib/contact";
+import { submitEnquiry } from "@/lib/enquiries";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -21,10 +22,12 @@ type FormErrors = { name?: string; email?: string; cell?: string; issue?: string
 export function WhatsAppEnquiryDialog({
   open,
   onOpenChange,
+  supplierAccountId,
   supplierName,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  supplierAccountId: string;
   supplierName: string;
 }) {
   const [name, setName] = useState("");
@@ -50,7 +53,7 @@ export function WhatsAppEnquiryDialog({
     onOpenChange(next);
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const fieldErrors: FormErrors = {};
     if (!name.trim()) fieldErrors.name = "Enter your name.";
@@ -61,6 +64,23 @@ export function WhatsAppEnquiryDialog({
     if (Object.keys(fieldErrors).length > 0) return;
 
     setSubmitting(true);
+
+    // Best-effort: WhatsApp is the primary path the customer expects to
+    // work, so a storage failure shouldn't block it — just log it.
+    try {
+      await submitEnquiry({
+        supplierAccountId,
+        customerName: name.trim(),
+        customerEmail: email.trim(),
+        customerCell: cell.trim(),
+        message: issue.trim(),
+        channel: "whatsapp",
+        image,
+      });
+    } catch (err) {
+      console.error("Could not save enquiry record:", err);
+    }
+
     const message = buildWhatsAppEnquiryMessage({
       supplierName,
       customerName: name.trim(),
@@ -84,7 +104,7 @@ export function WhatsAppEnquiryDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+        <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4" noValidate>
           <div className="space-y-1.5">
             <Label htmlFor="wa_name">Your Name</Label>
             <Input

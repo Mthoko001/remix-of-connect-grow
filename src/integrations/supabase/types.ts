@@ -32,6 +32,53 @@ export type Database = {
         }
         Relationships: []
       }
+      tb_enquiry: {
+        Row: {
+          channel: string
+          created_at: string
+          customer_cell: string
+          customer_email: string
+          customer_name: string
+          enquiry_id: number
+          image_path: string | null
+          message: string
+          status: string
+          supplier_account_id: string
+        }
+        Insert: {
+          channel?: string
+          created_at?: string
+          customer_cell: string
+          customer_email: string
+          customer_name: string
+          enquiry_id?: never
+          image_path?: string | null
+          message: string
+          status?: string
+          supplier_account_id: string
+        }
+        Update: {
+          channel?: string
+          created_at?: string
+          customer_cell?: string
+          customer_email?: string
+          customer_name?: string
+          enquiry_id?: never
+          image_path?: string | null
+          message?: string
+          status?: string
+          supplier_account_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tb_enquiry_supplier_account_id_fkey"
+            columns: ["supplier_account_id"]
+            isOneToOne: false
+            referencedRelation: "tb_supplier_account"
+            referencedColumns: ["supplier_account_id"]
+          },
+        ]
+      }
       tb_supplier_account: {
         Row: {
           created_at: string

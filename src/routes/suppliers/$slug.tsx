@@ -179,6 +179,7 @@ function SupplierPublicProfilePage() {
       <WhatsAppEnquiryDialog
         open={whatsappOpen}
         onOpenChange={setWhatsappOpen}
+        supplierAccountId={supplier.supplierAccountId}
         supplierName={supplier.name}
       />
     </div>

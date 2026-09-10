@@ -10,6 +10,13 @@
 
 export type MockSupplier = {
   slug: string;
+  /**
+   * A real tb_supplier_account row created for this demo supplier, so
+   * enquiries submitted on their profile satisfy tb_enquiry's foreign key
+   * and can genuinely be seen by logging into that supplier's dashboard.
+   * Not a real business — see the "demo.*@leadlink.test" account.
+   */
+  supplierAccountId: string;
   name: string;
   initials: string;
   category: string;
@@ -27,6 +34,7 @@ export type MockSupplier = {
 export const MOCK_SUPPLIERS: MockSupplier[] = [
   {
     slug: "bright-solar-solutions",
+    supplierAccountId: "3b90e7aa-f2f1-436e-8bc2-5a76059f6c4e",
     name: "Bright Solar Solutions",
     initials: "BS",
     category: "Solar & Energy",
@@ -43,6 +51,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
   },
   {
     slug: "apex-plumbing-co",
+    supplierAccountId: "9b5a27e9-eaef-4ad3-b701-bc7517dd89c8",
     name: "Apex Plumbing Co.",
     initials: "AP",
     category: "Plumbing",
@@ -59,6 +68,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
   },
   {
     slug: "lumen-electrical",
+    supplierAccountId: "f6235fec-c961-4e06-94b5-ddd9fb95988e",
     name: "Lumen Electrical",
     initials: "LE",
     category: "Electrical",
@@ -75,6 +85,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
   },
   {
     slug: "greenleaf-landscaping",
+    supplierAccountId: "2e0b2971-6856-411a-86b6-39710d0e1332",
     name: "GreenLeaf Landscaping",
     initials: "GL",
     category: "Landscaping",
@@ -91,6 +102,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
   },
   {
     slug: "coastal-appliance-repairs",
+    supplierAccountId: "cbebb058-73a7-4a96-bdad-dc5fbac14e1e",
     name: "Coastal Appliance Repairs",
     initials: "CA",
     category: "Appliance Repair",
