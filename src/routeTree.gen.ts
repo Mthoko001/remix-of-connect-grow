@@ -30,6 +30,7 @@ import { Route as SupplierReviewsRouteImport } from './routes/supplier/reviews'
 import { Route as SupplierSettingsRouteImport } from './routes/supplier/settings'
 import { Route as SupplierSignupRouteImport } from './routes/supplier/signup'
 import { Route as SupplierSubscriptionRouteImport } from './routes/supplier/subscription'
+import { Route as SuppliersIndexRouteImport } from './routes/suppliers/index'
 import { Route as SuppliersSlugRouteImport } from './routes/suppliers/$slug'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 
@@ -139,6 +140,11 @@ const SupplierSubscriptionRoute = SupplierSubscriptionRouteImport.update({
   path: '/supplier/subscription',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuppliersIndexRoute = SuppliersIndexRouteImport.update({
+  id: '/suppliers/',
+  path: '/suppliers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SuppliersSlugRoute = SuppliersSlugRouteImport.update({
   id: '/suppliers/$slug',
   path: '/suppliers/$slug',
@@ -173,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
   '/suppliers/$slug': typeof SuppliersSlugRoute
+  '/suppliers/': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRoutesByTo {
@@ -198,6 +205,7 @@ export interface FileRoutesByTo {
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
   '/suppliers/$slug': typeof SuppliersSlugRoute
+  '/suppliers': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRoutesById {
@@ -224,6 +232,7 @@ export interface FileRoutesById {
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
   '/suppliers/$slug': typeof SuppliersSlugRoute
+  '/suppliers/': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
 }
 export interface FileRouteTypes {
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/supplier/signup'
     | '/supplier/subscription'
     | '/suppliers/$slug'
+    | '/suppliers/'
     | '/.lovable/oauth/consent'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/supplier/signup'
     | '/supplier/subscription'
     | '/suppliers/$slug'
+    | '/suppliers'
     | '/.lovable/oauth/consent'
   id:
     | '__root__'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '/supplier/signup'
     | '/supplier/subscription'
     | '/suppliers/$slug'
+    | '/suppliers/'
     | '/.lovable/oauth/consent'
   fileRoutesById: FileRoutesById
 }
@@ -327,6 +339,7 @@ export interface RootRouteChildren {
   SupplierSignupRoute: typeof SupplierSignupRoute
   SupplierSubscriptionRoute: typeof SupplierSubscriptionRoute
   SuppliersSlugRoute: typeof SuppliersSlugRoute
+  SuppliersIndexRoute: typeof SuppliersIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
@@ -479,6 +492,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplierSubscriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/suppliers/': {
+      id: '/suppliers/'
+      path: '/suppliers'
+      fullPath: '/suppliers/'
+      preLoaderRoute: typeof SuppliersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/suppliers/$slug': {
       id: '/suppliers/$slug'
       path: '/suppliers/$slug'
@@ -520,6 +540,7 @@ const rootRouteChildren: RootRouteChildren = {
   SupplierSignupRoute: SupplierSignupRoute,
   SupplierSubscriptionRoute: SupplierSubscriptionRoute,
   SuppliersSlugRoute: SuppliersSlugRoute,
+  SuppliersIndexRoute: SuppliersIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport

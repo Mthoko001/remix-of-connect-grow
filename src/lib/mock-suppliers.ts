@@ -125,10 +125,111 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     whatsappNumber: "27795556677",
     gradient: "from-sky-500 to-blue-600",
   },
+  {
+    slug: "sunrise-power-systems",
+    supplierAccountId: "f0066b7f-e869-4655-b4c6-7ea9246daf91",
+    name: "Sunrise Power Systems",
+    initials: "SP",
+    category: "Solar & Energy",
+    rating: 4.8,
+    reviews: 65,
+    location: "Johannesburg",
+    verified: true,
+    description:
+      "Sunrise Power Systems specializes in solar installation and backup power for homes and businesses across Johannesburg, with flexible financing options.",
+    fullAddress: "88 Rivonia Road, Sandton, Johannesburg, 2196",
+    publicArea: "Sandton, Johannesburg, 2196",
+    cellNo: "081 222 9911",
+    whatsappNumber: "27812229911",
+    gradient: "from-yellow-500 to-amber-500",
+  },
+  {
+    slug: "flowmaster-plumbing",
+    supplierAccountId: "ea556a4d-8cde-4fe4-a23e-588d9429f836",
+    name: "FlowMaster Plumbing",
+    initials: "FP",
+    category: "Plumbing",
+    rating: 4.7,
+    reviews: 52,
+    location: "Cape Town",
+    verified: true,
+    description:
+      "FlowMaster Plumbing handles residential and commercial plumbing, drain clearing, and geyser installations across Cape Town, with a focus on fast response times.",
+    fullAddress: "5 Long Street, Cape Town CBD, 8001",
+    publicArea: "Cape Town CBD, 8001",
+    cellNo: "082 333 8822",
+    whatsappNumber: "27823338822",
+    gradient: "from-cyan-500 to-sky-600",
+  },
+  {
+    slug: "sparktech-electrical",
+    supplierAccountId: "1e01ae7e-990c-440c-9e00-50d691f7dab9",
+    name: "SparkTech Electrical",
+    initials: "ST",
+    category: "Electrical",
+    rating: 4.8,
+    reviews: 39,
+    location: "Pretoria",
+    verified: true,
+    description:
+      "SparkTech Electrical offers certified electrical contracting, CoC inspections, and solar-ready wiring for homes and businesses in Pretoria.",
+    fullAddress: "17 Church Street, Hatfield, Pretoria, 0083",
+    publicArea: "Hatfield, Pretoria, 0083",
+    cellNo: "083 444 7733",
+    whatsappNumber: "27834447733",
+    gradient: "from-purple-500 to-fuchsia-500",
+  },
+  {
+    slug: "fresh-coat-painters",
+    supplierAccountId: "827f0937-33c4-470c-bc9e-2c759ad8ef7d",
+    name: "Fresh Coat Painters",
+    initials: "FC",
+    category: "Painting & Renovations",
+    rating: 4.7,
+    reviews: 33,
+    location: "Durban",
+    verified: true,
+    description:
+      "Fresh Coat Painters brings a decade of experience in interior and exterior painting, waterproofing, and renovation touch-ups across Durban.",
+    fullAddress: "42 Musgrave Road, Berea, Durban, 4001",
+    publicArea: "Berea, Durban, 4001",
+    cellNo: "084 555 6644",
+    whatsappNumber: "27845556644",
+    gradient: "from-rose-500 to-pink-600",
+  },
 ];
 
 export function getSupplierBySlug(slug: string): MockSupplier | undefined {
   return MOCK_SUPPLIERS.find((s) => s.slug === slug);
+}
+
+/**
+ * Suppliers grouped by category, verified-only (matches real product
+ * behavior — an unverified supplier shouldn't be publicly browsable yet,
+ * even though their direct profile link still works). Categories with no
+ * verified suppliers are omitted so the browse page never shows an empty
+ * row. Order is stable (first-seen order in MOCK_SUPPLIERS).
+ */
+export function groupSuppliersByCategory(): { category: string; suppliers: MockSupplier[] }[] {
+  const verified = MOCK_SUPPLIERS.filter((s) => s.verified);
+  const order: string[] = [];
+  const byCategory = new Map<string, MockSupplier[]>();
+  for (const s of verified) {
+    if (!byCategory.has(s.category)) {
+      byCategory.set(s.category, []);
+      order.push(s.category);
+    }
+    byCategory.get(s.category)!.push(s);
+  }
+  return order.map((category) => ({ category, suppliers: byCategory.get(category)! }));
+}
+
+/** Highest-rated verified suppliers, for a "Featured" row. */
+export function getFeaturedSuppliers(count = 6): MockSupplier[] {
+  return [...MOCK_SUPPLIERS]
+    .filter((s) => s.verified)
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, count);
 }
 
 /** Deterministic placeholder product photos per supplier (picsum.photos). */
