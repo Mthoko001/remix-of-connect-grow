@@ -116,9 +116,9 @@ function SupplierPublicProfilePage() {
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
             <div>
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Address
+                Area
               </p>
-              <p className="mt-0.5 text-sm text-foreground">{supplier.address}</p>
+              <p className="mt-0.5 text-sm text-foreground">{supplier.publicArea}</p>
             </div>
           </div>
           <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-4">

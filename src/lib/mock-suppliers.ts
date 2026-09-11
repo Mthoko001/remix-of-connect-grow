@@ -25,7 +25,10 @@ export type MockSupplier = {
   location: string;
   verified: boolean;
   description: string;
-  address: string;
+  /** Full street address — internal only, never shown to customers. */
+  fullAddress: string;
+  /** Suburb/city/postal code only — safe to show on the public profile. */
+  publicArea: string;
   cellNo: string;
   whatsappNumber: string; // digits only, international format, no "+"
   gradient: string; // tailwind gradient classes for the logo avatar
@@ -44,7 +47,8 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     verified: true,
     description:
       "Bright Solar Solutions designs and installs residential and commercial solar systems across the Western Cape. From load-shedding backup setups to full off-grid installations, our certified technicians handle everything from site assessment to municipal sign-off.",
-    address: "14 Kloof Street, Gardens, Cape Town, 8001",
+    fullAddress: "14 Kloof Street, Gardens, Cape Town, 8001",
+    publicArea: "Gardens, Cape Town, 8001",
     cellNo: "082 111 2233",
     whatsappNumber: "27821112233",
     gradient: "from-amber-500 to-orange-500",
@@ -61,7 +65,8 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     verified: true,
     description:
       "24/7 emergency plumbing, geyser repairs and replacements, and full bathroom renovations. Apex Plumbing Co. has served Johannesburg homes and businesses for over a decade, with a satisfaction guarantee on every callout.",
-    address: "56 Bree Street, Johannesburg CBD, 2001",
+    fullAddress: "56 Bree Street, Johannesburg CBD, 2001",
+    publicArea: "Johannesburg CBD, 2001",
     cellNo: "083 222 3344",
     whatsappNumber: "27832223344",
     gradient: "from-blue-500 to-cyan-500",
@@ -78,7 +83,8 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     verified: true,
     description:
       "Lumen Electrical is a registered electrical contractor offering Certificate of Compliance (CoC) inspections, rewiring, fault-finding, and backup power installations for homes and small businesses in and around Durban.",
-    address: "21 Florida Road, Morningside, Durban, 4001",
+    fullAddress: "21 Florida Road, Morningside, Durban, 4001",
+    publicArea: "Morningside, Durban, 4001",
     cellNo: "084 333 4455",
     whatsappNumber: "27843334455",
     gradient: "from-violet-500 to-purple-500",
@@ -95,7 +101,8 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     verified: true,
     description:
       "From full garden redesigns to ongoing lawn and irrigation maintenance, GreenLeaf Landscaping helps Pretoria homeowners and estates keep their outdoor spaces looking their best year-round.",
-    address: "9 Lynnwood Road, Brooklyn, Pretoria, 0181",
+    fullAddress: "9 Lynnwood Road, Brooklyn, Pretoria, 0181",
+    publicArea: "Brooklyn, Pretoria, 0181",
     cellNo: "071 444 5566",
     whatsappNumber: "27714445566",
     gradient: "from-emerald-500 to-green-600",
@@ -112,7 +119,8 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     verified: false,
     description:
       "Fridge, washing machine, and stove repairs with same-day callouts across Port Elizabeth. Coastal Appliance Repairs is currently completing verification with LeadLink.",
-    address: "3 Cape Road, Mill Park, Port Elizabeth, 6001",
+    fullAddress: "3 Cape Road, Mill Park, Port Elizabeth, 6001",
+    publicArea: "Mill Park, Port Elizabeth, 6001",
     cellNo: "079 555 6677",
     whatsappNumber: "27795556677",
     gradient: "from-sky-500 to-blue-600",
