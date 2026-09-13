@@ -30,6 +30,8 @@ export type MockSupplier = {
   /** Suburb/city/postal code only — safe to show on the public profile. */
   publicArea: string;
   cellNo: string;
+  /** Shown to customers instead of a phone number they could call. */
+  businessHours: string;
   whatsappNumber: string; // digits only, international format, no "+"
   gradient: string; // tailwind gradient classes for the logo avatar
 };
@@ -50,6 +52,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     fullAddress: "14 Kloof Street, Gardens, Cape Town, 8001",
     publicArea: "Gardens, Cape Town, 8001",
     cellNo: "082 111 2233",
+    businessHours: "Mon–Fri: 8am–5pm, Sat: 8am–1pm",
     whatsappNumber: "27821112233",
     gradient: "from-amber-500 to-orange-500",
   },
@@ -68,6 +71,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     fullAddress: "56 Bree Street, Johannesburg CBD, 2001",
     publicArea: "Johannesburg CBD, 2001",
     cellNo: "083 222 3344",
+    businessHours: "24/7 for emergencies, office hours Mon–Fri: 7am–6pm",
     whatsappNumber: "27832223344",
     gradient: "from-blue-500 to-cyan-500",
   },
@@ -86,6 +90,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     fullAddress: "21 Florida Road, Morningside, Durban, 4001",
     publicArea: "Morningside, Durban, 4001",
     cellNo: "084 333 4455",
+    businessHours: "Mon–Fri: 7:30am–5pm",
     whatsappNumber: "27843334455",
     gradient: "from-violet-500 to-purple-500",
   },
@@ -104,6 +109,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     fullAddress: "9 Lynnwood Road, Brooklyn, Pretoria, 0181",
     publicArea: "Brooklyn, Pretoria, 0181",
     cellNo: "071 444 5566",
+    businessHours: "Mon–Sat: 7am–4pm",
     whatsappNumber: "27714445566",
     gradient: "from-emerald-500 to-green-600",
   },
@@ -122,6 +128,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     fullAddress: "3 Cape Road, Mill Park, Port Elizabeth, 6001",
     publicArea: "Mill Park, Port Elizabeth, 6001",
     cellNo: "079 555 6677",
+    businessHours: "Mon–Fri: 8am–5pm",
     whatsappNumber: "27795556677",
     gradient: "from-sky-500 to-blue-600",
   },
@@ -140,6 +147,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     fullAddress: "88 Rivonia Road, Sandton, Johannesburg, 2196",
     publicArea: "Sandton, Johannesburg, 2196",
     cellNo: "081 222 9911",
+    businessHours: "Mon–Fri: 8am–5pm, Sat: 9am–1pm",
     whatsappNumber: "27812229911",
     gradient: "from-yellow-500 to-amber-500",
   },
@@ -158,6 +166,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     fullAddress: "5 Long Street, Cape Town CBD, 8001",
     publicArea: "Cape Town CBD, 8001",
     cellNo: "082 333 8822",
+    businessHours: "24/7 for emergencies, office hours Mon–Fri: 8am–5pm",
     whatsappNumber: "27823338822",
     gradient: "from-cyan-500 to-sky-600",
   },
@@ -176,6 +185,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     fullAddress: "17 Church Street, Hatfield, Pretoria, 0083",
     publicArea: "Hatfield, Pretoria, 0083",
     cellNo: "083 444 7733",
+    businessHours: "Mon–Fri: 7:30am–5:30pm",
     whatsappNumber: "27834447733",
     gradient: "from-purple-500 to-fuchsia-500",
   },
@@ -194,6 +204,7 @@ export const MOCK_SUPPLIERS: MockSupplier[] = [
     fullAddress: "42 Musgrave Road, Berea, Durban, 4001",
     publicArea: "Berea, Durban, 4001",
     cellNo: "084 555 6644",
+    businessHours: "Mon–Sat: 8am–5pm",
     whatsappNumber: "27845556644",
     gradient: "from-rose-500 to-pink-600",
   },

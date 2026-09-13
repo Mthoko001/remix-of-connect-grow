@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { MapPin, MessageCircle, Phone, Send, ShieldCheck, Star } from "lucide-react";
+import { Clock, MapPin, MessageCircle, ShieldCheck, Star } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
-import { Button } from "@/components/ui/button";
-import { InAppEnquiryDialog } from "@/components/customer/in-app-enquiry-dialog";
 import { WhatsAppEnquiryDialog } from "@/components/customer/whatsapp-enquiry-dialog";
 import { getSupplierBySlug, mockProductImages, MOCK_SUPPLIERS } from "@/lib/mock-suppliers";
 
@@ -41,7 +39,6 @@ function StarRating({ rating }: { rating: number }) {
 
 function SupplierPublicProfilePage() {
   const supplier = Route.useLoaderData();
-  const [enquiryOpen, setEnquiryOpen] = useState(false);
   const [whatsappOpen, setWhatsappOpen] = useState(false);
   const productImages = mockProductImages(supplier.slug);
 
@@ -85,20 +82,16 @@ function SupplierPublicProfilePage() {
             </div>
           </div>
 
-          {/* Contact actions */}
-          <div className="flex w-full flex-col gap-2 sm:w-auto">
+          {/* Contact action */}
+          <div className="w-full sm:w-auto">
             <button
               type="button"
               onClick={() => setWhatsappOpen(true)}
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-transform hover:brightness-105 active:scale-[0.99]"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-transform hover:brightness-105 active:scale-[0.99] sm:w-auto"
             >
               <MessageCircle className="h-4 w-4" />
               Chat on WhatsApp
             </button>
-            <Button variant="outline" onClick={() => setEnquiryOpen(true)} className="gap-2">
-              <Send className="h-4 w-4" />
-              Send an Enquiry
-            </Button>
           </div>
         </div>
 
@@ -122,12 +115,12 @@ function SupplierPublicProfilePage() {
             </div>
           </div>
           <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-4">
-            <Phone className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+            <Clock className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
             <div>
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Cell Number
+                Business Hours
               </p>
-              <p className="mt-0.5 text-sm text-foreground">{supplier.cellNo}</p>
+              <p className="mt-0.5 text-sm text-foreground">{supplier.businessHours}</p>
             </div>
           </div>
         </section>
@@ -175,12 +168,6 @@ function SupplierPublicProfilePage() {
 
       <Footer />
 
-      <InAppEnquiryDialog
-        open={enquiryOpen}
-        onOpenChange={setEnquiryOpen}
-        supplierAccountId={supplier.supplierAccountId}
-        supplierName={supplier.name}
-      />
       <WhatsAppEnquiryDialog
         open={whatsappOpen}
         onOpenChange={setWhatsappOpen}
