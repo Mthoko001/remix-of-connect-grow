@@ -7,6 +7,8 @@ import { AdminShell } from "@/components/admin/admin-shell";
 import { AdminMediaView } from "@/components/admin/admin-media-view";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -19,9 +21,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   fetchSupplierReviewRows,
   productImagePaths,
-  setSupplierStatus,
+  setSupplierProfileStatus,
   type SupplierReviewRow,
-  type SupplierStatus,
+  type SupplierProfileStatus,
 } from "@/lib/admin-review";
 
 export const Route = createFileRoute("/admin/dashboard")({
@@ -31,20 +33,30 @@ export const Route = createFileRoute("/admin/dashboard")({
   component: AdminDashboardPage,
 });
 
-const TABS: { value: "all" | SupplierStatus; label: string }[] = [
+type TabValue = "all" | SupplierProfileStatus;
+
+const TABS: { value: TabValue; label: string }[] = [
   { value: "all", label: "All" },
-  { value: "pending", label: "Pending" },
-  { value: "verified", label: "Verified" },
+  { value: "pending_verification", label: "Pending Review" },
+  { value: "validated", label: "Validated" },
   { value: "rejected", label: "Rejected" },
+  { value: "draft", label: "Draft" },
 ];
+
+/** A row with no profile yet is treated as 'draft' for filtering/display. */
+function rowStatus(row: SupplierReviewRow): SupplierProfileStatus {
+  return row.profile?.status ?? "draft";
+}
 
 function AdminDashboardPage() {
   const { email, checking } = useAdminSession();
   const [rows, setRows] = useState<SupplierReviewRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState<"all" | SupplierStatus>("pending");
+  const [tab, setTab] = useState<TabValue>("pending_verification");
   const [selected, setSelected] = useState<SupplierReviewRow | null>(null);
   const [acting, setActing] = useState(false);
+  const [rejecting, setRejecting] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
 
   async function loadRows() {
     setLoading(true);
@@ -62,27 +74,53 @@ function AdminDashboardPage() {
   }, [checking]);
 
   const filtered = useMemo(
-    () => (tab === "all" ? rows : rows.filter((r) => r.status === tab)),
+    () => (tab === "all" ? rows : rows.filter((r) => rowStatus(r) === tab)),
     [rows, tab],
   );
 
   const counts = useMemo(() => {
-    const c: Record<"all" | SupplierStatus, number> = {
+    const c: Record<TabValue, number> = {
       all: rows.length,
-      pending: 0,
-      verified: 0,
+      draft: 0,
+      pending_verification: 0,
+      validated: 0,
       rejected: 0,
     };
-    for (const r of rows) c[r.status] += 1;
+    for (const r of rows) c[rowStatus(r)] += 1;
     return c;
   }, [rows]);
 
-  async function handleDecision(status: Extract<SupplierStatus, "verified" | "rejected">) {
+  function openRow(row: SupplierReviewRow) {
+    setSelected(row);
+    setRejecting(false);
+    setRejectionReason("");
+  }
+
+  async function handleApprove() {
     if (!selected) return;
     setActing(true);
     try {
-      await setSupplierStatus(selected.supplier_account_id, status);
-      toast.success(status === "verified" ? "Supplier verified." : "Supplier rejected.");
+      await setSupplierProfileStatus(selected.supplier_account_id, "validated");
+      toast.success("Supplier validated.");
+      setSelected(null);
+      await loadRows();
+    } catch {
+      toast.error("Couldn't update this supplier. Try again.");
+    } finally {
+      setActing(false);
+    }
+  }
+
+  async function handleReject() {
+    if (!selected) return;
+    if (!rejectionReason.trim()) {
+      toast.error("Add a reason so the supplier knows what to fix.");
+      return;
+    }
+    setActing(true);
+    try {
+      await setSupplierProfileStatus(selected.supplier_account_id, "rejected", rejectionReason);
+      toast.success("Supplier rejected.");
       setSelected(null);
       await loadRows();
     } catch {
@@ -111,7 +149,7 @@ function AdminDashboardPage() {
         </p>
       </div>
 
-      <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="mb-5">
+      <Tabs value={tab} onValueChange={(v) => setTab(v as TabValue)} className="mb-5">
         <TabsList>
           {TABS.map((t) => (
             <TabsTrigger key={t.value} value={t.value} className="gap-1.5">
@@ -128,7 +166,7 @@ function AdminDashboardPage() {
         <div className="rounded-xl border border-dashed border-border bg-card py-16 text-center">
           <p className="text-sm font-medium text-foreground">No suppliers here</p>
           <p className="mt-1 text-sm text-muted-foreground">
-            {tab === "pending"
+            {tab === "pending_verification"
               ? "Nothing is waiting for review right now."
               : "Nothing matches this filter yet."}
           </p>
@@ -154,13 +192,13 @@ function AdminDashboardPage() {
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{row.email}</td>
                   <td className="px-4 py-3">
-                    <StatusBadge status={row.status} />
+                    <StatusBadge status={rowStatus(row)} />
                   </td>
                   <td className="px-4 py-3 text-right">
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setSelected(row)}
+                      onClick={() => openRow(row)}
                       disabled={!row.profile}
                     >
                       Review
@@ -225,34 +263,78 @@ function AdminDashboardPage() {
                     </div>
                   </div>
                 )}
+
+                {selected.profile.status === "rejected" && selected.profile.rejection_reason && (
+                  <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-3">
+                    <p className="text-xs font-medium uppercase tracking-wide text-destructive">
+                      Previous rejection reason
+                    </p>
+                    <p className="mt-1 text-sm text-foreground">
+                      {selected.profile.rejection_reason}
+                    </p>
+                  </div>
+                )}
+
+                {rejecting && (
+                  <div className="space-y-1.5">
+                    <Label htmlFor="rejection_reason">Reason for rejection</Label>
+                    <Textarea
+                      id="rejection_reason"
+                      value={rejectionReason}
+                      onChange={(e) => setRejectionReason(e.target.value)}
+                      placeholder="Let the supplier know what to fix, e.g. missing product photos or an incomplete description."
+                      className="min-h-[80px]"
+                      autoFocus
+                    />
+                  </div>
+                )}
               </div>
 
               <DialogFooter className="gap-2 sm:gap-2">
-                <Button
-                  variant="outline"
-                  onClick={() => void handleDecision("rejected")}
-                  disabled={acting}
-                  className="gap-1.5"
-                >
-                  {acting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <X className="h-4 w-4" />
-                  )}
-                  Reject
-                </Button>
-                <Button
-                  onClick={() => void handleDecision("verified")}
-                  disabled={acting}
-                  className="gap-1.5"
-                >
-                  {acting ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Check className="h-4 w-4" />
-                  )}
-                  Verify
-                </Button>
+                {rejecting ? (
+                  <>
+                    <Button variant="ghost" onClick={() => setRejecting(false)} disabled={acting}>
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => void handleReject()}
+                      disabled={acting}
+                      className="gap-1.5"
+                    >
+                      {acting ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <X className="h-4 w-4" />
+                      )}
+                      Confirm Reject
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="outline"
+                      onClick={() => setRejecting(true)}
+                      disabled={acting}
+                      className="gap-1.5"
+                    >
+                      <X className="h-4 w-4" />
+                      Reject
+                    </Button>
+                    <Button
+                      onClick={() => void handleApprove()}
+                      disabled={acting}
+                      className="gap-1.5"
+                    >
+                      {acting ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Check className="h-4 w-4" />
+                      )}
+                      Validate
+                    </Button>
+                  </>
+                )}
               </DialogFooter>
             </>
           )}
@@ -262,16 +344,23 @@ function AdminDashboardPage() {
   );
 }
 
-function StatusBadge({ status }: { status: SupplierStatus }) {
-  if (status === "verified") {
+function StatusBadge({ status }: { status: SupplierProfileStatus }) {
+  if (status === "validated") {
     return (
       <Badge className="border-transparent bg-emerald-500/15 text-emerald-700 hover:bg-emerald-500/15">
-        Verified
+        Validated
       </Badge>
     );
   }
   if (status === "rejected") {
     return <Badge variant="destructive">Rejected</Badge>;
   }
-  return <Badge variant="secondary">Pending</Badge>;
+  if (status === "pending_verification") {
+    return (
+      <Badge className="border-transparent bg-brand/10 text-brand hover:bg-brand/10">
+        Pending Review
+      </Badge>
+    );
+  }
+  return <Badge variant="secondary">Draft</Badge>;
 }

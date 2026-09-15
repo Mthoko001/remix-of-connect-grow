@@ -116,11 +116,16 @@ export async function saveProfileDraft(draft: SupplierProfileDraft): Promise<Sup
 }
 
 /** Moves the supplier's profile from 'draft' into the admin review queue. */
+/** Moves the supplier's profile into the admin review queue (first submission or resubmission after rejection). */
 export async function submitProfileForReview(): Promise<void> {
   const supplierAccountId = await getCurrentUserId();
   const { error } = await supabase
     .from("tb_supplier_profile")
-    .update({ status: "pending_verification", date_updated: new Date().toISOString() })
+    .update({
+      status: "pending_verification",
+      rejection_reason: null,
+      date_updated: new Date().toISOString(),
+    })
     .eq("supplier_account_id", supplierAccountId);
   if (error) throw error;
 }

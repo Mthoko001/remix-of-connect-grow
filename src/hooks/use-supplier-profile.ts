@@ -92,6 +92,7 @@ export function useSupplierProfile() {
       await saveNow();
       await submitProfileForReview();
       setStatus("pending_verification");
+      setRejectionReason(null);
       setLastSavedAt(new Date());
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not submit your profile.");

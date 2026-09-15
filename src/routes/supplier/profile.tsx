@@ -224,7 +224,7 @@ function SupplierProfilePage() {
           </Panel>
 
           <div className="flex flex-wrap items-center justify-end gap-3">
-            {status === "draft" && (
+            {(status === "draft" || status === "rejected") && (
               <Button
                 type="button"
                 variant="outline"
@@ -242,7 +242,11 @@ function SupplierProfilePage() {
                 ) : (
                   <Send className="h-4 w-4" />
                 )}
-                {submitting ? "Submitting…" : "Submit for Review"}
+                {submitting
+                  ? "Submitting…"
+                  : status === "rejected"
+                    ? "Resubmit for Review"
+                    : "Submit for Review"}
               </Button>
             )}
             <Button

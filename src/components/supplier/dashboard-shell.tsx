@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { Logo } from "@/components/landing/logo";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { supabase } from "@/integrations/supabase/client";
 
 export const NAV_ITEMS = [
@@ -59,15 +60,16 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   );
 
   const logout = (
-    <div className="border-t border-border/60 p-3">
+    <div className="flex items-center gap-2 border-t border-border/60 p-3">
       <button
         type="button"
         onClick={handleLogout}
-        className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+        className="flex flex-1 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
       >
         <LogOut className="h-4 w-4" />
         Log out
       </button>
+      <ThemeToggle />
     </div>
   );
 
@@ -89,14 +91,17 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         <Link to="/" aria-label="LeadLink home">
           <Logo />
         </Link>
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Open menu"
-          className="grid h-10 w-10 place-items-center rounded-lg border border-border text-foreground"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+            className="grid h-10 w-10 place-items-center rounded-lg border border-border text-foreground"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+        </div>
       </header>
 
       {open && (
