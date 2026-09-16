@@ -20,6 +20,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   fetchSupplierReviewRows,
+  notifySupplierOfDecision,
   productImagePaths,
   setSupplierProfileStatus,
   type SupplierReviewRow,
@@ -104,6 +105,14 @@ function AdminDashboardPage() {
       toast.success("Supplier validated.");
       setSelected(null);
       await loadRows();
+      const { sent } = await notifySupplierOfDecision({
+        email: selected.email,
+        businessName: selected.profile?.business_name || selected.email,
+        status: "validated",
+      });
+      if (!sent) {
+        toast.warning("Supplier validated, but the notification email couldn't be sent.");
+      }
     } catch {
       toast.error("Couldn't update this supplier. Try again.");
     } finally {
@@ -123,6 +132,15 @@ function AdminDashboardPage() {
       toast.success("Supplier rejected.");
       setSelected(null);
       await loadRows();
+      const { sent } = await notifySupplierOfDecision({
+        email: selected.email,
+        businessName: selected.profile?.business_name || selected.email,
+        status: "rejected",
+        rejectionReason,
+      });
+      if (!sent) {
+        toast.warning("Supplier rejected, but the notification email couldn't be sent.");
+      }
     } catch {
       toast.error("Couldn't update this supplier. Try again.");
     } finally {

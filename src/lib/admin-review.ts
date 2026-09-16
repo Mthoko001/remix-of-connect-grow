@@ -90,3 +90,33 @@ export function productImagePaths(value: Json): string[] {
   if (!Array.isArray(value)) return [];
   return value.filter((v): v is string => typeof v === "string");
 }
+
+/**
+ * Emails the supplier that their profile was verified or rejected. Best-
+ * effort: the caller should not block the approve/reject action on this
+ * succeeding — it fails gracefully (e.g. RESEND_API_KEY not configured
+ * yet) without undoing the status change.
+ */
+export async function notifySupplierOfDecision(input: {
+  email: string;
+  businessName: string;
+  status: Extract<SupplierProfileStatus, "validated" | "rejected">;
+  rejectionReason?: string;
+}): Promise<{ sent: boolean }> {
+  try {
+    const { error } = await supabase.functions.invoke("send-supplier-status-email", {
+      body: {
+        email: input.email,
+        businessName: input.businessName,
+        status: input.status,
+        rejectionReason: input.rejectionReason,
+        siteUrl: window.location.origin,
+      },
+    });
+    if (error) throw error;
+    return { sent: true };
+  } catch (err) {
+    console.error("Could not send supplier notification email:", err);
+    return { sent: false };
+  }
+}
