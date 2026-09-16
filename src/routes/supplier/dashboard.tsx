@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { AlertTriangle, ArrowRight, CheckCircle2, Clock } from "lucide-react";
 import { useSupplierSession } from "@/hooks/use-supplier-session";
 import {
@@ -83,7 +83,14 @@ function SupplierDashboardPage() {
               Your business profile is verified
             </p>
             <p className="mt-1 text-sm text-muted-foreground">
-              You're all set — head to Subscription to activate your plan.
+              You're all set — head to{" "}
+              <Link
+                to="/supplier/subscription"
+                className="font-semibold text-emerald-700 underline underline-offset-2 hover:text-emerald-800"
+              >
+                Subscription
+              </Link>{" "}
+              to activate your plan.
             </p>
           </div>
         </div>
