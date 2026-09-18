@@ -22,6 +22,7 @@ import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminSuppliersRouteImport } from './routes/admin/suppliers'
 import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
 import { Route as SupplierAnalyticsRouteImport } from './routes/supplier/analytics'
+import { Route as SupplierCheckoutRouteImport } from './routes/supplier/checkout'
 import { Route as SupplierDashboardRouteImport } from './routes/supplier/dashboard'
 import { Route as SupplierEnquiriesRouteImport } from './routes/supplier/enquiries'
 import { Route as SupplierOnboardingRouteImport } from './routes/supplier/onboarding'
@@ -100,6 +101,11 @@ const SupplierAnalyticsRoute = SupplierAnalyticsRouteImport.update({
   path: '/supplier/analytics',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupplierCheckoutRoute = SupplierCheckoutRouteImport.update({
+  id: '/supplier/checkout',
+  path: '/supplier/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupplierDashboardRoute = SupplierDashboardRouteImport.update({
   id: '/supplier/dashboard',
   path: '/supplier/dashboard',
@@ -170,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/admin/verification': typeof AdminVerificationRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
+  '/supplier/checkout': typeof SupplierCheckoutRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/onboarding': typeof SupplierOnboardingRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/admin/verification': typeof AdminVerificationRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
+  '/supplier/checkout': typeof SupplierCheckoutRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/onboarding': typeof SupplierOnboardingRoute
@@ -223,6 +231,7 @@ export interface FileRoutesById {
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/admin/verification': typeof AdminVerificationRoute
   '/supplier/analytics': typeof SupplierAnalyticsRoute
+  '/supplier/checkout': typeof SupplierCheckoutRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/onboarding': typeof SupplierOnboardingRoute
@@ -251,6 +260,7 @@ export interface FileRouteTypes {
     | '/admin/suppliers'
     | '/admin/verification'
     | '/supplier/analytics'
+    | '/supplier/checkout'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
     | '/supplier/onboarding'
@@ -277,6 +287,7 @@ export interface FileRouteTypes {
     | '/admin/suppliers'
     | '/admin/verification'
     | '/supplier/analytics'
+    | '/supplier/checkout'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
     | '/supplier/onboarding'
@@ -303,6 +314,7 @@ export interface FileRouteTypes {
     | '/admin/suppliers'
     | '/admin/verification'
     | '/supplier/analytics'
+    | '/supplier/checkout'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
     | '/supplier/onboarding'
@@ -330,6 +342,7 @@ export interface RootRouteChildren {
   AdminSuppliersRoute: typeof AdminSuppliersRoute
   AdminVerificationRoute: typeof AdminVerificationRoute
   SupplierAnalyticsRoute: typeof SupplierAnalyticsRoute
+  SupplierCheckoutRoute: typeof SupplierCheckoutRoute
   SupplierDashboardRoute: typeof SupplierDashboardRoute
   SupplierEnquiriesRoute: typeof SupplierEnquiriesRoute
   SupplierOnboardingRoute: typeof SupplierOnboardingRoute
@@ -436,6 +449,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplierAnalyticsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/supplier/checkout': {
+      id: '/supplier/checkout'
+      path: '/supplier/checkout'
+      fullPath: '/supplier/checkout'
+      preLoaderRoute: typeof SupplierCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/supplier/dashboard': {
       id: '/supplier/dashboard'
       path: '/supplier/dashboard'
@@ -531,6 +551,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSuppliersRoute: AdminSuppliersRoute,
   AdminVerificationRoute: AdminVerificationRoute,
   SupplierAnalyticsRoute: SupplierAnalyticsRoute,
+  SupplierCheckoutRoute: SupplierCheckoutRoute,
   SupplierDashboardRoute: SupplierDashboardRoute,
   SupplierEnquiriesRoute: SupplierEnquiriesRoute,
   SupplierOnboardingRoute: SupplierOnboardingRoute,

@@ -169,6 +169,44 @@ export type Database = {
           },
         ]
       }
+      tb_subscription: {
+        Row: {
+          amount: number
+          created_at: string
+          is_test: boolean
+          paid_at: string | null
+          subscription_id: number
+          subscription_status: string
+          supplier_account_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          is_test?: boolean
+          paid_at?: string | null
+          subscription_id?: never
+          subscription_status?: string
+          supplier_account_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          is_test?: boolean
+          paid_at?: string | null
+          subscription_id?: never
+          subscription_status?: string
+          supplier_account_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tb_subscription_supplier_account_id_fkey"
+            columns: ["supplier_account_id"]
+            isOneToOne: false
+            referencedRelation: "tb_supplier_account"
+            referencedColumns: ["supplier_account_id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

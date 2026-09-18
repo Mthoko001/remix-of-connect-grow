@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
-import { toast } from "sonner";
-import { CreditCard } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { CheckCircle2, CreditCard, ShoppingCart, Trash2 } from "lucide-react";
 import { useSupplierSession } from "@/hooks/use-supplier-session";
 import { DashboardShell, PageHeader, Panel } from "@/components/supplier/dashboard-shell";
 import { Button } from "@/components/ui/button";
 import { fetchMyProfile, type SupplierProfileStatus } from "@/lib/supplier-profile";
+import {
+  fetchMySubscription,
+  testPlanAmountDisplay,
+  type SubscriptionRow,
+} from "@/lib/subscription";
 
 export const Route = createFileRoute("/supplier/subscription")({
   head: () => ({
@@ -15,17 +19,25 @@ export const Route = createFileRoute("/supplier/subscription")({
 });
 
 function SupplierSubscriptionPage() {
+  const navigate = useNavigate();
   const { checking } = useSupplierSession();
   const [status, setStatus] = useState<SupplierProfileStatus | null>(null);
+  const [subscription, setSubscription] = useState<SubscriptionRow | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [inCart, setInCart] = useState(false);
 
   useEffect(() => {
     if (checking) return;
-    fetchMyProfile()
-      .then((row) => setStatus((row?.status as SupplierProfileStatus) ?? "draft"))
-      .catch(() => setStatus("draft"));
+    Promise.all([fetchMyProfile(), fetchMySubscription()])
+      .then(([profile, sub]) => {
+        setStatus((profile?.status as SupplierProfileStatus) ?? "draft");
+        setSubscription(sub);
+      })
+      .catch(() => setStatus("draft"))
+      .finally(() => setLoading(false));
   }, [checking]);
 
-  if (checking || status === null) {
+  if (checking || loading || status === null) {
     return (
       <div className="grid min-h-screen place-items-center bg-muted/30">
         <p className="text-sm text-muted-foreground">Loading…</p>
@@ -34,15 +46,7 @@ function SupplierSubscriptionPage() {
   }
 
   const verified = status === "validated";
-
-  // No real payment processing yet — this just unlocks the button once an
-  // admin has verified the profile, matching the "coming soon" pattern used
-  // elsewhere in the app until billing is wired up.
-  function handlePayNow() {
-    toast("Payment is coming soon.", {
-      description: "We'll notify you as soon as it's ready.",
-    });
-  }
+  const isPaid = subscription?.subscription_status === "paid";
 
   return (
     <DashboardShell>
@@ -61,13 +65,22 @@ function SupplierSubscriptionPage() {
               </p>
             </div>
           </div>
-          <Button
-            onClick={verified ? handlePayNow : undefined}
-            disabled={!verified}
-            className="w-full gap-2 sm:w-auto"
-          >
-            Pay Now
-          </Button>
+
+          {isPaid ? (
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-4 py-2.5 text-sm font-semibold text-emerald-700">
+              <CheckCircle2 className="h-4 w-4" />
+              Active
+            </span>
+          ) : (
+            <Button
+              onClick={() => setInCart(true)}
+              disabled={!verified || inCart}
+              className="w-full gap-2 sm:w-auto"
+            >
+              <ShoppingCart className="h-4 w-4" />
+              {inCart ? "Added to Cart" : "Add to Cart"}
+            </Button>
+          )}
         </div>
 
         {(status === "draft" || status === "pending_verification") && (
@@ -84,12 +97,60 @@ function SupplierSubscriptionPage() {
             back — you'll be able to subscribe once it's verified.
           </p>
         )}
-        {verified && (
+        {verified && !isPaid && !inCart && (
           <p className="mt-4 text-sm text-emerald-700">
             Your profile is verified — you're all set to subscribe.
           </p>
         )}
+        {isPaid && subscription?.paid_at && (
+          <p className="mt-4 text-sm text-muted-foreground">
+            Paid{" "}
+            {new Date(subscription.paid_at).toLocaleDateString([], {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            })}
+            {subscription.is_test && " — test-mode payment, no real money was charged"}.
+          </p>
+        )}
       </Panel>
+
+      {inCart && !isPaid && (
+        <Panel title="Your Cart" className="mt-6">
+          <div className="flex items-center justify-between border-b border-border pb-4">
+            <div>
+              <p className="text-sm font-semibold text-foreground">Annual Plan</p>
+              <p className="text-xs text-muted-foreground">1 × LeadLink Supplier Subscription</p>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-semibold text-foreground">
+                {testPlanAmountDisplay()}
+              </span>
+              <button
+                type="button"
+                onClick={() => setInCart(false)}
+                aria-label="Remove from cart"
+                className="text-muted-foreground hover:text-destructive"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+          <div className="flex items-center justify-between pt-4">
+            <p className="text-sm font-semibold text-foreground">Total</p>
+            <p className="text-lg font-bold text-foreground">{testPlanAmountDisplay()}</p>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            Test mode price, for testing the payment flow. The real Annual Plan is R1,200/year.
+          </p>
+          <Button
+            onClick={() => navigate({ to: "/supplier/checkout" })}
+            className="mt-4 w-full gap-2 sm:w-auto"
+          >
+            Proceed to Checkout
+          </Button>
+        </Panel>
+      )}
     </DashboardShell>
   );
 }
