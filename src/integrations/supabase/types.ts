@@ -32,6 +32,38 @@ export type Database = {
         }
         Relationships: []
       }
+      tb_category: {
+        Row: {
+          category_id: number
+          created_at: string
+          name: string
+          parent_category_id: number | null
+          slug: string
+        }
+        Insert: {
+          category_id?: never
+          created_at?: string
+          name: string
+          parent_category_id?: number | null
+          slug: string
+        }
+        Update: {
+          category_id?: never
+          created_at?: string
+          name?: string
+          parent_category_id?: number | null
+          slug?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tb_category_parent_category_id_fkey"
+            columns: ["parent_category_id"]
+            isOneToOne: false
+            referencedRelation: "tb_category"
+            referencedColumns: ["category_id"]
+          },
+        ]
+      }
       tb_enquiry: {
         Row: {
           channel: string
@@ -109,6 +141,7 @@ export type Database = {
           business_description: string | null
           business_logo: string | null
           business_name: string
+          category_id: number | null
           cell_no: string | null
           date_created: string
           date_updated: string
@@ -125,6 +158,7 @@ export type Database = {
           business_description?: string | null
           business_logo?: string | null
           business_name?: string
+          category_id?: number | null
           cell_no?: string | null
           date_created?: string
           date_updated?: string
@@ -141,6 +175,7 @@ export type Database = {
           business_description?: string | null
           business_logo?: string | null
           business_name?: string
+          category_id?: number | null
           cell_no?: string | null
           date_created?: string
           date_updated?: string
@@ -153,6 +188,13 @@ export type Database = {
           updated_by?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "tb_supplier_profile_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "tb_category"
+            referencedColumns: ["category_id"]
+          },
           {
             foreignKeyName: "tb_supplier_profile_supplier_account_id_fkey"
             columns: ["supplier_account_id"]
