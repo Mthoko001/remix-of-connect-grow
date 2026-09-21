@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
 import {
   Flame,
   Leaf,
@@ -22,6 +23,9 @@ import {
 } from "@/lib/mock-suppliers";
 
 export const Route = createFileRoute("/suppliers/")({
+  validateSearch: z.object({
+    q: z.string().optional(),
+  }),
   head: () => ({
     meta: [
       { title: "Browse Suppliers — LeadLink" },
@@ -44,7 +48,11 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
 };
 
 function SuppliersListingPage() {
-  const [query, setQuery] = useState("");
+  const { q } = Route.useSearch();
+  const [query, setQuery] = useState(q ?? "");
+  useEffect(() => {
+    if (q !== undefined) setQuery(q);
+  }, [q]);
   const featured = useMemo(() => getFeaturedSuppliers(), []);
   const categoryRows = useMemo(() => groupSuppliersByCategory(), []);
 

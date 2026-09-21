@@ -1,22 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Logo } from "./logo";
+import { CategoriesDesktopMenu, CategoriesMobileMenu } from "./categories-menu";
+import { buildCategoryTree, fetchAllCategories, type CategoryNode } from "@/lib/categories";
 
 // Real routes use TanStack's type-safe <Link> (SPA navigation, no full
-// reload); Categories / Pricing point at placeholder paths whose route
-// files are not built yet, so they stay plain <a href> until they exist.
+// reload); Pricing points at a placeholder path whose route file is not
+// built yet, so it stays plain <a href> until it exists. Categories is
+// handled separately (see CategoriesDesktopMenu / CategoriesMobileMenu)
+// since it's a dropdown, not a plain link.
 type NavLink = { label: string; to: string } | { label: string; href: string };
 
 const NAV_LINKS: NavLink[] = [
   { label: "Suppliers", to: "/suppliers" },
   { label: "How It Works", href: "#how-it-works" },
-  { label: "Categories", href: "/categories" },
   { label: "Pricing", href: "/pricing" },
   { label: "About Us", href: "#about" },
 ];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const [categoryTree, setCategoryTree] = useState<CategoryNode[]>([]);
+
+  useEffect(() => {
+    fetchAllCategories()
+      .then((flat) => setCategoryTree(buildCategoryTree(flat)))
+      .catch(() => setCategoryTree([]));
+  }, []);
+
+  function renderLink(l: NavLink, onClick?: () => void, className?: string) {
+    return "to" in l ? (
+      <Link key={l.label} to={l.to} onClick={onClick} className={className}>
+        {l.label}
+      </Link>
+    ) : (
+      <a key={l.label} href={l.href} onClick={onClick} className={className}>
+        {l.label}
+      </a>
+    );
+  }
+
+  const desktopLinkClass =
+    "text-sm font-medium text-muted-foreground transition-colors hover:text-foreground";
+  const mobileLinkClass =
+    "rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-md">
@@ -26,25 +53,9 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {NAV_LINKS.map((l) =>
-            "to" in l ? (
-              <Link
-                key={l.label}
-                to={l.to}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {l.label}
-              </Link>
-            ) : (
-              <a
-                key={l.label}
-                href={l.href}
-                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-              >
-                {l.label}
-              </a>
-            ),
-          )}
+          {NAV_LINKS.slice(0, 2).map((l) => renderLink(l, undefined, desktopLinkClass))}
+          <CategoriesDesktopMenu categories={categoryTree} />
+          {NAV_LINKS.slice(2).map((l) => renderLink(l, undefined, desktopLinkClass))}
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
@@ -104,27 +115,9 @@ export function Navbar() {
       {open && (
         <div className="border-t border-border bg-background md:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 sm:px-6">
-            {NAV_LINKS.map((l) =>
-              "to" in l ? (
-                <Link
-                  key={l.label}
-                  to={l.to}
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
-                >
-                  {l.label}
-                </Link>
-              ) : (
-                <a
-                  key={l.label}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
-                >
-                  {l.label}
-                </a>
-              ),
-            )}
+            {NAV_LINKS.slice(0, 2).map((l) => renderLink(l, () => setOpen(false), mobileLinkClass))}
+            <CategoriesMobileMenu categories={categoryTree} onNavigate={() => setOpen(false)} />
+            {NAV_LINKS.slice(2).map((l) => renderLink(l, () => setOpen(false), mobileLinkClass))}
             <div className="mt-2 flex flex-col gap-2 border-t border-border pt-3">
               <a
                 href="/login"
