@@ -35,3 +35,26 @@ export async function signUpSupplierWithGoogle(): Promise<void> {
   });
   if (error) throw error;
 }
+
+/**
+ * Sends a password reset email. Always resolves without revealing whether
+ * the email actually belongs to an account — Supabase itself behaves this
+ * way (no error for an unknown email), which is the correct, safe default.
+ */
+export async function requestPasswordReset(email: string): Promise<void> {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/reset-password`,
+  });
+  if (error) throw error;
+}
+
+/**
+ * Sets a new password. Only works within the short-lived recovery session
+ * created when the user follows the link from requestPasswordReset's email
+ * — the reset-password page is responsible for confirming that session
+ * exists before calling this.
+ */
+export async function updatePassword(newPassword: string): Promise<void> {
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) throw error;
+}
