@@ -4,7 +4,7 @@
  * is captured in the message text instead, since the receiving number
  * alone can't tell you which listing the enquiry was about.
  */
-export const LEADLINK_WHATSAPP_NUMBER = "27818680007"; // 081 868 0007, intl format, no "+"
+export const LEADLINK_WHATSAPP_NUMBER = "27635657574"; // 063 565 7574, intl format, no "+"
 
 export type WhatsAppEnquiryDetails = {
   supplierName: string;
