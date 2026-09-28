@@ -1,4 +1,4 @@
-# LeadLink — Find Trusted Local Suppliers
+# GrowMeOnline — Find Trusted Local Suppliers
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
@@ -8,7 +8,7 @@
 
 ## Project Overview
 
-LeadLink is a business marketplace connecting customers with local suppliers and service providers. Customers can discover supplier listings and send enquiries through WhatsApp or in-app messaging. Suppliers can manage their business presence, respond to enquiries, and access subscription features. Administrators review supplier profiles and manage marketplace categories.
+GrowMeOnline is a business marketplace connecting customers with local suppliers and service providers. Customers can discover supplier listings and send enquiries through WhatsApp or in-app messaging. Suppliers can manage their business presence, respond to enquiries, and access subscription features. Administrators review supplier profiles and manage marketplace categories.
 
 The application is built with React, TypeScript, TanStack Start, and Supabase. Its interface includes public marketplace pages, supplier tools, and a separate administration area.
 
@@ -155,4 +155,4 @@ Configure and secure the Supabase project independently of the frontend. In part
 
 ---
 
-LeadLink helps customers connect with trusted local businesses and gives suppliers the tools to build their presence and manage new enquiries.
+GrowMeOnline helps customers connect with trusted local businesses and gives suppliers the tools to build their presence and manage new enquiries.
