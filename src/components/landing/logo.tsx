@@ -18,7 +18,7 @@ export function Logo({ className = "" }: { className?: string }) {
         </svg>
       </span>
       <span className="text-lg font-extrabold tracking-tight text-foreground">
-        Lead<span className="text-brand">Link</span>
+        GrowMe<span className="text-brand">Online</span>
       </span>
     </span>
   );
