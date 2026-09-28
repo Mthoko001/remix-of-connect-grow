@@ -87,7 +87,7 @@ export function Hero() {
         <div className="max-w-xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-verified" />
-            Trusted local suppliers, verified by LeadLink
+            Trusted local suppliers, verified by GrowMeOnline
           </span>
 
           <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
@@ -95,7 +95,7 @@ export function Hero() {
           </h1>
 
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            LeadLink connects customers directly with verified businesses — no
+            GrowMeOnline connects customers directly with verified businesses — no
             middlemen, no guesswork. Compare trusted suppliers and reach out
             instantly via WhatsApp or in-app chat.
           </p>
