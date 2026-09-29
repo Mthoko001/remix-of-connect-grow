@@ -4,11 +4,13 @@ import { Clock, MapPin, MessageCircle, ShieldCheck, Star } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { WhatsAppEnquiryDialog } from "@/components/customer/whatsapp-enquiry-dialog";
+import { fetchPublicSupplierBySlug } from "@/lib/public-suppliers.functions";
 import { getSupplierBySlug, mockProductImages, MOCK_SUPPLIERS } from "@/lib/mock-suppliers";
 
 export const Route = createFileRoute("/suppliers/$slug")({
-  loader: ({ params }) => {
-    const supplier = getSupplierBySlug(params.slug);
+  loader: async ({ params }) => {
+    const supplier =
+      getSupplierBySlug(params.slug) ?? (await fetchPublicSupplierBySlug({ data: params.slug }));
     if (!supplier) throw notFound();
     return supplier;
   },
@@ -40,7 +42,8 @@ function StarRating({ rating }: { rating: number }) {
 function SupplierPublicProfilePage() {
   const supplier = Route.useLoaderData();
   const [whatsappOpen, setWhatsappOpen] = useState(false);
-  const productImages = mockProductImages(supplier.slug);
+  const productImages =
+    supplier.source === "live" ? (supplier.productImages ?? []) : mockProductImages(supplier.slug);
 
   return (
     <div className="min-h-screen bg-background">
@@ -51,9 +54,17 @@ function SupplierPublicProfilePage() {
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-start gap-4">
             <span
-              className={`grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br ${supplier.gradient} text-xl font-bold text-white`}
+              className={`grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br ${supplier.gradient} text-xl font-bold text-white`}
             >
-              {supplier.initials}
+              {supplier.logoUrl ? (
+                <img
+                  src={supplier.logoUrl}
+                  alt={`${supplier.name} logo`}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                supplier.initials
+              )}
             </span>
             <div>
               <div className="flex flex-wrap items-center gap-2">
@@ -69,11 +80,15 @@ function SupplierPublicProfilePage() {
               </div>
               <p className="mt-1 text-sm text-muted-foreground">{supplier.category}</p>
               <div className="mt-2 flex flex-wrap items-center gap-3 text-sm">
-                <span className="flex items-center gap-1.5">
-                  <StarRating rating={supplier.rating} />
-                  <span className="font-semibold text-foreground">{supplier.rating}</span>
-                  <span className="text-muted-foreground">({supplier.reviews} reviews)</span>
-                </span>
+                {supplier.reviews > 0 ? (
+                  <span className="flex items-center gap-1.5">
+                    <StarRating rating={supplier.rating} />
+                    <span className="font-semibold text-foreground">{supplier.rating}</span>
+                    <span className="text-muted-foreground">({supplier.reviews} reviews)</span>
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">New on LeadLink</span>
+                )}
                 <span className="flex items-center gap-1 text-muted-foreground">
                   <MapPin className="h-4 w-4" />
                   {supplier.location}
@@ -126,20 +141,22 @@ function SupplierPublicProfilePage() {
         </section>
 
         {/* Product gallery */}
-        <section className="mt-10">
-          <h2 className="text-lg font-bold text-foreground">Photos</h2>
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {productImages.map((src) => (
-              <img
-                key={src}
-                src={src}
-                alt={`${supplier.name} work sample`}
-                loading="lazy"
-                className="aspect-[4/3] w-full rounded-xl border border-border object-cover"
-              />
-            ))}
-          </div>
-        </section>
+        {productImages.length > 0 && (
+          <section className="mt-10">
+            <h2 className="text-lg font-bold text-foreground">Photos</h2>
+            <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {productImages.map((src) => (
+                <img
+                  key={src}
+                  src={src}
+                  alt={`${supplier.name} work sample`}
+                  loading="lazy"
+                  className="aspect-[4/3] w-full rounded-xl border border-border object-cover"
+                />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Other suppliers */}
         <section className="mt-14 border-t border-border pt-8">

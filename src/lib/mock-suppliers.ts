@@ -8,7 +8,7 @@
  * schema will look like (slug instead of category_id, but same idea).
  */
 
-export type MockSupplier = {
+export type SupplierListing = {
   slug: string;
   /**
    * A real tb_supplier_account row created for this demo supplier, so
@@ -34,7 +34,12 @@ export type MockSupplier = {
   businessHours: string;
   whatsappNumber: string; // digits only, international format, no "+"
   gradient: string; // tailwind gradient classes for the logo avatar
+  source?: "live";
+  logoUrl?: string | null;
+  productImages?: string[];
 };
+
+export type MockSupplier = SupplierListing;
 
 export const MOCK_SUPPLIERS: MockSupplier[] = [
   {
@@ -221,10 +226,12 @@ export function getSupplierBySlug(slug: string): MockSupplier | undefined {
  * verified suppliers are omitted so the browse page never shows an empty
  * row. Order is stable (first-seen order in MOCK_SUPPLIERS).
  */
-export function groupSuppliersByCategory(): { category: string; suppliers: MockSupplier[] }[] {
-  const verified = MOCK_SUPPLIERS.filter((s) => s.verified);
+export function groupSuppliersByCategory(
+  suppliers: SupplierListing[] = MOCK_SUPPLIERS,
+): { category: string; suppliers: SupplierListing[] }[] {
+  const verified = suppliers.filter((s) => s.verified);
   const order: string[] = [];
-  const byCategory = new Map<string, MockSupplier[]>();
+  const byCategory = new Map<string, SupplierListing[]>();
   for (const s of verified) {
     if (!byCategory.has(s.category)) {
       byCategory.set(s.category, []);
@@ -236,8 +243,11 @@ export function groupSuppliersByCategory(): { category: string; suppliers: MockS
 }
 
 /** Highest-rated verified suppliers, for a "Featured" row. */
-export function getFeaturedSuppliers(count = 6): MockSupplier[] {
-  return [...MOCK_SUPPLIERS]
+export function getFeaturedSuppliers(
+  count = 6,
+  suppliers: SupplierListing[] = MOCK_SUPPLIERS,
+): SupplierListing[] {
+  return [...suppliers]
     .filter((s) => s.verified)
     .sort((a, b) => b.rating - a.rating)
     .slice(0, count);

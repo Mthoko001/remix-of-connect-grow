@@ -16,6 +16,7 @@ import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { SupplierRow } from "@/components/customer/supplier-row";
 import { SupplierCard } from "@/components/customer/supplier-card";
+import { fetchPublicSuppliers } from "@/lib/public-suppliers.functions";
 import {
   getFeaturedSuppliers,
   groupSuppliersByCategory,
@@ -23,6 +24,7 @@ import {
 } from "@/lib/mock-suppliers";
 
 export const Route = createFileRoute("/suppliers/")({
+  loader: () => fetchPublicSuppliers(),
   validateSearch: z.object({
     q: z.string().optional(),
   }),
@@ -48,25 +50,27 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
 };
 
 function SuppliersListingPage() {
+  const liveSuppliers = Route.useLoaderData();
   const { q } = Route.useSearch();
   const [query, setQuery] = useState(q ?? "");
   useEffect(() => {
     if (q !== undefined) setQuery(q);
   }, [q]);
-  const featured = useMemo(() => getFeaturedSuppliers(), []);
-  const categoryRows = useMemo(() => groupSuppliersByCategory(), []);
+  const suppliers = useMemo(() => [...MOCK_SUPPLIERS, ...liveSuppliers], [liveSuppliers]);
+  const featured = useMemo(() => getFeaturedSuppliers(6, suppliers), [suppliers]);
+  const categoryRows = useMemo(() => groupSuppliersByCategory(suppliers), [suppliers]);
 
   const trimmedQuery = query.trim().toLowerCase();
   const searchResults = useMemo(() => {
     if (!trimmedQuery) return [];
-    return MOCK_SUPPLIERS.filter(
+    return suppliers.filter(
       (s) =>
         s.verified &&
         (s.name.toLowerCase().includes(trimmedQuery) ||
           s.category.toLowerCase().includes(trimmedQuery) ||
           s.location.toLowerCase().includes(trimmedQuery)),
     );
-  }, [trimmedQuery]);
+  }, [suppliers, trimmedQuery]);
 
   return (
     <div className="min-h-screen bg-background">

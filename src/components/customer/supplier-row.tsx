@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { SupplierCard } from "@/components/customer/supplier-card";
-import type { MockSupplier } from "@/lib/mock-suppliers";
+import type { SupplierListing } from "@/lib/mock-suppliers";
 
 export function SupplierRow({
   title,
@@ -9,7 +9,7 @@ export function SupplierRow({
 }: {
   title: string;
   icon?: LucideIcon | undefined;
-  suppliers: MockSupplier[];
+  suppliers: SupplierListing[];
 }) {
   if (suppliers.length === 0) return null;
 
