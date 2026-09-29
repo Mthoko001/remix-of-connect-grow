@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Check, Loader2, X } from "lucide-react";
+import { Check, Loader2, Save, X } from "lucide-react";
 import { useAdminSession } from "@/hooks/use-admin-session";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { AdminMediaView } from "@/components/admin/admin-media-view";
@@ -23,6 +23,7 @@ import {
   notifySupplierOfDecision,
   productImagePaths,
   setSupplierProfileStatus,
+  updateSupplierBusinessDescription,
   type SupplierReviewRow,
   type SupplierProfileStatus,
 } from "@/lib/admin-review";
@@ -58,6 +59,7 @@ function AdminDashboardPage() {
   const [acting, setActing] = useState(false);
   const [rejecting, setRejecting] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
+  const [businessDescription, setBusinessDescription] = useState("");
 
   async function loadRows() {
     setLoading(true);
@@ -95,6 +97,35 @@ function AdminDashboardPage() {
     setSelected(row);
     setRejecting(false);
     setRejectionReason("");
+    setBusinessDescription(row.profile?.business_description ?? "");
+  }
+
+  async function handleSaveDescription() {
+    if (!selected?.profile) return;
+    setActing(true);
+    try {
+      const description = businessDescription.trim();
+      await updateSupplierBusinessDescription(selected.supplier_account_id, description);
+      const updatedRow: SupplierReviewRow = {
+        ...selected,
+        profile: { ...selected.profile, business_description: description || null },
+      };
+      setRows((current) =>
+        current.map((row) =>
+          row.supplier_account_id === selected.supplier_account_id ? updatedRow : row,
+        ),
+      );
+      setSelected(updatedRow);
+      toast.success("Business description saved.");
+    } catch (err) {
+      toast.error(
+        err instanceof Error
+          ? `Couldn't save description: ${err.message}`
+          : "Couldn't save description.",
+      );
+    } finally {
+      setActing(false);
+    }
   }
 
   async function handleApprove() {
@@ -246,12 +277,46 @@ function AdminDashboardPage() {
                 )}
 
                 <div className="space-y-1">
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                    Description
-                  </p>
-                  <p className="text-sm text-foreground">
-                    {selected.profile.business_description || "—"}
-                  </p>
+                  <Label
+                    htmlFor="business_description"
+                    className="text-xs font-medium uppercase tracking-wide text-muted-foreground"
+                  >
+                    Business Description
+                  </Label>
+                  <Textarea
+                    id="business_description"
+                    value={businessDescription}
+                    onChange={(e) => setBusinessDescription(e.target.value)}
+                    placeholder="Describe the supplier's services, experience, and what makes their business stand out."
+                    maxLength={1000}
+                    className="min-h-[120px]"
+                    disabled={acting}
+                  />
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs text-muted-foreground">
+                      This appears on the supplier's public listing.
+                    </p>
+                    <span className="shrink-0 text-xs text-muted-foreground">
+                      {businessDescription.length}/1000
+                    </span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => void handleSaveDescription()}
+                    disabled={
+                      acting ||
+                      businessDescription === (selected.profile.business_description ?? "")
+                    }
+                    className="mt-2 gap-1.5"
+                  >
+                    {acting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Save className="h-4 w-4" />
+                    )}
+                    Save Description
+                  </Button>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">

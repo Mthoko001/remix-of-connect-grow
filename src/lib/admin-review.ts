@@ -85,6 +85,21 @@ export async function setSupplierProfileStatus(
   if (error) throw error;
 }
 
+/** Updates only the supplier's public-facing business description. */
+export async function updateSupplierBusinessDescription(
+  supplierAccountId: string,
+  description: string,
+): Promise<void> {
+  const { error } = await supabase
+    .from("tb_supplier_profile")
+    .update({
+      business_description: description.trim() || null,
+      date_updated: new Date().toISOString(),
+    })
+    .eq("supplier_account_id", supplierAccountId);
+  if (error) throw error;
+}
+
 /** Product image paths are stored as a jsonb array of strings. */
 export function productImagePaths(value: Json): string[] {
   if (!Array.isArray(value)) return [];
