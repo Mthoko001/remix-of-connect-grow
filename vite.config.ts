@@ -15,5 +15,17 @@ export default defineConfig({
   },
   vite: {
     plugins: process.platform === "win32" ? [] : [mcpPlugin()],
+    // Fallback for publish builds that lack injected env: these are public (publishable) values.
+    define: {
+      "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(
+        process.env.VITE_SUPABASE_URL || "https://vjhfmhjsgrkzeupoafcn.supabase.co",
+      ),
+      "import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY": JSON.stringify(
+        process.env.VITE_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_jedDgTKY5hwkAYV-_IqLFw_q8h7_kSo",
+      ),
+      "import.meta.env.VITE_SUPABASE_PROJECT_ID": JSON.stringify(
+        process.env.VITE_SUPABASE_PROJECT_ID || "vjhfmhjsgrkzeupoafcn",
+      ),
+    },
   },
 });
