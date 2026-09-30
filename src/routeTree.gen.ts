@@ -32,6 +32,8 @@ import { Route as SupplierSubscriptionRouteImport } from './routes/supplier/subs
 import { Route as SuppliersIndexRouteImport } from './routes/suppliers/index'
 import { Route as SuppliersSlugRouteImport } from './routes/suppliers/$slug'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -149,6 +151,16 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
+  id: '/lovable/email/auth/preview',
+  path: '/lovable/email/auth/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
+  id: '/lovable/email/auth/webhook',
+  path: '/lovable/email/auth/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -174,6 +186,8 @@ export interface FileRoutesByFullPath {
   '/suppliers/$slug': typeof SuppliersSlugRoute
   '/suppliers/': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -199,6 +213,8 @@ export interface FileRoutesByTo {
   '/suppliers/$slug': typeof SuppliersSlugRoute
   '/suppliers': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -225,6 +241,8 @@ export interface FileRoutesById {
   '/suppliers/$slug': typeof SuppliersSlugRoute
   '/suppliers/': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -252,6 +270,8 @@ export interface FileRouteTypes {
     | '/suppliers/$slug'
     | '/suppliers/'
     | '/.lovable/oauth/consent'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -277,6 +297,8 @@ export interface FileRouteTypes {
     | '/suppliers/$slug'
     | '/suppliers'
     | '/.lovable/oauth/consent'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
   id:
     | '__root__'
     | '/'
@@ -302,6 +324,8 @@ export interface FileRouteTypes {
     | '/suppliers/$slug'
     | '/suppliers/'
     | '/.lovable/oauth/consent'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -328,6 +352,8 @@ export interface RootRouteChildren {
   SuppliersSlugRoute: typeof SuppliersSlugRoute
   SuppliersIndexRoute: typeof SuppliersIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
+  LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
+  LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -493,6 +519,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lovable/email/auth/preview': {
+      id: '/lovable/email/auth/preview'
+      path: '/lovable/email/auth/preview'
+      fullPath: '/lovable/email/auth/preview'
+      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/auth/webhook': {
+      id: '/lovable/email/auth/webhook'
+      path: '/lovable/email/auth/webhook'
+      fullPath: '/lovable/email/auth/webhook'
+      preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -521,6 +561,8 @@ const rootRouteChildren: RootRouteChildren = {
   SuppliersSlugRoute: SuppliersSlugRoute,
   SuppliersIndexRoute: SuppliersIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
+  LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
+  LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
