@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Check, Loader2, Save, X } from "lucide-react";
+import { Check, Loader2, Save, Sparkles, X } from "lucide-react";
 import { useAdminSession } from "@/hooks/use-admin-session";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { AdminMediaView } from "@/components/admin/admin-media-view";
@@ -18,6 +18,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { supabase } from "@/integrations/supabase/client";
+import { suggestBusinessDescription } from "@/lib/admin-description-ai.functions";
 import {
   fetchSupplierReviewRows,
   notifySupplierOfDecision,
@@ -60,6 +62,8 @@ function AdminDashboardPage() {
   const [rejecting, setRejecting] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
   const [businessDescription, setBusinessDescription] = useState("");
+  const [suggestedDescription, setSuggestedDescription] = useState("");
+  const [suggestingDescription, setSuggestingDescription] = useState(false);
 
   async function loadRows() {
     setLoading(true);
@@ -98,6 +102,34 @@ function AdminDashboardPage() {
     setRejecting(false);
     setRejectionReason("");
     setBusinessDescription(row.profile?.business_description ?? "");
+    setSuggestedDescription("");
+  }
+
+  async function handleSuggestDescription() {
+    const description = businessDescription.trim();
+    if (!description) {
+      toast.error("Add a business description before asking Gemini to improve it.");
+      return;
+    }
+
+    setSuggestingDescription(true);
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      const accessToken = data.session?.access_token;
+      if (error || !accessToken) {
+        throw new Error("Your session has expired. Please sign in again.");
+      }
+      const suggestion = await suggestBusinessDescription({
+        data: { accessToken, description },
+      });
+      setSuggestedDescription(suggestion);
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Couldn't generate a description suggestion.",
+      );
+    } finally {
+      setSuggestingDescription(false);
+    }
   }
 
   async function handleSaveDescription() {
@@ -290,16 +322,66 @@ function AdminDashboardPage() {
                     placeholder="Describe the supplier's services, experience, and what makes their business stand out."
                     maxLength={1000}
                     className="min-h-[120px]"
-                    disabled={acting}
+                    disabled={acting || suggestingDescription}
                   />
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-xs text-muted-foreground">
-                      This appears on the supplier's public listing.
+                      This appears on the public listing. The description is sent to Gemini for a
+                      suggestion; review it before applying.
                     </p>
                     <span className="shrink-0 text-xs text-muted-foreground">
                       {businessDescription.length}/1000
                     </span>
                   </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => void handleSuggestDescription()}
+                    disabled={acting || suggestingDescription || !businessDescription.trim()}
+                    className="mt-2 gap-1.5"
+                  >
+                    {suggestingDescription ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Sparkles className="h-4 w-4" />
+                    )}
+                    {suggestingDescription ? "Generating…" : "Improve with Gemini"}
+                  </Button>
+
+                  {suggestedDescription && (
+                    <div className="space-y-3 rounded-lg border border-brand/20 bg-brand/5 p-3">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                          Suggested description
+                        </p>
+                        <p className="mt-1 whitespace-pre-wrap text-sm text-foreground">
+                          {suggestedDescription}
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={() => {
+                            setBusinessDescription(suggestedDescription);
+                            setSuggestedDescription("");
+                          }}
+                          disabled={acting || suggestingDescription}
+                        >
+                          Use Suggestion
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setSuggestedDescription("")}
+                          disabled={acting || suggestingDescription}
+                        >
+                          Dismiss
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                   <Button
                     type="button"
                     variant="outline"

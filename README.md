@@ -120,9 +120,11 @@ SUPABASE_URL=https://your-project-ref.supabase.co
 SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
 VITE_SUPABASE_URL=https://your-project-ref.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-key
+# Optional: enables Gemini-powered business-description suggestions for admins
+GEMINI_API_KEY=your-gemini-api-key
 ```
 
-The client and server integrations use the Supabase URL and publishable key. Depending on the features and deployment environment you enable, additional server-side settings may be required (for example `SUPABASE_SERVICE_ROLE_KEY` or `LOVABLE_CRON_SECRET`). Set those only in a trusted server environment. **Never expose service-role keys or other server secrets to the browser or commit them to source control.**
+The client and server integrations use the Supabase URL and publishable key. `GEMINI_API_KEY` is optional and is used only on the server for admin description suggestions. Configure it in local `.env` and in your hosting provider's server-side secrets for deployed environments. Depending on the features and deployment environment you enable, additional server-side settings may be required (for example `SUPABASE_SERVICE_ROLE_KEY` or `LOVABLE_CRON_SECRET`). Set those only in a trusted server environment. **Never expose service-role keys or other server secrets to the browser or commit them to source control.**
 
 Start the development server:
 

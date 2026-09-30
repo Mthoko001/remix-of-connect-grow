@@ -1,6 +1,15 @@
 import { useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, Clock, ImagePlus, Loader2, LocateFixed, Send, Upload } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  ImagePlus,
+  Loader2,
+  LocateFixed,
+  Send,
+  Sparkles,
+  Upload,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useSupplierSession } from "@/hooks/use-supplier-session";
 import { useSupplierProfile, type SaveState } from "@/hooks/use-supplier-profile";
@@ -10,6 +19,8 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+import { suggestBusinessDescription } from "@/lib/admin-description-ai.functions";
 import {
   MAX_PRODUCT_IMAGES,
   TOTAL_TRACKED_FIELDS,
@@ -43,6 +54,8 @@ function SupplierProfilePage() {
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadingProducts, setUploadingProducts] = useState(false);
   const [locating, setLocating] = useState(false);
+  const [suggestingDescription, setSuggestingDescription] = useState(false);
+  const [suggestedDescription, setSuggestedDescription] = useState("");
   const logoInputRef = useRef<HTMLInputElement>(null);
   const productsInputRef = useRef<HTMLInputElement>(null);
 
@@ -107,6 +120,33 @@ function SupplierProfilePage() {
       draft.product_images.filter((p) => p !== path),
     );
     await removeSupplierMedia(path);
+  }
+
+  async function handleSuggestDescription() {
+    const description = draft.business_description.trim();
+    if (!description) {
+      toast.error("Add a business description before asking Gemini to improve it.");
+      return;
+    }
+
+    setSuggestingDescription(true);
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      const accessToken = data.session?.access_token;
+      if (error || !accessToken) {
+        throw new Error("Your session has expired. Please sign in again.");
+      }
+      const suggestion = await suggestBusinessDescription({
+        data: { accessToken, description },
+      });
+      setSuggestedDescription(suggestion);
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Couldn't generate a description suggestion.",
+      );
+    } finally {
+      setSuggestingDescription(false);
+    }
   }
 
   function handleUseCurrentLocation() {
@@ -183,9 +223,70 @@ function SupplierProfilePage() {
                   id="business_description"
                   placeholder="Tell customers what you do and what makes you different."
                   value={draft.business_description}
-                  onChange={(e) => updateField("business_description", e.target.value)}
+                  onChange={(e) => {
+                    updateField("business_description", e.target.value);
+                    setSuggestedDescription("");
+                  }}
+                  maxLength={1000}
                   className="min-h-[100px]"
+                  disabled={suggestingDescription}
                 />
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-xs text-muted-foreground">
+                    Gemini suggestions are based on your description. Review before applying.
+                  </p>
+                  <span className="shrink-0 text-xs text-muted-foreground">
+                    {draft.business_description.length}/1000
+                  </span>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => void handleSuggestDescription()}
+                  disabled={suggestingDescription || !draft.business_description.trim()}
+                  className="mt-2 gap-1.5"
+                >
+                  {suggestingDescription ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="h-4 w-4" />
+                  )}
+                  {suggestingDescription ? "Generating…" : "Improve with Gemini"}
+                </Button>
+                {suggestedDescription && (
+                  <div className="space-y-3 rounded-lg border border-brand/20 bg-brand/5 p-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                        Suggested description
+                      </p>
+                      <p className="mt-1 whitespace-pre-wrap text-sm text-foreground">
+                        {suggestedDescription}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={() => {
+                          updateField("business_description", suggestedDescription);
+                          setSuggestedDescription("");
+                        }}
+                        disabled={suggestingDescription}
+                      >
+                        Use Suggestion
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSuggestedDescription("")}
+                        disabled={suggestingDescription}
+                      >
+                        Dismiss
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
