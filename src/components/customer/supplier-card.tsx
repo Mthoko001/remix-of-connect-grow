@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, ShieldCheck, Star } from "lucide-react";
-import type { SupplierListing } from "@/lib/mock-suppliers";
+import type { SupplierListing } from "@/lib/supplier-listing";
 
 function StarRating({ rating }: { rating: number }) {
   return (
