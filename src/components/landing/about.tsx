@@ -1,10 +1,9 @@
-const STATS = [
-  { value: "1,200+", label: "Verified suppliers" },
-  { value: "18k", label: "Enquiries sent" },
-  { value: "4.8★", label: "Avg. supplier rating" },
-];
-
-export function About() {
+export function About({ verifiedCount }: { verifiedCount: number }) {
+  const STATS = [
+    { value: String(verifiedCount), label: "Verified suppliers" },
+    { value: "5", label: "Free enquiries for new suppliers" },
+    { value: "0%", label: "Commission on jobs" },
+  ];
   return (
     <section id="about" className="scroll-mt-20 border-t border-border/60 bg-card/30">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:py-24 lg:px-8">
