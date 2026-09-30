@@ -1,5 +1,5 @@
 /**
- * All customer WhatsApp enquiries currently route to a single LeadLink
+ * All customer WhatsApp enquiries currently route to a single GrowMeOnline
  * number rather than each supplier's own number — the supplier's identity
  * is captured in the message text instead, since the receiving number
  * alone can't tell you which listing the enquiry was about.
@@ -23,7 +23,7 @@ export type WhatsAppEnquiryDetails = {
  */
 export function buildWhatsAppEnquiryMessage(details: WhatsAppEnquiryDetails): string {
   const lines = [
-    `New enquiry via LeadLink for: ${details.supplierName}`,
+    `New enquiry via GrowMeOnline for: ${details.supplierName}`,
     "",
     `Name: ${details.customerName}`,
     `Email: ${details.email}`,

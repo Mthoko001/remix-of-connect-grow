@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/login")({
   head: () => ({
-    meta: [{ title: "Admin Log In — LeadLink" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Admin Log In — GrowMeOnline" }, { name: "robots", content: "noindex" }],
   }),
   component: AdminLoginPage,
 });
@@ -83,7 +83,7 @@ function AdminLoginPage() {
       <div className="w-full max-w-[420px]">
         <div className="rounded-2xl border border-border/60 bg-card/80 p-7 shadow-xl ring-1 ring-black/[0.02] backdrop-blur-xl sm:p-8">
           <div className="flex justify-center">
-            <Link to="/" aria-label="LeadLink home">
+            <Link to="/" aria-label="GrowMeOnline home">
               <Logo className="scale-110" />
             </Link>
           </div>
@@ -94,7 +94,7 @@ function AdminLoginPage() {
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">Admin Log In</h1>
             <p className="mt-1.5 text-sm text-muted-foreground">
-              Restricted access for LeadLink administrators.
+              Restricted access for GrowMeOnline administrators.
             </p>
           </div>
 
@@ -107,7 +107,7 @@ function AdminLoginPage() {
                 id="admin_email"
                 type="email"
                 autoComplete="email"
-                placeholder="you@leadlink.co.za"
+                placeholder="you@growmeonline.co.za"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 aria-invalid={!!errors.email}

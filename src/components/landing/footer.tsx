@@ -18,11 +18,11 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <div className="max-w-xs">
-            <Link to="/" aria-label="LeadLink home">
+            <Link to="/" aria-label="GrowMeOnline home">
               <Logo />
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              LeadLink connects customers with verified local suppliers. List
+              GrowMeOnline connects customers with verified local suppliers. List
               your business and start receiving real enquiries.
             </p>
           </div>
@@ -58,7 +58,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row">
-          <p>© {new Date().getFullYear()} LeadLink. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} GrowMeOnline. All rights reserved.</p>
           <p>Connecting customers with trusted local suppliers.</p>
         </div>
       </div>

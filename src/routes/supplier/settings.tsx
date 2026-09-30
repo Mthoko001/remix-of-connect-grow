@@ -19,7 +19,7 @@ import { updatePassword } from "@/lib/supplier-auth";
 
 export const Route = createFileRoute("/supplier/settings")({
   head: () => ({
-    meta: [{ title: "Settings — LeadLink" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Settings — GrowMeOnline" }, { name: "robots", content: "noindex" }],
   }),
   component: SupplierSettingsPage,
 });

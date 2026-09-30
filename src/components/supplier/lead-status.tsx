@@ -28,7 +28,7 @@ export function QuotaExhaustedBanner() {
             Your free enquiry allowance has been used.
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            You have already received 5 customer enquiries through LeadLink.
+            You have already received 5 customer enquiries through GrowMeOnline.
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
             Activate your subscription to continue receiving new customer enquiries.

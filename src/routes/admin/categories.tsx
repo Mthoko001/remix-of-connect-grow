@@ -45,7 +45,7 @@ import {
 
 export const Route = createFileRoute("/admin/categories")({
   head: () => ({
-    meta: [{ title: "Categories — LeadLink Admin" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Categories — GrowMeOnline Admin" }, { name: "robots", content: "noindex" }],
   }),
   component: CategoriesPage,
 });

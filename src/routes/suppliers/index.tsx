@@ -26,10 +26,10 @@ export const Route = createFileRoute("/suppliers/")({
   }),
   head: () => ({
     meta: [
-      { title: "Browse Suppliers — LeadLink" },
+      { title: "Browse Suppliers — GrowMeOnline" },
       {
         name: "description",
-        content: "Browse verified suppliers on LeadLink, organized by category.",
+        content: "Browse verified suppliers on GrowMeOnline, organized by category.",
       },
     ],
   }),
@@ -96,7 +96,7 @@ function SuppliersListingPage() {
           <div className="rounded-xl border border-dashed border-border bg-card py-16 text-center">
             <p className="text-sm font-medium text-foreground">No verified suppliers yet</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Suppliers appear here as soon as LeadLink verifies them.
+              Suppliers appear here as soon as GrowMeOnline verifies them.
             </p>
           </div>
         ) : trimmedQuery ? (

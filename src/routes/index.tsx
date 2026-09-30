@@ -11,17 +11,17 @@ export const Route = createFileRoute("/")({
   loader: () => fetchPublicSuppliers(),
   head: () => ({
     meta: [
-      { title: "LeadLink — Find Trusted Local Suppliers" },
+      { title: "GrowMeOnline — Find Trusted Local Suppliers" },
       {
         name: "description",
         content:
-          "LeadLink connects customers with verified local suppliers. List your business, get verified, and start receiving enquiries via WhatsApp or in-app chat.",
+          "GrowMeOnline connects customers with verified local suppliers. List your business, get verified, and start receiving enquiries via WhatsApp or in-app chat.",
       },
-      { property: "og:title", content: "LeadLink — Find Trusted Local Suppliers" },
+      { property: "og:title", content: "GrowMeOnline — Find Trusted Local Suppliers" },
       {
         property: "og:description",
         content:
-          "LeadLink connects customers with verified local suppliers. List your business, get verified, and start receiving enquiries via WhatsApp or in-app chat.",
+          "GrowMeOnline connects customers with verified local suppliers. List your business, get verified, and start receiving enquiries via WhatsApp or in-app chat.",
       },
     ],
   }),

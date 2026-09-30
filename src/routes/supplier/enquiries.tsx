@@ -18,7 +18,7 @@ import {
 
 export const Route = createFileRoute("/supplier/enquiries")({
   head: () => ({
-    meta: [{ title: "Enquiries — LeadLink" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Enquiries — GrowMeOnline" }, { name: "robots", content: "noindex" }],
   }),
   component: SupplierEnquiriesPage,
 });

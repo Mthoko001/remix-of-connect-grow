@@ -26,7 +26,7 @@ import {
 
 export const Route = createFileRoute("/supplier/dashboard")({
   head: () => ({
-    meta: [{ title: "Dashboard — LeadLink" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Dashboard — GrowMeOnline" }, { name: "robots", content: "noindex" }],
   }),
   component: SupplierDashboardPage,
 });
@@ -80,7 +80,7 @@ function SupplierDashboardPage() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <PageHeader
           title={`Welcome back${email ? `, ${email}` : ""}`}
-          subtitle="Here's what's happening with your business on LeadLink."
+          subtitle="Here's what's happening with your business on GrowMeOnline."
         />
         {leadStatus && <MonetizationBadge status={leadStatus.status} />}
       </div>

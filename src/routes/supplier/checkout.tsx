@@ -14,7 +14,7 @@ import {
 
 export const Route = createFileRoute("/supplier/checkout")({
   head: () => ({
-    meta: [{ title: "Checkout — LeadLink" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Checkout — GrowMeOnline" }, { name: "robots", content: "noindex" }],
   }),
   component: SupplierCheckoutPage,
 });
@@ -142,7 +142,7 @@ function SupplierCheckoutPage() {
                 <div>
                   <p className="text-sm font-semibold text-foreground">Annual Plan</p>
                   <p className="text-xs text-muted-foreground">
-                    1 × LeadLink Supplier Subscription
+                    1 × GrowMeOnline Supplier Subscription
                   </p>
                 </div>
               </div>

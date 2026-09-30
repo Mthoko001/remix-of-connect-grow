@@ -10,17 +10,17 @@ import { requestPasswordReset } from "@/lib/supplier-auth";
 export const Route = createFileRoute("/forgot-password")({
   head: () => ({
     meta: [
-      { title: "Reset Your Password — LeadLink" },
+      { title: "Reset Your Password — GrowMeOnline" },
       {
         name: "description",
         content:
-          "Reset the password for your LeadLink supplier account and get back to managing your enquiries.",
+          "Reset the password for your GrowMeOnline supplier account and get back to managing your enquiries.",
       },
-      { property: "og:title", content: "Reset Your Password — LeadLink" },
+      { property: "og:title", content: "Reset Your Password — GrowMeOnline" },
       {
         property: "og:description",
         content:
-          "Reset the password for your LeadLink supplier account and get back to managing your enquiries.",
+          "Reset the password for your GrowMeOnline supplier account and get back to managing your enquiries.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -66,7 +66,7 @@ function ForgotPasswordPage() {
       <div className="w-full max-w-[460px]">
         <div className="rounded-2xl border border-border/60 bg-card/80 p-7 text-center shadow-xl shadow-brand/5 backdrop-blur-xl sm:p-8">
           <div className="flex justify-center">
-            <Link to="/" aria-label="LeadLink home">
+            <Link to="/" aria-label="GrowMeOnline home">
               <Logo className="scale-110" />
             </Link>
           </div>

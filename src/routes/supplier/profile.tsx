@@ -33,7 +33,7 @@ import {
 
 export const Route = createFileRoute("/supplier/profile")({
   head: () => ({
-    meta: [{ title: "Business Profile — LeadLink" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Business Profile — GrowMeOnline" }, { name: "robots", content: "noindex" }],
   }),
   component: SupplierProfilePage,
 });

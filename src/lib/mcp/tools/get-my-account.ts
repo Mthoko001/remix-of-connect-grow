@@ -5,7 +5,7 @@ export default defineTool({
   name: "get_my_account",
   title: "Get my supplier account",
   description:
-    "Return the signed-in supplier's LeadLink account: email, onboarding status and timestamps.",
+    "Return the signed-in supplier's GrowMeOnline account: email, onboarding status and timestamps.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_input, ctx) => {

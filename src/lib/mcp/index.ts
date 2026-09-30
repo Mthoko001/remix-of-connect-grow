@@ -12,7 +12,7 @@ export default defineMcp({
   title: "Remix of Connect & Grow",
   version: "0.1.0",
   instructions:
-    "Tools for LeadLink suppliers. Read the signed-in supplier's account and business profile, and update their profile details. Each caller only ever sees their own data.",
+    "Tools for GrowMeOnline suppliers. Read the signed-in supplier's account and business profile, and update their profile details. Each caller only ever sees their own data.",
   auth: auth.oauth.issuer({
     issuer: `https://${projectRef}.supabase.co/auth/v1`,
     acceptedAudiences: "authenticated",

@@ -92,7 +92,7 @@ function Consent() {
           Connect {clientName} to your account
         </h1>
         <p className="mt-2 text-center text-sm text-muted-foreground">
-          {clientName} will be able to read and update your LeadLink supplier account and business
+          {clientName} will be able to read and update your GrowMeOnline supplier account and business
           profile on your behalf.
         </p>
         {error && (

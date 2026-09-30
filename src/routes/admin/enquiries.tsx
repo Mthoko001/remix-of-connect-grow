@@ -20,7 +20,7 @@ import { getEnquiryImageUrl, markEnquiryStatus, type EnquiryStatus } from "@/lib
 
 export const Route = createFileRoute("/admin/enquiries")({
   head: () => ({
-    meta: [{ title: "Enquiries — LeadLink Admin" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Enquiries — GrowMeOnline Admin" }, { name: "robots", content: "noindex" }],
   }),
   component: AdminEnquiriesPage,
 });

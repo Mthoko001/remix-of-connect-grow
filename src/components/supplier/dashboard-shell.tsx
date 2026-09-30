@@ -74,7 +74,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 hidden w-64 flex-col border-r border-border/60 bg-card/80 backdrop-blur-xl lg:flex">
         <div className="flex h-16 items-center px-5">
-          <Link to="/" aria-label="LeadLink home">
+          <Link to="/" aria-label="GrowMeOnline home">
             <Logo />
           </Link>
         </div>
@@ -84,7 +84,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
       {/* Mobile top bar */}
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border/60 bg-card/90 px-4 backdrop-blur-xl lg:hidden">
-        <Link to="/" aria-label="LeadLink home">
+        <Link to="/" aria-label="GrowMeOnline home">
           <Logo />
         </Link>
         <div className="flex items-center gap-2">
