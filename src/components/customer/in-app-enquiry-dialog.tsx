@@ -12,6 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { submitEnquiry } from "@/lib/enquiries";
+import {
+  canSupplierReceiveEnquiries,
+  QUOTA_EXHAUSTED_MESSAGE,
+  SupplierQuotaExhaustedError,
+} from "@/lib/lead-quota";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -68,6 +73,13 @@ export function InAppEnquiryDialog({
     setSubmitting(true);
     setSubmitError(null);
     try {
+      let available = true;
+      try {
+        available = await canSupplierReceiveEnquiries(supplierAccountId);
+      } catch (err) {
+        console.error("Could not check supplier availability:", err);
+      }
+      if (!available) throw new SupplierQuotaExhaustedError();
       await submitEnquiry({
         supplierAccountId,
         customerName: name.trim(),
@@ -78,8 +90,12 @@ export function InAppEnquiryDialog({
         image,
       });
       setSent(true);
-    } catch {
-      setSubmitError("Couldn't send your message. Please try again.");
+    } catch (err) {
+      setSubmitError(
+        err instanceof SupplierQuotaExhaustedError
+          ? QUOTA_EXHAUSTED_MESSAGE
+          : "Couldn't send your message. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
