@@ -5,12 +5,10 @@ import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { WhatsAppEnquiryDialog } from "@/components/customer/whatsapp-enquiry-dialog";
 import { fetchPublicSupplierBySlug } from "@/lib/public-suppliers.functions";
-import { getSupplierBySlug, mockProductImages, MOCK_SUPPLIERS } from "@/lib/mock-suppliers";
 
 export const Route = createFileRoute("/suppliers/$slug")({
   loader: async ({ params }) => {
-    const supplier =
-      getSupplierBySlug(params.slug) ?? (await fetchPublicSupplierBySlug({ data: params.slug }));
+    const supplier = await fetchPublicSupplierBySlug({ data: params.slug });
     if (!supplier) throw notFound();
     return supplier;
   },
@@ -42,8 +40,7 @@ function StarRating({ rating }: { rating: number }) {
 function SupplierPublicProfilePage() {
   const supplier = Route.useLoaderData();
   const [whatsappOpen, setWhatsappOpen] = useState(false);
-  const productImages =
-    supplier.source === "live" ? (supplier.productImages ?? []) : mockProductImages(supplier.slug);
+  const productImages = supplier.productImages ?? [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -157,30 +154,6 @@ function SupplierPublicProfilePage() {
             </div>
           </section>
         )}
-
-        {/* Other suppliers */}
-        <section className="mt-14 border-t border-border pt-8">
-          <h2 className="text-lg font-bold text-foreground">More suppliers</h2>
-          <div className="mt-4 flex flex-wrap gap-3">
-            {MOCK_SUPPLIERS.filter((s) => s.slug !== supplier.slug)
-              .slice(0, 3)
-              .map((s) => (
-                <Link
-                  key={s.slug}
-                  to="/suppliers/$slug"
-                  params={{ slug: s.slug }}
-                  className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-2 text-sm font-medium text-foreground transition-colors hover:bg-muted"
-                >
-                  <span
-                    className={`grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br ${s.gradient} text-[10px] font-bold text-white`}
-                  >
-                    {s.initials}
-                  </span>
-                  {s.name}
-                </Link>
-              ))}
-          </div>
-        </section>
       </main>
 
       <Footer />

@@ -17,11 +17,7 @@ import { Footer } from "@/components/landing/footer";
 import { SupplierRow } from "@/components/customer/supplier-row";
 import { SupplierCard } from "@/components/customer/supplier-card";
 import { fetchPublicSuppliers } from "@/lib/public-suppliers.functions";
-import {
-  getFeaturedSuppliers,
-  groupSuppliersByCategory,
-  MOCK_SUPPLIERS,
-} from "@/lib/mock-suppliers";
+import { getFeaturedSuppliers, groupSuppliersByCategory } from "@/lib/supplier-listing";
 
 export const Route = createFileRoute("/suppliers/")({
   loader: () => fetchPublicSuppliers(),
@@ -56,7 +52,7 @@ function SuppliersListingPage() {
   useEffect(() => {
     if (q !== undefined) setQuery(q);
   }, [q]);
-  const suppliers = useMemo(() => [...liveSuppliers, ...MOCK_SUPPLIERS], [liveSuppliers]);
+  const suppliers = liveSuppliers;
   const featured = useMemo(() => getFeaturedSuppliers(6, suppliers), [suppliers]);
   const categoryRows = useMemo(() => groupSuppliersByCategory(suppliers), [suppliers]);
 
@@ -96,7 +92,14 @@ function SuppliersListingPage() {
           </div>
         </div>
 
-        {trimmedQuery ? (
+        {suppliers.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-border bg-card py-16 text-center">
+            <p className="text-sm font-medium text-foreground">No verified suppliers yet</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Suppliers appear here as soon as LeadLink verifies them.
+            </p>
+          </div>
+        ) : trimmedQuery ? (
           searchResults.length === 0 ? (
             <div className="rounded-xl border border-dashed border-border bg-card py-16 text-center">
               <p className="text-sm font-medium text-foreground">No suppliers found</p>

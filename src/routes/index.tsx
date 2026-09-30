@@ -37,7 +37,7 @@ function LandingPage() {
         <Hero />
         <HowItWorks />
         <FeaturedListings liveSuppliers={liveSuppliers} />
-        <About />
+        <About verifiedCount={liveSuppliers.length} />
       </main>
       <Footer />
     </div>

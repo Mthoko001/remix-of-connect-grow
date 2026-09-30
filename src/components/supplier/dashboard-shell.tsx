@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
-  BarChart3,
   CreditCard,
   LayoutDashboard,
   LogOut,
   Menu,
   MessageSquare,
   Settings,
-  Star,
   Store,
   X,
 } from "lucide-react";
@@ -20,8 +18,6 @@ export const NAV_ITEMS = [
   { label: "Overview", to: "/supplier/dashboard", icon: LayoutDashboard },
   { label: "Business Profile", to: "/supplier/profile", icon: Store },
   { label: "Enquiries", to: "/supplier/enquiries", icon: MessageSquare },
-  { label: "Analytics", to: "/supplier/analytics", icon: BarChart3 },
-  { label: "Reviews", to: "/supplier/reviews", icon: Star },
   { label: "Subscription", to: "/supplier/subscription", icon: CreditCard },
   { label: "Settings", to: "/supplier/settings", icon: Settings },
 ] as const;

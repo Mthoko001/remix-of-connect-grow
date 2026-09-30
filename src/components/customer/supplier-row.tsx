@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { SupplierCard } from "@/components/customer/supplier-card";
-import type { SupplierListing } from "@/lib/mock-suppliers";
+import type { SupplierListing } from "@/lib/supplier-listing";
 
 export function SupplierRow({
   title,

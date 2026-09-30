@@ -54,7 +54,10 @@ function SupplierSubscriptionPage() {
 
   return (
     <DashboardShell>
-      <PageHeader title="Subscription" subtitle="Manage your LeadLink supplier subscription." />
+      <PageHeader
+        title="Subscription"
+        subtitle="Your first 5 customer enquiries are free. After that, an active subscription is needed to keep receiving new enquiries."
+      />
 
       <Panel>
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">

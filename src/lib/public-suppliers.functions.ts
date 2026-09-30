@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import type { SupplierListing } from "@/lib/mock-suppliers";
+import type { SupplierListing } from "@/lib/supplier-listing";
 
 const publicSupplierRowSchema = z.object({
   supplier_profile_id: z.number(),
@@ -132,7 +132,7 @@ export const fetchPublicSuppliers = createServerFn({ method: "GET" }).handler(as
     const urls = await signMedia(profiles);
     return profiles.map((p) => toSupplierListing(p, urls));
   } catch (error) {
-    // Listing view may not exist yet (categories not built); fall back to mock data.
+    // Fail soft: show an empty directory rather than crash the page.
     console.error(error);
     return [] as SupplierListing[];
   }

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { MOCK_SUPPLIERS, type SupplierListing } from "@/lib/mock-suppliers";
+import type { SupplierListing } from "@/lib/supplier-listing";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -26,7 +26,7 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export function FeaturedListings({ liveSuppliers = [] }: { liveSuppliers?: SupplierListing[] }) {
-  const featured = [...liveSuppliers, ...MOCK_SUPPLIERS].slice(0, 4);
+  const featured = liveSuppliers.slice(0, 4);
   return (
     <section className="bg-background">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24 lg:px-8">
@@ -39,8 +39,8 @@ export function FeaturedListings({ liveSuppliers = [] }: { liveSuppliers?: Suppl
               Trusted by customers across the country
             </h2>
           </div>
-          <a
-            href="/search"
+          <Link
+            to="/suppliers"
             className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-brand hover:underline"
           >
             Browse all suppliers
@@ -57,8 +57,17 @@ export function FeaturedListings({ liveSuppliers = [] }: { liveSuppliers?: Suppl
             >
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
-          </a>
+          </Link>
         </div>
+
+        {featured.length === 0 && (
+          <div className="mt-10 rounded-2xl border border-dashed border-border bg-card py-14 text-center">
+            <p className="text-sm font-medium text-foreground">Verified suppliers are coming soon</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Be one of the first businesses listed on LeadLink.
+            </p>
+          </div>
+        )}
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {featured.map((s) => (

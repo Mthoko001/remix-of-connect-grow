@@ -7,7 +7,7 @@ import { formatDuration, formatRand } from "@/lib/packages";
 
 const TITLE = "Pricing — LeadLink";
 const DESCRIPTION =
-  "One simple annual subscription to list your business on LeadLink, get verified and receive customer enquiries.";
+  "Your first 5 customer enquiries on LeadLink are free. After that, one simple subscription keeps new enquiries coming.";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -35,13 +35,18 @@ const FEATURES = [
 const STEPS = [
   { title: "Create your profile", body: "Sign up free and complete your business profile." },
   { title: "Get verified", body: "Our team reviews your details before you go live." },
-  { title: "Subscribe and go live", body: "Pay once a year and start receiving enquiries." },
+  { title: "Get 5 free enquiries", body: "Once verified, your first 5 customer enquiries are free." },
+  { title: "Subscribe to keep going", body: "After 5 enquiries, subscribe to keep receiving new ones." },
 ];
 
 const FAQS = [
   {
     q: "Is there a fee to sign up?",
-    a: "No. Creating an account and building your profile is free. You only pay once your profile is verified and you are ready to go live.",
+    a: "No. Creating an account, building your profile and your first 5 enquiries are all free.",
+  },
+  {
+    q: "What happens after my 5 free enquiries?",
+    a: "New enquiries are paused until you activate a subscription. Enquiries you already received stay available in your dashboard.",
   },
   {
     q: "Do you take a commission on jobs?",
@@ -64,11 +69,12 @@ function PricingPage() {
         <section className="mx-auto max-w-3xl px-4 pb-8 pt-14 text-center sm:px-6 lg:pt-20">
           <p className="text-sm font-semibold uppercase tracking-wider text-brand">Pricing</p>
           <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
-            One simple annual plan
+            Your first 5 enquiries are free
           </h1>
           <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-            No commission, no per-lead fees. Pay once a year and get found by customers looking
-            for trusted local suppliers.
+            Get verified and receive your first 5 customer enquiries at no cost. After that, an
+            active subscription is needed to keep receiving new enquiries. No commission, no
+            per-lead fees.
           </p>
         </section>
 
@@ -109,7 +115,7 @@ function PricingPage() {
               List My Business
             </a>
             <p className="mt-3 text-center text-xs text-muted-foreground">
-              Free to sign up. Pay only after you are verified.
+              Free to sign up. First 5 enquiries free once verified.
             </p>
           </div>
         </section>
@@ -119,7 +125,7 @@ function PricingPage() {
             <h2 className="text-center text-2xl font-extrabold tracking-tight text-foreground">
               How billing works
             </h2>
-            <ol className="mt-8 grid gap-5 md:grid-cols-3">
+            <ol className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {STEPS.map((s, i) => (
                 <li key={s.title} className="rounded-2xl border border-border bg-card p-5">
                   <span className="grid h-8 w-8 place-items-center rounded-full bg-brand/10 text-sm font-bold text-brand">
