@@ -16,21 +16,16 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
-import { Route as AdminAuditLogRouteImport } from './routes/admin/audit-log'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
 import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as AdminEnquiriesRouteImport } from './routes/admin/enquiries'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPackagesRouteImport } from './routes/admin/packages'
 import { Route as AdminSuppliersRouteImport } from './routes/admin/suppliers'
-import { Route as AdminVerificationRouteImport } from './routes/admin/verification'
-import { Route as SupplierAnalyticsRouteImport } from './routes/supplier/analytics'
 import { Route as SupplierCheckoutRouteImport } from './routes/supplier/checkout'
 import { Route as SupplierDashboardRouteImport } from './routes/supplier/dashboard'
 import { Route as SupplierEnquiriesRouteImport } from './routes/supplier/enquiries'
-import { Route as SupplierOnboardingRouteImport } from './routes/supplier/onboarding'
 import { Route as SupplierProfileRouteImport } from './routes/supplier/profile'
-import { Route as SupplierReviewsRouteImport } from './routes/supplier/reviews'
 import { Route as SupplierSettingsRouteImport } from './routes/supplier/settings'
 import { Route as SupplierSignupRouteImport } from './routes/supplier/signup'
 import { Route as SupplierSubscriptionRouteImport } from './routes/supplier/subscription'
@@ -74,11 +69,6 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
     path: '/.well-known/oauth-protected-resource',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AdminAuditLogRoute = AdminAuditLogRouteImport.update({
-  id: '/admin/audit-log',
-  path: '/admin/audit-log',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   id: '/admin/categories',
   path: '/admin/categories',
@@ -109,16 +99,6 @@ const AdminSuppliersRoute = AdminSuppliersRouteImport.update({
   path: '/admin/suppliers',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminVerificationRoute = AdminVerificationRouteImport.update({
-  id: '/admin/verification',
-  path: '/admin/verification',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SupplierAnalyticsRoute = SupplierAnalyticsRouteImport.update({
-  id: '/supplier/analytics',
-  path: '/supplier/analytics',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SupplierCheckoutRoute = SupplierCheckoutRouteImport.update({
   id: '/supplier/checkout',
   path: '/supplier/checkout',
@@ -134,19 +114,9 @@ const SupplierEnquiriesRoute = SupplierEnquiriesRouteImport.update({
   path: '/supplier/enquiries',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SupplierOnboardingRoute = SupplierOnboardingRouteImport.update({
-  id: '/supplier/onboarding',
-  path: '/supplier/onboarding',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SupplierProfileRoute = SupplierProfileRouteImport.update({
   id: '/supplier/profile',
   path: '/supplier/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SupplierReviewsRoute = SupplierReviewsRouteImport.update({
-  id: '/supplier/reviews',
-  path: '/supplier/reviews',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SupplierSettingsRoute = SupplierSettingsRouteImport.update({
@@ -188,21 +158,16 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
-  '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
-  '/admin/verification': typeof AdminVerificationRoute
-  '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/checkout': typeof SupplierCheckoutRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
-  '/supplier/onboarding': typeof SupplierOnboardingRoute
   '/supplier/profile': typeof SupplierProfileRoute
-  '/supplier/reviews': typeof SupplierReviewsRoute
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
@@ -218,21 +183,16 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
-  '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
-  '/admin/verification': typeof AdminVerificationRoute
-  '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/checkout': typeof SupplierCheckoutRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
-  '/supplier/onboarding': typeof SupplierOnboardingRoute
   '/supplier/profile': typeof SupplierProfileRoute
-  '/supplier/reviews': typeof SupplierReviewsRoute
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
@@ -249,21 +209,16 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
-  '/admin/audit-log': typeof AdminAuditLogRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/dashboard': typeof AdminDashboardRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
-  '/admin/verification': typeof AdminVerificationRoute
-  '/supplier/analytics': typeof SupplierAnalyticsRoute
   '/supplier/checkout': typeof SupplierCheckoutRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
-  '/supplier/onboarding': typeof SupplierOnboardingRoute
   '/supplier/profile': typeof SupplierProfileRoute
-  '/supplier/reviews': typeof SupplierReviewsRoute
   '/supplier/settings': typeof SupplierSettingsRoute
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
@@ -281,21 +236,16 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/reset-password'
     | '/.well-known/oauth-protected-resource'
-    | '/admin/audit-log'
     | '/admin/categories'
     | '/admin/dashboard'
     | '/admin/enquiries'
     | '/admin/login'
     | '/admin/packages'
     | '/admin/suppliers'
-    | '/admin/verification'
-    | '/supplier/analytics'
     | '/supplier/checkout'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
-    | '/supplier/onboarding'
     | '/supplier/profile'
-    | '/supplier/reviews'
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
@@ -311,21 +261,16 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/reset-password'
     | '/.well-known/oauth-protected-resource'
-    | '/admin/audit-log'
     | '/admin/categories'
     | '/admin/dashboard'
     | '/admin/enquiries'
     | '/admin/login'
     | '/admin/packages'
     | '/admin/suppliers'
-    | '/admin/verification'
-    | '/supplier/analytics'
     | '/supplier/checkout'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
-    | '/supplier/onboarding'
     | '/supplier/profile'
-    | '/supplier/reviews'
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
@@ -341,21 +286,16 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/reset-password'
     | '/.well-known/oauth-protected-resource'
-    | '/admin/audit-log'
     | '/admin/categories'
     | '/admin/dashboard'
     | '/admin/enquiries'
     | '/admin/login'
     | '/admin/packages'
     | '/admin/suppliers'
-    | '/admin/verification'
-    | '/supplier/analytics'
     | '/supplier/checkout'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
-    | '/supplier/onboarding'
     | '/supplier/profile'
-    | '/supplier/reviews'
     | '/supplier/settings'
     | '/supplier/signup'
     | '/supplier/subscription'
@@ -372,21 +312,16 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
-  AdminAuditLogRoute: typeof AdminAuditLogRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminDashboardRoute: typeof AdminDashboardRoute
   AdminEnquiriesRoute: typeof AdminEnquiriesRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
   AdminSuppliersRoute: typeof AdminSuppliersRoute
-  AdminVerificationRoute: typeof AdminVerificationRoute
-  SupplierAnalyticsRoute: typeof SupplierAnalyticsRoute
   SupplierCheckoutRoute: typeof SupplierCheckoutRoute
   SupplierDashboardRoute: typeof SupplierDashboardRoute
   SupplierEnquiriesRoute: typeof SupplierEnquiriesRoute
-  SupplierOnboardingRoute: typeof SupplierOnboardingRoute
   SupplierProfileRoute: typeof SupplierProfileRoute
-  SupplierReviewsRoute: typeof SupplierReviewsRoute
   SupplierSettingsRoute: typeof SupplierSettingsRoute
   SupplierSignupRoute: typeof SupplierSignupRoute
   SupplierSubscriptionRoute: typeof SupplierSubscriptionRoute
@@ -446,13 +381,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/audit-log': {
-      id: '/admin/audit-log'
-      path: '/admin/audit-log'
-      fullPath: '/admin/audit-log'
-      preLoaderRoute: typeof AdminAuditLogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/categories': {
       id: '/admin/categories'
       path: '/admin/categories'
@@ -495,20 +423,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSuppliersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/verification': {
-      id: '/admin/verification'
-      path: '/admin/verification'
-      fullPath: '/admin/verification'
-      preLoaderRoute: typeof AdminVerificationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/supplier/analytics': {
-      id: '/supplier/analytics'
-      path: '/supplier/analytics'
-      fullPath: '/supplier/analytics'
-      preLoaderRoute: typeof SupplierAnalyticsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/supplier/checkout': {
       id: '/supplier/checkout'
       path: '/supplier/checkout'
@@ -530,25 +444,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupplierEnquiriesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/supplier/onboarding': {
-      id: '/supplier/onboarding'
-      path: '/supplier/onboarding'
-      fullPath: '/supplier/onboarding'
-      preLoaderRoute: typeof SupplierOnboardingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/supplier/profile': {
       id: '/supplier/profile'
       path: '/supplier/profile'
       fullPath: '/supplier/profile'
       preLoaderRoute: typeof SupplierProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/supplier/reviews': {
-      id: '/supplier/reviews'
-      path: '/supplier/reviews'
-      fullPath: '/supplier/reviews'
-      preLoaderRoute: typeof SupplierReviewsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/supplier/settings': {
@@ -605,21 +505,16 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
-  AdminAuditLogRoute: AdminAuditLogRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminDashboardRoute: AdminDashboardRoute,
   AdminEnquiriesRoute: AdminEnquiriesRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminPackagesRoute: AdminPackagesRoute,
   AdminSuppliersRoute: AdminSuppliersRoute,
-  AdminVerificationRoute: AdminVerificationRoute,
-  SupplierAnalyticsRoute: SupplierAnalyticsRoute,
   SupplierCheckoutRoute: SupplierCheckoutRoute,
   SupplierDashboardRoute: SupplierDashboardRoute,
   SupplierEnquiriesRoute: SupplierEnquiriesRoute,
-  SupplierOnboardingRoute: SupplierOnboardingRoute,
   SupplierProfileRoute: SupplierProfileRoute,
-  SupplierReviewsRoute: SupplierReviewsRoute,
   SupplierSettingsRoute: SupplierSettingsRoute,
   SupplierSignupRoute: SupplierSignupRoute,
   SupplierSubscriptionRoute: SupplierSubscriptionRoute,

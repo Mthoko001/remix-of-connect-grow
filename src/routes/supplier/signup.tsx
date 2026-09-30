@@ -220,19 +220,9 @@ function SupplierSignupPage() {
                 {/* Consent text */}
                 <p className="text-xs leading-relaxed text-muted-foreground">
                   By creating an account, you agree to LeadLink's{" "}
-                  <a
-                    href="/terms"
-                    className="font-medium text-foreground underline-offset-2 hover:underline"
-                  >
-                    Terms of Service
-                  </a>{" "}
+                  <span className="font-medium text-foreground">Terms of Service</span>{" "}
                   and{" "}
-                  <a
-                    href="/privacy"
-                    className="font-medium text-foreground underline-offset-2 hover:underline"
-                  >
-                    Privacy Policy
-                  </a>
+                  <span className="font-medium text-foreground">Privacy Policy</span>
                   .
                 </p>
 

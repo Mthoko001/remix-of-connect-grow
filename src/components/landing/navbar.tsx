@@ -12,9 +12,9 @@ type NavLink = { label: string; to: string } | { label: string; href: string };
 
 const NAV_LINKS: NavLink[] = [
   { label: "Suppliers", to: "/suppliers" },
-  { label: "How It Works", href: "#how-it-works" },
+  { label: "How It Works", href: "/#how-it-works" },
   { label: "Pricing", to: "/pricing" },
-  { label: "About Us", href: "#about" },
+  { label: "About Us", href: "/#about" },
 ];
 
 export function Navbar() {

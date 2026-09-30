@@ -2,8 +2,6 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
-  ClipboardCheck,
-  History,
   LayoutDashboard,
   LogOut,
   Package,
@@ -19,12 +17,10 @@ import { Logo } from "@/components/landing/logo";
 
 export const ADMIN_NAV_ITEMS = [
   { label: "Overview", to: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "Verification Queue", to: "/admin/verification", icon: ClipboardCheck },
   { label: "Enquiries", to: "/admin/enquiries", icon: Mail },
   { label: "Live Suppliers", to: "/admin/suppliers", icon: Store },
   { label: "Categories", to: "/admin/categories", icon: Tags },
   { label: "Packages", to: "/admin/packages", icon: Package },
-  { label: "Audit Log", to: "/admin/audit-log", icon: History },
 ] as const;
 
 export function AdminShell({ email, children }: { email: string | null; children: ReactNode }) {
