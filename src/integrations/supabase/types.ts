@@ -19,16 +19,28 @@ export type Database = {
           admin_account_id: string
           created_at: string
           email: string
+          full_name: string | null
+          is_active: boolean
+          role: string
+          updated_at: string
         }
         Insert: {
           admin_account_id: string
           created_at?: string
           email: string
+          full_name?: string | null
+          is_active?: boolean
+          role?: string
+          updated_at?: string
         }
         Update: {
           admin_account_id?: string
           created_at?: string
           email?: string
+          full_name?: string | null
+          is_active?: boolean
+          role?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -78,7 +90,7 @@ export type Database = {
           supplier_account_id: string
         }
         Insert: {
-          channel?: string
+          channel: string
           created_at?: string
           customer_cell: string
           customer_email: string
@@ -104,6 +116,44 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "tb_enquiry_supplier_account_id_fkey"
+            columns: ["supplier_account_id"]
+            isOneToOne: false
+            referencedRelation: "tb_supplier_account"
+            referencedColumns: ["supplier_account_id"]
+          },
+        ]
+      }
+      tb_subscription: {
+        Row: {
+          amount: number
+          created_at: string
+          is_test: boolean
+          paid_at: string | null
+          subscription_id: number
+          subscription_status: string
+          supplier_account_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          is_test?: boolean
+          paid_at?: string | null
+          subscription_id?: never
+          subscription_status?: string
+          supplier_account_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          is_test?: boolean
+          paid_at?: string | null
+          subscription_id?: never
+          subscription_status?: string
+          supplier_account_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tb_subscription_supplier_account_id_fkey"
             columns: ["supplier_account_id"]
             isOneToOne: false
             referencedRelation: "tb_supplier_account"
@@ -202,59 +252,32 @@ export type Database = {
             referencedRelation: "tb_supplier_account"
             referencedColumns: ["supplier_account_id"]
           },
-          {
-            foreignKeyName: "tb_supplier_profile_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "tb_supplier_account"
-            referencedColumns: ["supplier_account_id"]
-          },
-        ]
-      }
-      tb_subscription: {
-        Row: {
-          amount: number
-          created_at: string
-          is_test: boolean
-          paid_at: string | null
-          subscription_id: number
-          subscription_status: string
-          supplier_account_id: string
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          is_test?: boolean
-          paid_at?: string | null
-          subscription_id?: never
-          subscription_status?: string
-          supplier_account_id: string
-        }
-        Update: {
-          amount?: number
-          created_at?: string
-          is_test?: boolean
-          paid_at?: string | null
-          subscription_id?: never
-          subscription_status?: string
-          supplier_account_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "tb_subscription_supplier_account_id_fkey"
-            columns: ["supplier_account_id"]
-            isOneToOne: false
-            referencedRelation: "tb_supplier_account"
-            referencedColumns: ["supplier_account_id"]
-          },
         ]
       }
     }
     Views: {
-      [_ in never]: never
+      tb_public_supplier_listing: {
+        Row: {
+          business_description: string | null
+          business_name: string | null
+          category_name: string | null
+          public_area: string | null
+          supplier_account_id: string | null
+          supplier_profile_id: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tb_supplier_profile_supplier_account_id_fkey"
+            columns: ["supplier_account_id"]
+            isOneToOne: true
+            referencedRelation: "tb_supplier_account"
+            referencedColumns: ["supplier_account_id"]
+          },
+        ]
+      }
     }
     Functions: {
-      is_admin: { Args: never; Returns: boolean }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
