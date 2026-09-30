@@ -14,6 +14,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { buildWhatsAppEnquiryMessage, buildWhatsAppUrl } from "@/lib/contact";
 import { submitEnquiry } from "@/lib/enquiries";
+import {
+  canSupplierReceiveEnquiries,
+  QUOTA_EXHAUSTED_MESSAGE,
+  SupplierQuotaExhaustedError,
+} from "@/lib/lead-quota";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -37,6 +42,7 @@ export function WhatsAppEnquiryDialog({
   const [image, setImage] = useState<File | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
+  const [blocked, setBlocked] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function reset() {
@@ -46,6 +52,7 @@ export function WhatsAppEnquiryDialog({
     setIssue("");
     setImage(null);
     setErrors({});
+    setBlocked(false);
   }
 
   function handleOpenChange(next: boolean) {
@@ -65,6 +72,17 @@ export function WhatsAppEnquiryDialog({
 
     setSubmitting(true);
 
+    // Quota gate: never open WhatsApp for a supplier who can't take new enquiries.
+    try {
+      if (!(await canSupplierReceiveEnquiries(supplierAccountId))) {
+        setBlocked(true);
+        setSubmitting(false);
+        return;
+      }
+    } catch (err) {
+      console.error("Could not check supplier availability:", err);
+    }
+
     // Best-effort: WhatsApp is the primary path the customer expects to
     // work, so a storage failure shouldn't block it — just log it.
     try {
@@ -78,6 +96,11 @@ export function WhatsAppEnquiryDialog({
         image,
       });
     } catch (err) {
+      if (err instanceof SupplierQuotaExhaustedError) {
+        setBlocked(true);
+        setSubmitting(false);
+        return;
+      }
       console.error("Could not save enquiry record:", err);
     }
 
@@ -198,8 +221,14 @@ export function WhatsAppEnquiryDialog({
             )}
           </div>
 
+          {blocked && (
+            <p role="alert" className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
+              {QUOTA_EXHAUSTED_MESSAGE}
+            </p>
+          )}
+
           <DialogFooter>
-            <Button type="submit" disabled={submitting} className="w-full gap-2 sm:w-auto">
+            <Button type="submit" disabled={submitting || blocked} className="w-full gap-2 sm:w-auto">
               {submitting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (

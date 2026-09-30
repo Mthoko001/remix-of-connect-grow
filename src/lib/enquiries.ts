@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
+import { isQuotaExhaustedDbError, SupplierQuotaExhaustedError } from "@/lib/lead-quota";
 
 const ENQUIRY_MEDIA_BUCKET = "enquiry-media";
 
@@ -51,6 +52,7 @@ export async function submitEnquiry(input: SubmitEnquiryInput): Promise<void> {
     channel: input.channel,
     image_path: imagePath,
   });
+  if (isQuotaExhaustedDbError(error)) throw new SupplierQuotaExhaustedError();
   if (error) throw error;
 }
 
