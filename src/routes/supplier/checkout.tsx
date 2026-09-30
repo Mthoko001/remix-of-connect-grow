@@ -153,7 +153,7 @@ function SupplierCheckoutPage() {
               <p className="text-lg font-bold text-foreground">{testPlanAmountDisplay()}</p>
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
-              Test mode price. The real Annual Plan is R1,200/year — this checkout is for testing
+              Test mode price. The real price is the one set on your Subscription page — this checkout is for testing
               the payment flow only.
             </p>
           </Panel>

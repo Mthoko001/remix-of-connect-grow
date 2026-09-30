@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, ShieldCheck } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
+import { usePackages } from "@/hooks/use-packages";
+import { formatDuration, formatRand } from "@/lib/packages";
 
 const TITLE = "Pricing — LeadLink";
 const DESCRIPTION =
@@ -52,6 +54,9 @@ const FAQS = [
 ];
 
 function PricingPage() {
+  const { packages, loading } = usePackages();
+  const pkg = packages[0];
+  const features = pkg?.benefits.length ? pkg.benefits : FEATURES;
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
@@ -70,20 +75,26 @@ function PricingPage() {
         <section className="mx-auto max-w-lg px-4 pb-16 sm:px-6">
           <div className="rounded-3xl border border-border bg-card p-8 shadow-xl shadow-brand/10">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-foreground">Supplier Annual</h2>
+              <h2 className="text-lg font-bold text-foreground">{pkg?.name ?? "Supplier Annual"}</h2>
               <span className="inline-flex items-center gap-1 rounded-full bg-verified/10 px-2.5 py-1 text-xs font-semibold text-verified">
                 <ShieldCheck className="h-3.5 w-3.5" />
                 Verified listing
               </span>
             </div>
             <p className="mt-5 flex items-baseline gap-1">
-              <span className="text-5xl font-extrabold tracking-tight text-foreground">R1,200</span>
-              <span className="text-sm text-muted-foreground">/ year</span>
+              <span className="text-5xl font-extrabold tracking-tight text-foreground">
+                {pkg ? formatRand(pkg.price) : loading ? "…" : "—"}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                / {formatDuration(pkg?.durationMonths ?? 12)}
+              </span>
             </p>
-            <p className="mt-1 text-sm text-muted-foreground">Billed once a year. Cancel any time.</p>
+            {pkg?.description && (
+              <p className="mt-1 text-sm text-muted-foreground">{pkg.description}</p>
+            )}
 
             <ul className="mt-6 space-y-3">
-              {FEATURES.map((f) => (
+              {features.map((f) => (
                 <li key={f} className="flex items-start gap-3 text-sm text-foreground">
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-verified" />
                   {f}

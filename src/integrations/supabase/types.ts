@@ -123,11 +123,57 @@ export type Database = {
           },
         ]
       }
+      tb_package: {
+        Row: {
+          benefits: Json
+          created_by: string | null
+          date_created: string
+          date_updated: string
+          description: string
+          duration_months: number
+          is_active: boolean
+          name: string
+          package_id: number
+          price: number
+          sort_order: number
+          updated_by: string | null
+        }
+        Insert: {
+          benefits?: Json
+          created_by?: string | null
+          date_created?: string
+          date_updated?: string
+          description?: string
+          duration_months?: number
+          is_active?: boolean
+          name: string
+          package_id?: never
+          price: number
+          sort_order?: number
+          updated_by?: string | null
+        }
+        Update: {
+          benefits?: Json
+          created_by?: string | null
+          date_created?: string
+          date_updated?: string
+          description?: string
+          duration_months?: number
+          is_active?: boolean
+          name?: string
+          package_id?: never
+          price?: number
+          sort_order?: number
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       tb_subscription: {
         Row: {
           amount: number
           created_at: string
           is_test: boolean
+          package_id: number | null
           paid_at: string | null
           subscription_id: number
           subscription_status: string
@@ -137,6 +183,7 @@ export type Database = {
           amount: number
           created_at?: string
           is_test?: boolean
+          package_id?: number | null
           paid_at?: string | null
           subscription_id?: never
           subscription_status?: string
@@ -146,12 +193,20 @@ export type Database = {
           amount?: number
           created_at?: string
           is_test?: boolean
+          package_id?: number | null
           paid_at?: string | null
           subscription_id?: never
           subscription_status?: string
           supplier_account_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "tb_subscription_package_id_fkey"
+            columns: ["package_id"]
+            isOneToOne: false
+            referencedRelation: "tb_package"
+            referencedColumns: ["package_id"]
+          },
           {
             foreignKeyName: "tb_subscription_supplier_account_id_fkey"
             columns: ["supplier_account_id"]

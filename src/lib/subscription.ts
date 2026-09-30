@@ -3,7 +3,8 @@ import type { Tables } from "@/integrations/supabase/types";
 
 export type SubscriptionRow = Tables<"tb_subscription">;
 
-const TEST_PLAN_AMOUNT = 5.0; // R5 — test-mode price. Real price: R1,200/year.
+const TEST_PLAN_AMOUNT = 5.0; // R5 — test-mode price. Real price lives in tb_package (admin-managed).
+// TODO: charge the package price once a real payment gateway is wired up.
 
 async function getCurrentUserId(): Promise<string> {
   const { data, error } = await supabase.auth.getUser();
@@ -30,7 +31,7 @@ export async function fetchMySubscription(): Promise<SubscriptionRow | null> {
  * involved, no real money moves. is_test stays true so this is always
  * distinguishable from a real transaction once a real gateway is wired up.
  */
-export async function createTestSubscription(): Promise<SubscriptionRow> {
+export async function createTestSubscription(packageId?: number): Promise<SubscriptionRow> {
   const supplierAccountId = await getCurrentUserId();
   const { data, error } = await supabase
     .from("tb_subscription")
@@ -39,6 +40,7 @@ export async function createTestSubscription(): Promise<SubscriptionRow> {
       amount: TEST_PLAN_AMOUNT,
       subscription_status: "paid",
       is_test: true,
+      package_id: packageId ?? null,
       paid_at: new Date().toISOString(),
     })
     .select("*")

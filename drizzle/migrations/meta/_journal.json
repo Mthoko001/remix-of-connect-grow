@@ -22,6 +22,20 @@
       "when": 1790785145186,
       "tag": "0002_free_enquiry_quota",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790785374278,
+      "tag": "0003_create_packages",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790785480225,
+      "tag": "0004_fix_package_read_policy",
+      "breakpoints": true
     }
   ]
 }
