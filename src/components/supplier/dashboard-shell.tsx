@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
-  BarChart3,
   CreditCard,
   LayoutDashboard,
   LogOut,
   Menu,
   MessageSquare,
   Settings,
-  Star,
   Store,
   X,
 } from "lucide-react";
