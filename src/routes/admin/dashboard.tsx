@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Check, Loader2, Save, Sparkles, X } from "lucide-react";
 import { useAdminSession } from "@/hooks/use-admin-session";
 import { AdminShell } from "@/components/admin/admin-shell";
+import { MonetizationKpiCards } from "@/components/admin/monetization-kpis";
 import { AdminMediaView } from "@/components/admin/admin-media-view";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -229,6 +230,8 @@ function AdminDashboardPage() {
           Review supplier profiles and approve them for verification.
         </p>
       </div>
+
+      <MonetizationKpiCards />
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as TabValue)} className="mb-5">
         <TabsList>
