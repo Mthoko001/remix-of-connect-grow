@@ -9,14 +9,14 @@ export function About({ verifiedCount }: { verifiedCount: number }) {
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:py-24 lg:px-8">
         <div>
           <p className="text-sm font-semibold uppercase tracking-wider text-brand">
-            About LeadLink
+            About GrowMeOnline
           </p>
           <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
             Connecting customers directly with verified local suppliers
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            LeadLink's mission is simple: make it effortless for customers to
-            find businesses they can actually trust. Every supplier on LeadLink
+            GrowMeOnline's mission is simple: make it effortless for customers to
+            find businesses they can actually trust. Every supplier on GrowMeOnline
             is reviewed and verified before they go live, so you're never
             gambling on quality. And because enquiries go straight to the
             supplier — via WhatsApp — there's no middleman

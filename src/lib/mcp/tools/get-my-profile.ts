@@ -5,7 +5,7 @@ export default defineTool({
   name: "get_my_business_profile",
   title: "Get my business profile",
   description:
-    "Return the signed-in supplier's LeadLink business profile: name, description, address, cell number, media paths and status.",
+    "Return the signed-in supplier's GrowMeOnline business profile: name, description, address, cell number, media paths and status.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async (_input, ctx) => {

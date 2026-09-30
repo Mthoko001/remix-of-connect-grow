@@ -14,10 +14,10 @@ export const Route = createFileRoute("/suppliers/$slug")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: loaderData ? `${loaderData.name} — LeadLink` : "Supplier — LeadLink" },
+      { title: loaderData ? `${loaderData.name} — GrowMeOnline` : "Supplier — GrowMeOnline" },
       {
         name: "description",
-        content: loaderData?.description ?? "View this supplier's business profile on LeadLink.",
+        content: loaderData?.description ?? "View this supplier's business profile on GrowMeOnline.",
       },
     ],
   }),
@@ -84,7 +84,7 @@ function SupplierPublicProfilePage() {
                     <span className="text-muted-foreground">({supplier.reviews} reviews)</span>
                   </span>
                 ) : (
-                  <span className="text-muted-foreground">New on LeadLink</span>
+                  <span className="text-muted-foreground">New on GrowMeOnline</span>
                 )}
                 <span className="flex items-center gap-1 text-muted-foreground">
                   <MapPin className="h-4 w-4" />

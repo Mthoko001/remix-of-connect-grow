@@ -6,7 +6,7 @@ export default defineTool({
   name: "update_my_business_profile",
   title: "Update my business profile",
   description:
-    "Create or update the signed-in supplier's LeadLink business profile text fields. Only provided fields are changed. Images are managed in the app.",
+    "Create or update the signed-in supplier's GrowMeOnline business profile text fields. Only provided fields are changed. Images are managed in the app.",
   inputSchema: {
     business_name: z.string().trim().optional().describe("Trading name of the business."),
     business_description: z

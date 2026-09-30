@@ -11,17 +11,17 @@ import { Eye, EyeOff, ShieldCheck, Loader2 } from "lucide-react";
 export const Route = createFileRoute("/supplier/signup")({
   head: () => ({
     meta: [
-      { title: "List Your Business — LeadLink" },
+      { title: "List Your Business — GrowMeOnline" },
       {
         name: "description",
         content:
-          "Create your LeadLink supplier account and start receiving enquiries from local customers.",
+          "Create your GrowMeOnline supplier account and start receiving enquiries from local customers.",
       },
-      { property: "og:title", content: "List Your Business — LeadLink" },
+      { property: "og:title", content: "List Your Business — GrowMeOnline" },
       {
         property: "og:description",
         content:
-          "Create your LeadLink supplier account and start receiving enquiries from local customers.",
+          "Create your GrowMeOnline supplier account and start receiving enquiries from local customers.",
       },
     ],
   }),
@@ -98,7 +98,7 @@ function SupplierSignupPage() {
         <div className="rounded-2xl border border-border/60 bg-card/80 p-7 shadow-xl shadow-brand/5 ring-1 ring-black/[0.02] backdrop-blur-xl sm:p-8">
           {/* Logo */}
           <div className="flex justify-center">
-            <Link to="/" aria-label="LeadLink home">
+            <Link to="/" aria-label="GrowMeOnline home">
               <Logo className="scale-110" />
             </Link>
           </div>
@@ -219,7 +219,7 @@ function SupplierSignupPage() {
 
                 {/* Consent text */}
                 <p className="text-xs leading-relaxed text-muted-foreground">
-                  By creating an account, you agree to LeadLink's{" "}
+                  By creating an account, you agree to GrowMeOnline's{" "}
                   <span className="font-medium text-foreground">Terms of Service</span>{" "}
                   and{" "}
                   <span className="font-medium text-foreground">Privacy Policy</span>

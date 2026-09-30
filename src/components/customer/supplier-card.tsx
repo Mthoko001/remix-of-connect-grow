@@ -56,7 +56,7 @@ export function SupplierCard({ supplier }: { supplier: SupplierListing }) {
             <span className="text-[11px] text-muted-foreground">({supplier.reviews})</span>
           </>
         ) : (
-          <span className="text-xs text-muted-foreground">New on LeadLink</span>
+          <span className="text-xs text-muted-foreground">New on GrowMeOnline</span>
         )}
       </div>
 

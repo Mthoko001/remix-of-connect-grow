@@ -5,9 +5,9 @@ import { Footer } from "@/components/landing/footer";
 import { usePackages } from "@/hooks/use-packages";
 import { formatDuration, formatRand } from "@/lib/packages";
 
-const TITLE = "Pricing — LeadLink";
+const TITLE = "Pricing — GrowMeOnline";
 const DESCRIPTION =
-  "Your first 5 customer enquiries on LeadLink are free. After that, one simple subscription keeps new enquiries coming.";
+  "Your first 5 customer enquiries on GrowMeOnline are free. After that, one simple subscription keeps new enquiries coming.";
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/pricing")({
 });
 
 const FEATURES = [
-  "Verified business listing on LeadLink",
+  "Verified business listing on GrowMeOnline",
   "Business profile with logo and up to 6 photos",
   "Customer enquiries via WhatsApp and in-app messaging",
   "Supplier dashboard with enquiry tracking",

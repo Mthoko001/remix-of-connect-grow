@@ -65,7 +65,7 @@ async function signMedia(rows: PublicSupplierRow[]): Promise<SignedUrls> {
 }
 
 function toSupplierListing(profile: PublicSupplierRow, urls: SignedUrls): SupplierListing {
-  const name = profile.business_name.trim() || "LeadLink Supplier";
+  const name = profile.business_name.trim() || "GrowMeOnline Supplier";
   const area = profile.public_area?.trim() || "Location not provided";
 
   return {
@@ -78,7 +78,7 @@ function toSupplierListing(profile: PublicSupplierRow, urls: SignedUrls): Suppli
     reviews: 0,
     location: area,
     verified: true,
-    description: profile.business_description?.trim() || "Business profile on LeadLink.",
+    description: profile.business_description?.trim() || "Business profile on GrowMeOnline.",
     fullAddress: "",
     publicArea: area,
     cellNo: "",

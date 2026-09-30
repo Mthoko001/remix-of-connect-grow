@@ -21,7 +21,7 @@ import { MonetizationBadge } from "@/components/supplier/lead-status";
 
 export const Route = createFileRoute("/admin/suppliers")({
   head: () => ({
-    meta: [{ title: "Live Suppliers — LeadLink Admin" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Live Suppliers — GrowMeOnline Admin" }, { name: "robots", content: "noindex" }],
   }),
   component: LiveSuppliersPage,
 });

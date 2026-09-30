@@ -10,7 +10,7 @@ import { updatePassword } from "@/lib/supplier-auth";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
-    meta: [{ title: "Set a New Password — LeadLink" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Set a New Password — GrowMeOnline" }, { name: "robots", content: "noindex" }],
   }),
   component: ResetPasswordPage,
 });
@@ -92,7 +92,7 @@ function ResetPasswordPage() {
       <div className="w-full max-w-[460px]">
         <div className="rounded-2xl border border-border/60 bg-card/80 p-7 text-center shadow-xl shadow-brand/5 backdrop-blur-xl sm:p-8">
           <div className="flex justify-center">
-            <Link to="/" aria-label="LeadLink home">
+            <Link to="/" aria-label="GrowMeOnline home">
               <Logo className="scale-110" />
             </Link>
           </div>

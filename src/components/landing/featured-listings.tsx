@@ -64,7 +64,7 @@ export function FeaturedListings({ liveSuppliers = [] }: { liveSuppliers?: Suppl
           <div className="mt-10 rounded-2xl border border-dashed border-border bg-card py-14 text-center">
             <p className="text-sm font-medium text-foreground">Verified suppliers are coming soon</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              Be one of the first businesses listed on LeadLink.
+              Be one of the first businesses listed on GrowMeOnline.
             </p>
           </div>
         )}
@@ -125,7 +125,7 @@ export function FeaturedListings({ liveSuppliers = [] }: { liveSuppliers?: Suppl
                     <span className="text-xs text-muted-foreground">({s.reviews})</span>
                   </>
                 ) : (
-                  <span className="text-sm text-muted-foreground">New on LeadLink</span>
+                  <span className="text-sm text-muted-foreground">New on GrowMeOnline</span>
                 )}
               </div>
 

@@ -29,7 +29,7 @@ import {
 
 export const Route = createFileRoute("/admin/packages")({
   head: () => ({
-    meta: [{ title: "Packages — LeadLink Admin" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Packages — GrowMeOnline Admin" }, { name: "robots", content: "noindex" }],
   }),
   component: AdminPackagesPage,
 });

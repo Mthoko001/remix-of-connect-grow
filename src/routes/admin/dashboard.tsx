@@ -33,7 +33,7 @@ import {
 
 export const Route = createFileRoute("/admin/dashboard")({
   head: () => ({
-    meta: [{ title: "Admin Dashboard — LeadLink" }, { name: "robots", content: "noindex" }],
+    meta: [{ title: "Admin Dashboard — GrowMeOnline" }, { name: "robots", content: "noindex" }],
   }),
   component: AdminDashboardPage,
 });

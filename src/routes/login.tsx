@@ -21,17 +21,17 @@ export const Route = createFileRoute("/login")({
   },
   head: () => ({
     meta: [
-      { title: "Log In — LeadLink" },
+      { title: "Log In — GrowMeOnline" },
       {
         name: "description",
         content:
-          "Log in to your LeadLink supplier account to manage your business profile and enquiries.",
+          "Log in to your GrowMeOnline supplier account to manage your business profile and enquiries.",
       },
-      { property: "og:title", content: "Log In — LeadLink" },
+      { property: "og:title", content: "Log In — GrowMeOnline" },
       {
         property: "og:description",
         content:
-          "Log in to your LeadLink supplier account to manage your business profile and enquiries.",
+          "Log in to your GrowMeOnline supplier account to manage your business profile and enquiries.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -106,7 +106,7 @@ function LoginPage() {
       <div className="w-full max-w-[460px]">
         <div className="rounded-2xl border border-border/60 bg-card/80 p-7 shadow-xl shadow-brand/5 ring-1 ring-black/[0.02] backdrop-blur-xl sm:p-8">
           <div className="flex justify-center">
-            <Link to="/" aria-label="LeadLink home">
+            <Link to="/" aria-label="GrowMeOnline home">
               <Logo className="scale-110" />
             </Link>
           </div>
