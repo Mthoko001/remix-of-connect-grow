@@ -29,6 +29,20 @@ export type SupplierReviewRow = {
   profile: SupplierReviewProfile | null;
 };
 
+export type AdminSupplierRow = {
+  supplier_account_id: string;
+  email: string;
+  business_name: string;
+  profile_status: SupplierProfileStatus;
+  account_created_at: string;
+  subscription: {
+    subscription_status: string;
+    amount: number;
+    paid_at: string | null;
+    is_test: boolean;
+  } | null;
+};
+
 /** Every supplier account + its profile (if any), newest first. Admin-only via RLS. */
 export async function fetchSupplierReviewRows(): Promise<SupplierReviewRow[]> {
   const [{ data: accounts, error: accountsError }, { data: profiles, error: profilesError }] =
@@ -59,6 +73,50 @@ export async function fetchSupplierReviewRows(): Promise<SupplierReviewRow[]> {
         ? { ...rawProfile, status: rawProfile.status as SupplierProfileStatus }
         : null,
     };
+  });
+}
+
+/** Validated and rejected suppliers with their latest subscription status. */
+export async function fetchAdminSuppliers(): Promise<AdminSupplierRow[]> {
+  const [supplierRows, { data: subscriptions, error: subscriptionsError }] = await Promise.all([
+    fetchSupplierReviewRows(),
+    supabase
+      .from("tb_subscription")
+      .select("supplier_account_id, subscription_status, amount, paid_at, is_test, created_at")
+      .order("created_at", { ascending: false }),
+  ]);
+
+  if (subscriptionsError) throw subscriptionsError;
+
+  const latestSubscriptionByAccount = new Map<
+    string,
+    NonNullable<AdminSupplierRow["subscription"]>
+  >();
+  for (const subscription of subscriptions ?? []) {
+    if (!latestSubscriptionByAccount.has(subscription.supplier_account_id)) {
+      latestSubscriptionByAccount.set(subscription.supplier_account_id, {
+        subscription_status: subscription.subscription_status,
+        amount: subscription.amount,
+        paid_at: subscription.paid_at,
+        is_test: subscription.is_test,
+      });
+    }
+  }
+
+  return supplierRows.flatMap((row) => {
+    const profile = row.profile;
+    if (!profile || (profile.status !== "validated" && profile.status !== "rejected")) return [];
+
+    return [
+      {
+        supplier_account_id: row.supplier_account_id,
+        email: row.email,
+        business_name: profile.business_name,
+        profile_status: profile.status,
+        account_created_at: row.account_created_at,
+        subscription: latestSubscriptionByAccount.get(row.supplier_account_id) ?? null,
+      },
+    ];
   });
 }
 

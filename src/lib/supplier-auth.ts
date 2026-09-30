@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 export type SignUpWithEmailInput = {
   email: string;
   password: string;
+  captchaToken: string;
 };
 
 /**
@@ -13,12 +14,14 @@ export type SignUpWithEmailInput = {
 export async function signUpSupplierWithEmail({
   email,
   password,
+  captchaToken,
 }: SignUpWithEmailInput): Promise<{ needsEmailConfirmation: boolean }> {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       emailRedirectTo: `${window.location.origin}/supplier/dashboard`,
+      captchaToken,
     },
   });
 
