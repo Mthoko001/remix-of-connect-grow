@@ -56,7 +56,7 @@ function SuppliersListingPage() {
   useEffect(() => {
     if (q !== undefined) setQuery(q);
   }, [q]);
-  const suppliers = useMemo(() => [...MOCK_SUPPLIERS, ...liveSuppliers], [liveSuppliers]);
+  const suppliers = useMemo(() => [...liveSuppliers, ...MOCK_SUPPLIERS], [liveSuppliers]);
   const featured = useMemo(() => getFeaturedSuppliers(6, suppliers), [suppliers]);
   const categoryRows = useMemo(() => groupSuppliersByCategory(suppliers), [suppliers]);
 
