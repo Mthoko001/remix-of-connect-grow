@@ -14,6 +14,8 @@ import { toast } from "sonner";
 import { useSupplierSession } from "@/hooks/use-supplier-session";
 import { useSupplierProfile, type SaveState } from "@/hooks/use-supplier-profile";
 import { DashboardShell, PageHeader, Panel } from "@/components/supplier/dashboard-shell";
+import { MonetizationBadge } from "@/components/supplier/lead-status";
+import { useLeadStatus } from "@/hooks/use-lead-status";
 import { MediaThumb } from "@/components/supplier/media-thumb";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -193,7 +195,10 @@ function SupplierProfilePage() {
           title="Business Profile"
           subtitle="This information appears on your public listing once you're verified."
         />
-        <SaveStatusLabel saveState={saveState} lastSavedAt={lastSavedAt} />
+        <div className="flex items-center gap-3">
+          <LeadStatusBadge />
+          <SaveStatusLabel saveState={saveState} lastSavedAt={lastSavedAt} />
+        </div>
       </div>
 
       {error && (
@@ -504,4 +509,9 @@ function SaveStatusLabel({
     );
   }
   return null;
+}
+
+function LeadStatusBadge() {
+  const { leadStatus } = useLeadStatus(true);
+  return leadStatus ? <MonetizationBadge status={leadStatus.status} /> : null;
 }

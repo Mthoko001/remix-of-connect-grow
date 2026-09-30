@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Free-enquiry quota (5) is enforced by a BEFORE INSERT trigger on tb_enquiry; UI checks via can_supplier_receive_enquiries are UX only. Why: the database is the only place customers cannot bypass.

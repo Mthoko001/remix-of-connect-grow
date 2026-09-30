@@ -15,6 +15,13 @@
       "when": 1790784298471,
       "tag": "0001_public_listing_media_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790785145186,
+      "tag": "0002_free_enquiry_quota",
+      "breakpoints": true
     }
   ]
 }

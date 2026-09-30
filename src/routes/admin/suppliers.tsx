@@ -12,6 +12,12 @@ import {
   type AdminSupplierRow,
   type SupplierProfileStatus,
 } from "@/lib/admin-review";
+import {
+  fetchAdminMonetization,
+  FREE_ENQUIRY_LIMIT,
+  type SupplierMonetization,
+} from "@/lib/lead-quota";
+import { MonetizationBadge } from "@/components/supplier/lead-status";
 
 export const Route = createFileRoute("/admin/suppliers")({
   head: () => ({
@@ -32,6 +38,7 @@ const FILTERS: { value: SupplierFilter; label: string }[] = [
 function LiveSuppliersPage() {
   const { email, checking } = useAdminSession();
   const [rows, setRows] = useState<AdminSupplierRow[]>([]);
+  const [monetization, setMonetization] = useState<Map<string, SupplierMonetization>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<SupplierFilter>("all");
@@ -41,7 +48,12 @@ function LiveSuppliersPage() {
     setLoading(true);
     setError(null);
     try {
-      setRows(await fetchAdminSuppliers());
+      const [supplierRows, monetizationRows] = await Promise.all([
+        fetchAdminSuppliers(),
+        fetchAdminMonetization(),
+      ]);
+      setRows(supplierRows);
+      setMonetization(new Map(monetizationRows.map((m) => [m.supplierAccountId, m])));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't load suppliers.");
     } finally {
@@ -166,6 +178,9 @@ function LiveSuppliersPage() {
                   <th className="px-4 py-3">Supplier email</th>
                   <th className="px-4 py-3">Profile</th>
                   <th className="px-4 py-3">Subscription</th>
+                  <th className="px-4 py-3">Total Enquiries</th>
+                  <th className="px-4 py-3">Free Usage</th>
+                  <th className="px-4 py-3">Monetization</th>
                   <th className="px-4 py-3">Joined</th>
                 </tr>
               </thead>
@@ -180,6 +195,7 @@ function LiveSuppliersPage() {
                     <td className="px-4 py-3">
                       <SubscriptionStatus row={row} />
                     </td>
+                    <MonetizationCells m={monetization.get(row.supplier_account_id)} />
                     <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
                       {new Date(row.account_created_at).toLocaleDateString()}
                     </td>
@@ -221,4 +237,21 @@ function SubscriptionStatus({ row }: { row: AdminSupplierRow }) {
     .replaceAll("_", " ")
     .replace(/\b\w/g, (character) => character.toUpperCase());
   return <Badge variant="secondary">{label}</Badge>;
+}
+
+function MonetizationCells({ m }: { m: SupplierMonetization | undefined }) {
+  const total = m?.totalEnquiries ?? 0;
+  return (
+    <>
+      <td className="px-4 py-3 text-foreground">{total}</td>
+      <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+        {m?.hasActiveSubscription
+          ? "Active"
+          : `${Math.min(total, FREE_ENQUIRY_LIMIT)}/${FREE_ENQUIRY_LIMIT}`}
+      </td>
+      <td className="px-4 py-3">
+        <MonetizationBadge status={m?.status ?? "free_plan"} />
+      </td>
+    </>
+  );
 }

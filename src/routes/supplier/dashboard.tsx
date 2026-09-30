@@ -17,6 +17,12 @@ import {
   type SupplierProfileStatus,
 } from "@/lib/supplier-profile";
 import { fetchMyEnquiries, type EnquiryRow } from "@/lib/enquiries";
+import { useLeadStatus } from "@/hooks/use-lead-status";
+import {
+  LeadGenerationStatusCard,
+  MonetizationBadge,
+  QuotaExhaustedBanner,
+} from "@/components/supplier/lead-status";
 
 export const Route = createFileRoute("/supplier/dashboard")({
   head: () => ({
@@ -31,6 +37,7 @@ function SupplierDashboardPage() {
   const [completeFields, setCompleteFields] = useState<number | null>(null);
   const [status, setStatus] = useState<SupplierProfileStatus | null>(null);
   const [enquiries, setEnquiries] = useState<EnquiryRow[]>([]);
+  const { leadStatus } = useLeadStatus(!checking);
 
   useEffect(() => {
     if (checking) return;
@@ -70,10 +77,15 @@ function SupplierDashboardPage() {
 
   return (
     <DashboardShell>
-      <PageHeader
-        title={`Welcome back${email ? `, ${email}` : ""}`}
-        subtitle="Here's what's happening with your business on LeadLink."
-      />
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <PageHeader
+          title={`Welcome back${email ? `, ${email}` : ""}`}
+          subtitle="Here's what's happening with your business on LeadLink."
+        />
+        {leadStatus && <MonetizationBadge status={leadStatus.status} />}
+      </div>
+
+      {leadStatus?.status === "quota_reached" && <QuotaExhaustedBanner />}
 
       {status === "validated" ? (
         <div className="mb-6 flex items-center gap-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5 sm:p-6">
@@ -169,8 +181,13 @@ function SupplierDashboardPage() {
         <MetricCard label="Profile Views" value="0" />
         <MetricCard label="Enquiries" value={String(enquiries.length)} />
         <MetricCard label="Conversion Rate" value="—" />
-        <MetricCard label="Subscription Status" value="Unpaid" />
+        <MetricCard
+          label="Subscription Status"
+          value={leadStatus?.hasActiveSubscription ? "Active" : "Unpaid"}
+        />
       </div>
+
+      {leadStatus && <LeadGenerationStatusCard leadStatus={leadStatus} />}
 
       <Panel title="Recent enquiries" className="mt-6">
         {enquiries.length === 0 ? (

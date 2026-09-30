@@ -279,7 +279,37 @@ export type Database = {
       }
     }
     Functions: {
+      admin_supplier_monetization: {
+        Args: never
+        Returns: {
+          has_active_subscription: boolean
+          monetization_status: string
+          supplier_account_id: string
+          total_enquiries: number
+        }[]
+      }
+      can_supplier_receive_enquiries: {
+        Args: { _supplier_account_id: string }
+        Returns: boolean
+      }
+      get_my_lead_status: {
+        Args: never
+        Returns: {
+          free_limit: number
+          has_active_subscription: boolean
+          monetization_status: string
+          total_enquiries: number
+        }[]
+      }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      supplier_has_active_subscription: {
+        Args: { _supplier_account_id: string }
+        Returns: boolean
+      }
+      supplier_monetization_status: {
+        Args: { _active: boolean; _total: number }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
