@@ -125,7 +125,7 @@ function PricingPage() {
             <h2 className="text-center text-2xl font-extrabold tracking-tight text-foreground">
               How billing works
             </h2>
-            <ol className="mt-8 grid gap-5 md:grid-cols-3">
+            <ol className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {STEPS.map((s, i) => (
                 <li key={s.title} className="rounded-2xl border border-border bg-card p-5">
                   <span className="grid h-8 w-8 place-items-center rounded-full bg-brand/10 text-sm font-bold text-brand">
