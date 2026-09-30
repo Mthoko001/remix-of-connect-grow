@@ -5,8 +5,7 @@ import { CategoriesDesktopMenu, CategoriesMobileMenu } from "./categories-menu";
 import { buildCategoryTree, fetchAllCategories, type CategoryNode } from "@/lib/categories";
 
 // Real routes use TanStack's type-safe <Link> (SPA navigation, no full
-// reload); Pricing points at a placeholder path whose route file is not
-// built yet, so it stays plain <a href> until it exists. Categories is
+// reload); in-page anchors stay plain <a href>. Categories is
 // handled separately (see CategoriesDesktopMenu / CategoriesMobileMenu)
 // since it's a dropdown, not a plain link.
 type NavLink = { label: string; to: string } | { label: string; href: string };
@@ -14,7 +13,7 @@ type NavLink = { label: string; to: string } | { label: string; href: string };
 const NAV_LINKS: NavLink[] = [
   { label: "Suppliers", to: "/suppliers" },
   { label: "How It Works", href: "#how-it-works" },
-  { label: "Pricing", href: "/pricing" },
+  { label: "Pricing", to: "/pricing" },
   { label: "About Us", href: "#about" },
 ];
 
