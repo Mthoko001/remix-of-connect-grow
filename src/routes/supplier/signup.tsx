@@ -1,6 +1,5 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { TurnstileWidget } from "@/components/auth/turnstile-widget";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -42,17 +41,10 @@ function SupplierSignupPage() {
     email?: string;
     password?: string;
     confirmPassword?: string;
-    captcha?: string;
     form?: string;
   }>({});
   const [submitting, setSubmitting] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState("");
-  const [captchaResetKey, setCaptchaResetKey] = useState(0);
-  const handleCaptchaTokenChange = useCallback((token: string) => {
-    setCaptchaToken(token);
-    if (token) setErrors((current) => ({ ...current, captcha: "" }));
-  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,16 +53,14 @@ function SupplierSignupPage() {
     if (password.length < MIN_PASSWORD_LENGTH)
       next.password = `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
     if (confirmPassword !== password) next.confirmPassword = "Passwords don't match.";
-    if (!captchaToken) next.captcha = "Complete the verification before creating your account.";
     setErrors(next);
-    if (next.email || next.password || next.confirmPassword || next.captcha) return;
+    if (next.email || next.password || next.confirmPassword) return;
 
     setSubmitting(true);
     try {
       const { needsEmailConfirmation } = await signUpSupplierWithEmail({
         email,
         password,
-        captchaToken,
       });
       if (needsEmailConfirmation) {
         setConfirmEmail(true);
@@ -83,8 +73,6 @@ function SupplierSignupPage() {
       });
     } finally {
       setSubmitting(false);
-      setCaptchaToken("");
-      setCaptchaResetKey((key) => key + 1);
     }
   }
 
@@ -227,11 +215,7 @@ function SupplierSignupPage() {
                   )}
                 </div>
 
-                <TurnstileWidget
-                  onTokenChange={handleCaptchaTokenChange}
-                  resetKey={captchaResetKey}
-                />
-                {errors.captcha && <p className="text-sm text-destructive">{errors.captcha}</p>}
+                <MockTurnstile />
 
                 {/* Consent text */}
                 <p className="text-xs leading-relaxed text-muted-foreground">
@@ -256,7 +240,7 @@ function SupplierSignupPage() {
 
                 <Button
                   type="submit"
-                  disabled={submitting || !captchaToken}
+                  disabled={submitting}
                   className="h-10 w-full gap-2 bg-gradient-to-r from-brand to-brand-glow text-brand-foreground shadow-lg shadow-brand/25 transition-all hover:shadow-brand/40 hover:brightness-105 active:scale-[0.99] focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
@@ -305,5 +289,30 @@ function GoogleGIcon() {
         d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.464.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"
       />
     </svg>
+  );
+}
+
+function MockTurnstile() {
+  return (
+    <div
+      role="presentation"
+      aria-label="Bot protection check (demo)"
+      className="relative flex h-[68px] w-full items-center gap-3 overflow-hidden rounded-md border border-border bg-muted/40 px-3"
+    >
+      <span className="grid h-6 w-6 place-items-center rounded-[4px] border border-border bg-background text-verified shadow-sm">
+        <ShieldCheck className="h-4 w-4" />
+      </span>
+      <div className="flex flex-col leading-tight">
+        <span className="text-[13px] font-semibold text-foreground">I'm not a robot</span>
+        <span className="text-[10px] text-muted-foreground">Demo widget</span>
+      </div>
+      <div className="ml-auto flex flex-col items-center gap-0.5 text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
+        <ShieldCheck className="h-4 w-4 text-muted-foreground/70" />
+        <span>Turnstile</span>
+      </div>
+      <span className="absolute right-1 top-1 rounded bg-verified/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-verified">
+        Demo
+      </span>
+    </div>
   );
 }
