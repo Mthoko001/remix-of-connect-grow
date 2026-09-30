@@ -4,6 +4,8 @@ import { CheckCircle2, CreditCard, ShoppingCart, Trash2 } from "lucide-react";
 import { useSupplierSession } from "@/hooks/use-supplier-session";
 import { DashboardShell, PageHeader, Panel } from "@/components/supplier/dashboard-shell";
 import { Button } from "@/components/ui/button";
+import { usePackages } from "@/hooks/use-packages";
+import { formatDuration, formatRand } from "@/lib/packages";
 import { fetchMyProfile, type SupplierProfileStatus } from "@/lib/supplier-profile";
 import {
   fetchMySubscription,
@@ -25,6 +27,8 @@ function SupplierSubscriptionPage() {
   const [subscription, setSubscription] = useState<SubscriptionRow | null>(null);
   const [loading, setLoading] = useState(true);
   const [inCart, setInCart] = useState(false);
+  const { packages } = usePackages({ enabled: !checking });
+  const pkg = packages[0];
 
   useEffect(() => {
     if (checking) return;
@@ -59,9 +63,12 @@ function SupplierSubscriptionPage() {
               <CreditCard className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-base font-semibold text-foreground">Annual Plan</p>
+              <p className="text-base font-semibold text-foreground">{pkg?.name ?? "Annual Plan"}</p>
               <p className="mt-1 text-2xl font-bold text-foreground">
-                R1,200<span className="text-sm font-medium text-muted-foreground">/year</span>
+                {pkg ? formatRand(pkg.price) : "—"}
+                <span className="text-sm font-medium text-muted-foreground">
+                  /{formatDuration(pkg?.durationMonths ?? 12)}
+                </span>
               </p>
             </div>
           </div>
@@ -141,7 +148,7 @@ function SupplierSubscriptionPage() {
             <p className="text-lg font-bold text-foreground">{testPlanAmountDisplay()}</p>
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
-            Test mode price, for testing the payment flow. The real Annual Plan is R1,200/year.
+            Test mode price, for testing the payment flow. The real price is shown above.
           </p>
           <Button
             onClick={() => navigate({ to: "/supplier/checkout" })}

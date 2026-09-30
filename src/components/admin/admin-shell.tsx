@@ -6,6 +6,7 @@ import {
   History,
   LayoutDashboard,
   LogOut,
+  Package,
   Mail,
   Menu,
   ShieldCheck,
@@ -22,6 +23,7 @@ export const ADMIN_NAV_ITEMS = [
   { label: "Enquiries", to: "/admin/enquiries", icon: Mail },
   { label: "Live Suppliers", to: "/admin/suppliers", icon: Store },
   { label: "Categories", to: "/admin/categories", icon: Tags },
+  { label: "Packages", to: "/admin/packages", icon: Package },
   { label: "Audit Log", to: "/admin/audit-log", icon: History },
 ] as const;
 
