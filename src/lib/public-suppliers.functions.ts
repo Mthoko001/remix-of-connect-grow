@@ -9,6 +9,8 @@ const publicSupplierRowSchema = z.object({
   business_description: z.string().nullable(),
   public_area: z.string().nullable(),
   category_name: z.string().nullable(),
+  business_logo: z.string().nullable().optional(),
+  product_images: z.array(z.string()).nullable().optional(),
 });
 
 type PublicSupplierRow = z.infer<typeof publicSupplierRowSchema>;
@@ -39,7 +41,30 @@ function initials(name: string): string {
     .join("");
 }
 
-function toSupplierListing(profile: PublicSupplierRow): SupplierListing {
+type SignedUrls = Map<string, string>;
+
+/** Signs private supplier-media paths (rows come only from the validated-only view). */
+async function signMedia(rows: PublicSupplierRow[]): Promise<SignedUrls> {
+  const paths = Array.from(
+    new Set(
+      rows.flatMap((r) => [r.business_logo ?? "", ...(r.product_images ?? [])]).filter(Boolean),
+    ),
+  );
+  const map: SignedUrls = new Map();
+  if (paths.length === 0) return map;
+  try {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin.storage.from("supplier-media").createSignedUrls(paths, 3600);
+    for (const item of data ?? []) {
+      if (item.path && item.signedUrl) map.set(item.path, item.signedUrl);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+  return map;
+}
+
+function toSupplierListing(profile: PublicSupplierRow, urls: SignedUrls): SupplierListing {
   const name = profile.business_name.trim() || "LeadLink Supplier";
   const area = profile.public_area?.trim() || "Location not provided";
 
@@ -63,6 +88,10 @@ function toSupplierListing(profile: PublicSupplierRow): SupplierListing {
       AVATAR_GRADIENTS[profile.supplier_profile_id % AVATAR_GRADIENTS.length] ??
       "from-amber-500 to-orange-500",
     source: "live",
+    logoUrl: profile.business_logo ? (urls.get(profile.business_logo) ?? null) : null,
+    productImages: (profile.product_images ?? [])
+      .map((path) => urls.get(path))
+      .filter((u): u is string => Boolean(u)),
   };
 }
 
@@ -98,9 +127,10 @@ async function fetchPublicSupplierRows(query: string): Promise<PublicSupplierRow
 export const fetchPublicSuppliers = createServerFn({ method: "GET" }).handler(async () => {
   try {
     const profiles = await fetchPublicSupplierRows(
-      "select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name&order=business_name.asc",
+      "select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name,business_logo,product_images&order=business_name.asc",
     );
-    return profiles.map(toSupplierListing);
+    const urls = await signMedia(profiles);
+    return profiles.map((p) => toSupplierListing(p, urls));
   } catch (error) {
     // Listing view may not exist yet (categories not built); fall back to mock data.
     console.error(error);
@@ -118,8 +148,9 @@ export const fetchPublicSupplierBySlug = createServerFn({ method: "GET" })
     if (!Number.isSafeInteger(profileId) || profileId <= 0) return null;
 
     const profiles = await fetchPublicSupplierRows(
-      `select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name&supplier_profile_id=eq.${profileId}&limit=1`,
+      `select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name,business_logo,product_images&supplier_profile_id=eq.${profileId}&limit=1`,
     );
     const profile = profiles[0];
-    return profile ? toSupplierListing(profile) : null;
+    if (!profile) return null;
+    return toSupplierListing(profile, await signMedia([profile]));
   });

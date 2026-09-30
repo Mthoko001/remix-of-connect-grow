@@ -259,8 +259,10 @@ export type Database = {
       tb_public_supplier_listing: {
         Row: {
           business_description: string | null
+          business_logo: string | null
           business_name: string | null
           category_name: string | null
+          product_images: Json | null
           public_area: string | null
           supplier_account_id: string | null
           supplier_profile_id: number | null

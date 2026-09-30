@@ -5,8 +5,10 @@ import { HowItWorks } from "@/components/landing/how-it-works";
 import { FeaturedListings } from "@/components/landing/featured-listings";
 import { About } from "@/components/landing/about";
 import { Footer } from "@/components/landing/footer";
+import { fetchPublicSuppliers } from "@/lib/public-suppliers.functions";
 
 export const Route = createFileRoute("/")({
+  loader: () => fetchPublicSuppliers(),
   head: () => ({
     meta: [
       { title: "LeadLink — Find Trusted Local Suppliers" },
@@ -27,13 +29,14 @@ export const Route = createFileRoute("/")({
 });
 
 function LandingPage() {
+  const liveSuppliers = Route.useLoaderData();
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
       <main className="flex-1">
         <Hero />
         <HowItWorks />
-        <FeaturedListings />
+        <FeaturedListings liveSuppliers={liveSuppliers} />
         <About />
       </main>
       <Footer />

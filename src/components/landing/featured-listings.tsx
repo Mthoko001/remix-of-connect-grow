@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { MOCK_SUPPLIERS } from "@/lib/mock-suppliers";
+import { MOCK_SUPPLIERS, type SupplierListing } from "@/lib/mock-suppliers";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -25,7 +25,8 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-export function FeaturedListings() {
+export function FeaturedListings({ liveSuppliers = [] }: { liveSuppliers?: SupplierListing[] }) {
+  const featured = [...liveSuppliers, ...MOCK_SUPPLIERS].slice(0, 4);
   return (
     <section className="bg-background">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24 lg:px-8">
@@ -60,7 +61,7 @@ export function FeaturedListings() {
         </div>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {MOCK_SUPPLIERS.map((s) => (
+          {featured.map((s) => (
             <Link
               key={s.slug}
               to="/suppliers/$slug"
@@ -68,11 +69,19 @@ export function FeaturedListings() {
               className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/10"
             >
               <div className="flex items-center justify-between">
-                <span
-                  className={`grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${s.gradient} text-base font-bold text-white`}
-                >
-                  {s.initials}
-                </span>
+                {s.logoUrl ? (
+                  <img
+                    src={s.logoUrl}
+                    alt={`${s.name} logo`}
+                    className="h-12 w-12 rounded-xl object-cover"
+                  />
+                ) : (
+                  <span
+                    className={`grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${s.gradient} text-base font-bold text-white`}
+                  >
+                    {s.initials}
+                  </span>
+                )}
                 {s.verified && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-verified/10 px-2 py-0.5 text-xs font-semibold text-verified">
                     <svg
@@ -100,9 +109,15 @@ export function FeaturedListings() {
               <p className="mt-1 text-sm text-muted-foreground">{s.category}</p>
 
               <div className="mt-3 flex items-center gap-1.5">
-                <StarRating rating={s.rating} />
-                <span className="text-sm font-semibold text-foreground">{s.rating}</span>
-                <span className="text-xs text-muted-foreground">({s.reviews})</span>
+                {s.reviews > 0 ? (
+                  <>
+                    <StarRating rating={s.rating} />
+                    <span className="text-sm font-semibold text-foreground">{s.rating}</span>
+                    <span className="text-xs text-muted-foreground">({s.reviews})</span>
+                  </>
+                ) : (
+                  <span className="text-sm text-muted-foreground">New on LeadLink</span>
+                )}
               </div>
 
               <div className="mt-4 flex items-center gap-1.5 border-t border-border pt-4 text-xs text-muted-foreground">
