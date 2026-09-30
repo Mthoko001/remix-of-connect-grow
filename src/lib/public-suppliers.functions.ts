@@ -96,10 +96,16 @@ async function fetchPublicSupplierRows(query: string): Promise<PublicSupplierRow
 }
 
 export const fetchPublicSuppliers = createServerFn({ method: "GET" }).handler(async () => {
-  const profiles = await fetchPublicSupplierRows(
-    "select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name&order=business_name.asc",
-  );
-  return profiles.map(toSupplierListing);
+  try {
+    const profiles = await fetchPublicSupplierRows(
+      "select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name&order=business_name.asc",
+    );
+    return profiles.map(toSupplierListing);
+  } catch (error) {
+    // Listing view may not exist yet (categories not built); fall back to mock data.
+    console.error(error);
+    return [] as SupplierListing[];
+  }
 });
 
 export const fetchPublicSupplierBySlug = createServerFn({ method: "GET" })
