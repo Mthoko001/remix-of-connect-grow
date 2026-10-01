@@ -43,6 +43,13 @@
       "when": 1790789480088,
       "tag": "0005_restore_supplier_account_trigger",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790834559109,
+      "tag": "0006_grant_is_admin_to_authenticated",
+      "breakpoints": true
     }
   ]
 }
