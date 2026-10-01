@@ -45,6 +45,23 @@ export function countCompleteFields(draft: SupplierProfileDraft): number {
   return count;
 }
 
+const FIELD_LABELS: Record<string, string> = {
+  business_name: "Business Name",
+  business_description: "Description",
+  address: "Address",
+  cell_no: "Cell Number",
+};
+
+/** Human-readable list of what's still missing before the profile can be submitted. */
+export function missingFields(draft: SupplierProfileDraft): string[] {
+  const missing: string[] = REQUIRED_FIELDS.filter(
+    (field) => String(draft[field] ?? "").trim().length === 0,
+  ).map((field) => FIELD_LABELS[field] ?? String(field));
+  if (!draft.business_logo) missing.push("Business logo");
+  if (draft.product_images.length === 0) missing.push("At least one product image");
+  return missing;
+}
+
 export function toDraft(row: SupplierProfileRow | null): SupplierProfileDraft {
   if (!row) return EMPTY_DRAFT;
   return {
