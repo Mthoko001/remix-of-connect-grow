@@ -26,8 +26,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { suggestBusinessDescription } from "@/lib/admin-description-ai.functions";
 import {
   MAX_PRODUCT_IMAGES,
-  TOTAL_TRACKED_FIELDS,
-  countCompleteFields,
+  missingFields,
   removeSupplierMedia,
   uploadSupplierMedia,
 } from "@/lib/supplier-profile";
@@ -336,22 +335,24 @@ function SupplierProfilePage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() =>
+                onClick={() => {
+                  const missing = missingFields(draft);
+                  if (missing.length > 0) {
+                    toast.error("Please complete your profile before submitting.", {
+                      description: `Still missing: ${missing.join(", ")}.`,
+                    });
+                    return;
+                  }
                   void submitForReview().then((ok) => {
                     if (ok)
                       toast.success(
                         "Your profile has been submitted for review. You will be notified once the review process is complete.",
                       );
                     else toast.error("Could not submit your profile. Please try again.");
-                  })
-                }
-                disabled={submitting || countCompleteFields(draft) < TOTAL_TRACKED_FIELDS}
+                  });
+                }}
+                disabled={submitting}
                 className="gap-2"
-                title={
-                  countCompleteFields(draft) < TOTAL_TRACKED_FIELDS
-                    ? "Complete all fields before submitting for review."
-                    : undefined
-                }
               >
                 {submitting ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
