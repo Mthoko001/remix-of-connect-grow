@@ -168,6 +168,38 @@ export type Database = {
         }
         Relationships: []
       }
+      tb_profile_view: {
+        Row: {
+          profile_view_id: number
+          supplier_account_id: string
+          viewed_at: string
+          viewer_account_id: string | null
+          visitor_hash: string
+        }
+        Insert: {
+          profile_view_id?: never
+          supplier_account_id: string
+          viewed_at?: string
+          viewer_account_id?: string | null
+          visitor_hash: string
+        }
+        Update: {
+          profile_view_id?: never
+          supplier_account_id?: string
+          viewed_at?: string
+          viewer_account_id?: string | null
+          visitor_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tb_profile_view_supplier_account_id_fkey"
+            columns: ["supplier_account_id"]
+            isOneToOne: false
+            referencedRelation: "tb_supplier_account"
+            referencedColumns: ["supplier_account_id"]
+          },
+        ]
+      }
       tb_subscription: {
         Row: {
           amount: number
@@ -343,6 +375,16 @@ export type Database = {
           total_enquiries: number
         }[]
       }
+      admin_top_profile_views: {
+        Args: { _limit?: number }
+        Returns: {
+          business_name: string
+          platform_total: number
+          supplier_account_id: string
+          total_views: number
+          views_this_month: number
+        }[]
+      }
       can_supplier_receive_enquiries: {
         Args: { _supplier_account_id: string }
         Returns: boolean
@@ -356,7 +398,21 @@ export type Database = {
           total_enquiries: number
         }[]
       }
+      get_my_profile_view_stats: {
+        Args: never
+        Returns: {
+          daily: Json
+          total_views: number
+          views_last_month: number
+          views_this_month: number
+          views_this_week: number
+        }[]
+      }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      record_profile_view: {
+        Args: { _supplier_account_id: string; _visitor_id: string }
+        Returns: boolean
+      }
       supplier_has_active_subscription: {
         Args: { _supplier_account_id: string }
         Returns: boolean
