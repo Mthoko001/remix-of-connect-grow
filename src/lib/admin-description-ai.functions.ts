@@ -107,6 +107,13 @@ export const suggestBusinessDescription = createServerFn({ method: "POST" })
       if (response.status === 429) {
         throw new Error("Gemini is rate-limited right now. Please try again shortly.");
       }
+      if (response.status === 400 || response.status === 401 || response.status === 403) {
+        const detail = await response.text();
+        if (/api key|API_KEY|permission|unauthori/i.test(detail) || response.status !== 400) {
+          console.error("Gemini rejected the API key:", response.status);
+          throw new Error("Your Gemini key was rejected. Please check or replace it.");
+        }
+      }
       console.error("Gemini description suggestion failed with status:", response.status);
       throw new Error("Gemini couldn't generate a suggestion. Please try again.");
     }
