@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.supplier_has_active_subscription(uuid) FROM authenticated;

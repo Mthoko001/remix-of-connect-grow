@@ -45,7 +45,14 @@ export function useSupplierProfile() {
         }
       })
       .catch((err: unknown) => {
-        if (active) setError(err instanceof Error ? err.message : "Could not load your profile.");
+        if (!active) return;
+        const message =
+          err instanceof Error
+            ? err.message
+            : typeof err === "object" && err !== null && "message" in err
+              ? String((err as { message: unknown }).message)
+              : "Could not load your profile.";
+        setError(message);
       })
       .finally(() => {
         if (active) setLoading(false);
