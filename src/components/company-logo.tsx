@@ -1,10 +1,10 @@
 import { cn } from "@/lib/utils";
 
 type CompanyLogoProps = {
-  src?: string | null;
+  src?: string | null | undefined;
   name: string;
-  initials?: string;
-  fallbackClassName?: string;
+  initials?: string | undefined;
+  fallbackClassName?: string | undefined;
 };
 
 /** Consistent, uncropped company-logo presentation across the app. */
