@@ -169,11 +169,7 @@ function AdminDashboardPage() {
       toast.success("Supplier validated.");
       setSelected(null);
       await loadRows();
-      const { sent } = await notifySupplierOfDecision({
-        email: selected.email,
-        businessName: selected.profile?.business_name || selected.email,
-        status: "validated",
-      });
+      const { sent } = await notifySupplierOfDecision({ supplierAccountId: selected.supplier_account_id });
       if (!sent) {
         toast.warning("Supplier validated, but the notification email couldn't be sent.");
       }
@@ -196,12 +192,7 @@ function AdminDashboardPage() {
       toast.success("Supplier rejected.");
       setSelected(null);
       await loadRows();
-      const { sent } = await notifySupplierOfDecision({
-        email: selected.email,
-        businessName: selected.profile?.business_name || selected.email,
-        status: "rejected",
-        rejectionReason,
-      });
+      const { sent } = await notifySupplierOfDecision({ supplierAccountId: selected.supplier_account_id });
       if (!sent) {
         toast.warning("Supplier rejected, but the notification email couldn't be sent.");
       }
