@@ -16,6 +16,7 @@ import { useSupplierProfile, type SaveState } from "@/hooks/use-supplier-profile
 import { DashboardShell, PageHeader, Panel } from "@/components/supplier/dashboard-shell";
 import { MonetizationBadge } from "@/components/supplier/lead-status";
 import { useLeadStatus } from "@/hooks/use-lead-status";
+import { ProfileStatusBadge } from "@/components/supplier/profile-status-badge";
 import { MediaThumb } from "@/components/supplier/media-thumb";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -196,6 +197,7 @@ function SupplierProfilePage() {
           subtitle="This information appears on your public listing once you're verified."
         />
         <div className="flex items-center gap-3">
+          <ProfileStatusBadge status={status} />
           <LeadStatusBadge />
           <SaveStatusLabel saveState={saveState} lastSavedAt={lastSavedAt} />
         </div>
@@ -334,7 +336,15 @@ function SupplierProfilePage() {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => void submitForReview()}
+                onClick={() =>
+                  void submitForReview().then((ok) => {
+                    if (ok)
+                      toast.success(
+                        "Your profile has been submitted for review. You will be notified once the review process is complete.",
+                      );
+                    else toast.error("Could not submit your profile. Please try again.");
+                  })
+                }
                 disabled={submitting || countCompleteFields(draft) < TOTAL_TRACKED_FIELDS}
                 className="gap-2"
                 title={
@@ -357,7 +367,12 @@ function SupplierProfilePage() {
             )}
             <Button
               type="button"
-              onClick={() => void saveNow()}
+              onClick={() =>
+                void saveNow().then((ok) => {
+                  if (ok) toast.success("Draft saved successfully.");
+                  else toast.error("Could not save your changes. Please try again.");
+                })
+              }
               disabled={saveState === "saving"}
               className="gap-2"
             >
@@ -458,7 +473,7 @@ function StatusBanner({
       <div className="mb-6 flex items-center gap-3 rounded-2xl border border-brand/20 bg-brand/5 p-4">
         <Clock className="h-5 w-5 shrink-0 text-brand" />
         <p className="text-sm text-foreground">
-          Submitted — awaiting review. You can still edit your details below.
+          Under review — our team is checking your profile. We'll email you once it's approved. You can still edit your details below.
         </p>
       </div>
     );

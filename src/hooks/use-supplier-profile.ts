@@ -62,7 +62,7 @@ export function useSupplierProfile() {
     };
   }, []);
 
-  const save = useCallback(async () => {
+  const save = useCallback(async (): Promise<boolean> => {
     setSaveState("saving");
     setError(null);
     try {
@@ -70,9 +70,11 @@ export function useSupplierProfile() {
       dirtyRef.current = false;
       setLastSavedAt(new Date(row.date_updated));
       setSaveState("saved");
+      return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save your draft.");
       setSaveState("error");
+      return false;
     }
   }, []);
 
@@ -89,20 +91,27 @@ export function useSupplierProfile() {
 
   const saveNow = useCallback(async () => {
     if (timerRef.current) clearTimeout(timerRef.current);
-    await save();
+    return save();
   }, [save]);
 
-  const submitForReview = useCallback(async () => {
+  const submitForReview = useCallback(async (): Promise<boolean> => {
     setSubmitting(true);
     setError(null);
     try {
-      await saveNow();
+      const saved = await saveNow();
+      if (!saved) return false;
       await submitProfileForReview();
       setStatus("pending_verification");
       setRejectionReason(null);
       setLastSavedAt(new Date());
+      // Confirmation email is best-effort; never blocks the submission.
+      void import("@/lib/profile-emails.functions")
+        .then(({ sendProfileSubmittedEmail }) => sendProfileSubmittedEmail())
+        .catch((err) => console.error("Submission email failed", err));
+      return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not submit your profile.");
+      return false;
     } finally {
       setSubmitting(false);
     }
