@@ -4,7 +4,9 @@ import { Clock, MapPin, MessageCircle, ShieldCheck, Star } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { WhatsAppEnquiryDialog } from "@/components/customer/whatsapp-enquiry-dialog";
+import { ImageGalleryLightbox } from "@/components/customer/image-gallery-lightbox";
 import { CompanyLogo } from "@/components/company-logo";
+import { Button } from "@/components/ui/button";
 import { fetchPublicSupplierBySlug } from "@/lib/public-suppliers.functions";
 
 export const Route = createFileRoute("/suppliers/$slug")({
@@ -13,15 +15,24 @@ export const Route = createFileRoute("/suppliers/$slug")({
     if (!supplier) throw notFound();
     return supplier;
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      { title: loaderData ? `${loaderData.name} — GrowMeOnline` : "Supplier — GrowMeOnline" },
+  head: ({ loaderData }) => {
+    const title = loaderData ? `${loaderData.name} — GrowMeOnline` : "Supplier — GrowMeOnline";
+    const description =
+      loaderData?.description ?? "View this supplier's business profile on GrowMeOnline.";
+    return {
+      meta: [
+      { title },
       {
         name: "description",
-        content: loaderData?.description ?? "View this supplier's business profile on GrowMeOnline.",
+        content: description,
       },
-    ],
-  }),
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      ],
+    };
+  },
   component: SupplierPublicProfilePage,
 });
 
@@ -41,6 +52,7 @@ function StarRating({ rating }: { rating: number }) {
 function SupplierPublicProfilePage() {
   const supplier = Route.useLoaderData();
   const [whatsappOpen, setWhatsappOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const productImages = supplier.productImages ?? [];
 
   return (
@@ -136,14 +148,22 @@ function SupplierPublicProfilePage() {
           <section className="mt-10">
             <h2 className="text-lg font-bold text-foreground">Photos</h2>
             <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {productImages.map((src) => (
-                <img
+              {productImages.map((src, index) => (
+                <Button
                   key={src}
-                  src={src}
-                  alt={`${supplier.name} work sample`}
-                  loading="lazy"
-                  className="aspect-[4/3] w-full rounded-xl border border-border object-cover"
-                />
+                  type="button"
+                  variant="outline"
+                  onClick={() => setSelectedImageIndex(index)}
+                  aria-label={`Open ${supplier.name} image ${index + 1}`}
+                  className="group aspect-[4/3] h-auto w-full overflow-hidden rounded-lg bg-muted/20 p-2 shadow-none"
+                >
+                  <img
+                    src={src}
+                    alt={`${supplier.name} work sample ${index + 1}`}
+                    loading="lazy"
+                    className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+                  />
+                </Button>
               ))}
             </div>
           </section>
@@ -157,6 +177,12 @@ function SupplierPublicProfilePage() {
         onOpenChange={setWhatsappOpen}
         supplierAccountId={supplier.supplierAccountId}
         supplierName={supplier.name}
+      />
+      <ImageGalleryLightbox
+        images={productImages}
+        supplierName={supplier.name}
+        selectedIndex={selectedImageIndex}
+        onSelectedIndexChange={setSelectedImageIndex}
       />
     </div>
   );
