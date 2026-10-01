@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { SupplierListing } from "@/lib/supplier-listing";
+import { CompanyLogo } from "@/components/company-logo";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -78,19 +79,12 @@ export function FeaturedListings({ liveSuppliers = [] }: { liveSuppliers?: Suppl
               className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/10"
             >
               <div className="flex items-center justify-between">
-                {s.logoUrl ? (
-                  <img
-                    src={s.logoUrl}
-                    alt={`${s.name} logo`}
-                    className="h-12 w-12 rounded-xl object-cover"
-                  />
-                ) : (
-                  <span
-                    className={`grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${s.gradient} text-base font-bold text-white`}
-                  >
-                    {s.initials}
-                  </span>
-                )}
+                <CompanyLogo
+                  src={s.logoUrl}
+                  name={s.name}
+                  initials={s.initials}
+                  fallbackClassName={`bg-gradient-to-br ${s.gradient}`}
+                />
                 {s.verified && (
                   <span className="inline-flex items-center gap-1 rounded-full bg-verified/10 px-2 py-0.5 text-xs font-semibold text-verified">
                     <svg

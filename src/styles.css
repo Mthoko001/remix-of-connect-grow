@@ -65,6 +65,7 @@
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-glow: var(--brand-glow);
   --color-verified: var(--verified);
+  --color-logo-surface: var(--logo-surface);
 }
 
 :root {
@@ -73,6 +74,7 @@
   --brand-foreground: oklch(0.99 0.01 250);
   --brand-glow: oklch(0.6 0.19 264);
   --verified: oklch(0.62 0.15 155);
+  --logo-surface: oklch(1 0 0);
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
@@ -112,6 +114,7 @@
   --brand-foreground: oklch(0.15 0.03 255);
   --brand-glow: oklch(0.68 0.19 264);
   --verified: oklch(0.7 0.15 155);
+  --logo-surface: oklch(1 0 0);
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
