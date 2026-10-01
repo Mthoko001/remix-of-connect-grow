@@ -17,6 +17,7 @@ import {
   type SupplierProfileStatus,
 } from "@/lib/supplier-profile";
 import { fetchMyEnquiries, type EnquiryRow } from "@/lib/enquiries";
+import { ProfileStatusBadge } from "@/components/supplier/profile-status-badge";
 import { useLeadStatus } from "@/hooks/use-lead-status";
 import {
   LeadGenerationStatusCard,
@@ -82,7 +83,10 @@ function SupplierDashboardPage() {
           title={`Welcome back${email ? `, ${email}` : ""}`}
           subtitle="Here's what's happening with your business on GrowMeOnline."
         />
-        {leadStatus && <MonetizationBadge status={leadStatus.status} />}
+        <div className="flex flex-wrap items-center gap-2">
+          {status && <ProfileStatusBadge status={status} />}
+          {leadStatus && <MonetizationBadge status={leadStatus.status} />}
+        </div>
       </div>
 
       {leadStatus?.status === "quota_reached" && <QuotaExhaustedBanner />}
@@ -130,7 +134,7 @@ function SupplierDashboardPage() {
         <div className="mb-6 flex items-center gap-3 rounded-2xl border border-brand/20 bg-brand/5 p-5 sm:p-6">
           <Clock className="h-5 w-5 shrink-0 text-brand" />
           <div>
-            <p className="text-sm font-semibold text-foreground">Submitted for review</p>
+            <p className="text-sm font-semibold text-foreground">Under review</p>
             <p className="mt-1 text-sm text-muted-foreground">
               We're reviewing your business profile — we'll notify you once you're verified.
             </p>

@@ -164,30 +164,13 @@ export function productImagePaths(value: Json): string[] {
   return value.filter((v): v is string => typeof v === "string");
 }
 
-/**
- * Emails the supplier that their profile was verified or rejected. Best-
- * effort: the caller should not block the approve/reject action on this
- * succeeding — it fails gracefully (e.g. RESEND_API_KEY not configured
- * yet) without undoing the status change.
- */
+/** Emails the supplier the approve/reject decision. Best-effort; never undoes the status change. */
 export async function notifySupplierOfDecision(input: {
-  email: string;
-  businessName: string;
-  status: Extract<SupplierProfileStatus, "validated" | "rejected">;
-  rejectionReason?: string;
+  supplierAccountId: string;
 }): Promise<{ sent: boolean }> {
   try {
-    const { error } = await supabase.functions.invoke("send-supplier-status-email", {
-      body: {
-        email: input.email,
-        businessName: input.businessName,
-        status: input.status,
-        rejectionReason: input.rejectionReason,
-        siteUrl: window.location.origin,
-      },
-    });
-    if (error) throw error;
-    return { sent: true };
+    const { sendProfileDecisionEmail } = await import("@/lib/profile-emails.functions");
+    return await sendProfileDecisionEmail({ data: { supplierAccountId: input.supplierAccountId } });
   } catch (err) {
     console.error("Could not send supplier notification email:", err);
     return { sent: false };
