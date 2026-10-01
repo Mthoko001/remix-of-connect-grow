@@ -8,18 +8,6 @@ const suggestionInputSchema = z.object({
   description: z.string().trim().min(1).max(1000),
 });
 
-const geminiResponseSchema = z.object({
-  candidates: z
-    .array(
-      z.object({
-        content: z.object({
-          parts: z.array(z.object({ text: z.string() })),
-        }),
-      }),
-    )
-    .optional(),
-});
-
 export const suggestBusinessDescription = createServerFn({ method: "POST" })
   .validator(suggestionInputSchema)
   .handler(async ({ data }) => {
