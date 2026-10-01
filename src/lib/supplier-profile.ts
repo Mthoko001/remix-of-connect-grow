@@ -33,14 +33,13 @@ export const REQUIRED_FIELDS = [
   "cell_no",
 ] as const satisfies readonly (keyof SupplierProfileDraft)[];
 
-/** Total fields counted for completeness (4 required + logo + product images). */
-export const TOTAL_TRACKED_FIELDS = REQUIRED_FIELDS.length + 2;
+/** Total fields counted for completeness (4 required + product images). Logo is optional. */
+export const TOTAL_TRACKED_FIELDS = REQUIRED_FIELDS.length + 1;
 
 export function countCompleteFields(draft: SupplierProfileDraft): number {
   let count = REQUIRED_FIELDS.filter(
     (field) => String(draft[field] ?? "").trim().length > 0,
   ).length;
-  if (draft.business_logo) count += 1;
   if (draft.product_images.length > 0) count += 1;
   return count;
 }
@@ -57,7 +56,6 @@ export function missingFields(draft: SupplierProfileDraft): string[] {
   const missing: string[] = REQUIRED_FIELDS.filter(
     (field) => String(draft[field] ?? "").trim().length === 0,
   ).map((field) => FIELD_LABELS[field] ?? String(field));
-  if (!draft.business_logo) missing.push("Business logo");
   if (draft.product_images.length === 0) missing.push("At least one product image");
   return missing;
 }

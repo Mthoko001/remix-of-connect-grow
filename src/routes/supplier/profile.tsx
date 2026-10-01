@@ -384,7 +384,7 @@ function SupplierProfilePage() {
         </div>
 
         <div className="space-y-6">
-          <Panel title="Business logo">
+          <Panel title="Business logo (optional)">
             {draft.business_logo ? (
               <div className="w-full max-w-[160px]">
                 <MediaThumb
