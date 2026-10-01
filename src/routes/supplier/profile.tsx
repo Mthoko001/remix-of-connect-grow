@@ -26,7 +26,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { suggestBusinessDescription } from "@/lib/admin-description-ai.functions";
 import {
   MAX_PRODUCT_IMAGES,
-  TOTAL_TRACKED_FIELDS,
   missingFields,
   removeSupplierMedia,
   uploadSupplierMedia,
