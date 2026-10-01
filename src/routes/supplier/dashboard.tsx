@@ -24,6 +24,11 @@ import {
   MonetizationBadge,
   QuotaExhaustedBanner,
 } from "@/components/supplier/lead-status";
+import {
+  ProfileViewMetrics,
+  ProfileViewsChart,
+  useProfileViewStats,
+} from "@/components/supplier/profile-views-panel";
 
 export const Route = createFileRoute("/supplier/dashboard")({
   head: () => ({
@@ -39,6 +44,7 @@ function SupplierDashboardPage() {
   const [status, setStatus] = useState<SupplierProfileStatus | null>(null);
   const [enquiries, setEnquiries] = useState<EnquiryRow[]>([]);
   const { leadStatus } = useLeadStatus(!checking);
+  const viewStats = useProfileViewStats(!checking);
 
   useEffect(() => {
     if (checking) return;
@@ -182,7 +188,7 @@ function SupplierDashboardPage() {
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard label="Profile Views" value="0" />
+        <MetricCard label="Profile Views" value={viewStats ? String(viewStats.total) : "—"} />
         <MetricCard label="Enquiries" value={String(enquiries.length)} />
         <MetricCard label="Conversion Rate" value="—" />
         <MetricCard
@@ -190,6 +196,9 @@ function SupplierDashboardPage() {
           value={leadStatus?.hasActiveSubscription ? "Active" : "Unpaid"}
         />
       </div>
+
+      <ProfileViewMetrics stats={viewStats} />
+      <ProfileViewsChart stats={viewStats} />
 
       {leadStatus && <LeadGenerationStatusCard leadStatus={leadStatus} />}
 
