@@ -64,7 +64,7 @@ export function ImageGalleryLightbox({
     >
       <DialogContent
         ref={viewerRef}
-        className="h-dvh w-screen max-w-none gap-0 overflow-hidden border-0 bg-gallery p-0 text-gallery-foreground shadow-none [&>button]:hidden sm:rounded-none"
+        className="h-dvh w-screen max-w-none grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden border-0 bg-gallery p-0 text-gallery-foreground shadow-none [&>button]:hidden sm:rounded-none"
       >
         <DialogTitle className="sr-only">{supplierName} image gallery</DialogTitle>
 
@@ -137,12 +137,12 @@ export function ImageGalleryLightbox({
           </div>
         </header>
 
-        <div className="relative min-h-0 flex-1 overflow-auto">
-          <div className="flex min-h-full items-center justify-center p-4 sm:p-8">
+        <div className="relative min-h-0 overflow-auto bg-gallery">
+          <div className="flex h-full min-h-0 items-center justify-center p-14 sm:p-16">
             <img
               src={images[activeIndex]}
               alt={`${supplierName} work sample ${activeIndex + 1}`}
-              className="max-h-[calc(100dvh-11rem)] max-w-full object-contain transition-transform duration-200"
+              className="max-h-full max-w-full object-contain transition-transform duration-200"
               style={{ transform: `scale(${zoom})` }}
             />
           </div>
@@ -173,8 +173,8 @@ export function ImageGalleryLightbox({
           )}
         </div>
 
-        <div className="h-28 border-t border-gallery-foreground/15 px-3 py-3 sm:px-5">
-          <div className="mx-auto flex h-full max-w-4xl gap-2 overflow-x-auto pb-1">
+        <div className="h-28 border-t border-gallery-foreground/15 bg-gallery px-3 py-3 sm:px-5">
+          <div className="mx-auto flex h-full max-w-4xl justify-start gap-2 overflow-x-auto pb-1 sm:justify-center">
             {images.map((src, index) => (
               <Button
                 key={`${src}-${index}`}
