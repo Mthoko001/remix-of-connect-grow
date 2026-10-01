@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { recordProfileView } from "@/lib/profile-views";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Clock, MapPin, MessageCircle, ShieldCheck, Star } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
@@ -54,6 +55,10 @@ function SupplierPublicProfilePage() {
   const [whatsappOpen, setWhatsappOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const productImages = supplier.productImages ?? [];
+
+  useEffect(() => {
+    void recordProfileView(supplier.supplierAccountId);
+  }, [supplier.supplierAccountId]);
 
   return (
     <div className="min-h-screen bg-background">
