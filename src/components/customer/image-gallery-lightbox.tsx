@@ -64,7 +64,7 @@ export function ImageGalleryLightbox({
     >
       <DialogContent
         ref={viewerRef}
-        className="h-dvh w-screen max-w-none grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden border-0 bg-gallery p-0 text-gallery-foreground shadow-none [&>button]:hidden sm:rounded-none"
+        className="inset-0 left-0 top-0 h-dvh w-screen max-w-none translate-x-0 translate-y-0 grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden border-0 bg-gallery p-0 text-gallery-foreground shadow-none duration-0 data-[state=closed]:animate-none data-[state=open]:animate-none [&>button]:hidden sm:rounded-none"
       >
         <DialogTitle className="sr-only">{supplierName} image gallery</DialogTitle>
 
