@@ -386,11 +386,12 @@ function SupplierProfilePage() {
         <div className="space-y-6">
           <Panel title="Business logo (optional)">
             {draft.business_logo ? (
-              <div className="w-full max-w-[160px]">
+              <div className="flex justify-center">
                 <MediaThumb
                   path={draft.business_logo}
                   alt="Business logo"
                   onRemove={handleRemoveLogo}
+                  variant="logo"
                 />
               </div>
             ) : (

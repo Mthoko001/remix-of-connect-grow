@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Free-enquiry quota (5) is enforced by a BEFORE INSERT trigger on tb_enquiry; UI checks via can_supplier_receive_enquiries are UX only. Why: the database is the only place customers cannot bypass.
+- Render supplier/company logos through the shared 80px CompanyLogo component; keep product photos on cover-fit media components. Why: logos must remain uncropped and proportional everywhere.

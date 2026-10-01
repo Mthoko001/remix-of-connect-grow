@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, ShieldCheck, Star } from "lucide-react";
 import type { SupplierListing } from "@/lib/supplier-listing";
+import { CompanyLogo } from "@/components/company-logo";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -24,19 +25,12 @@ export function SupplierCard({ supplier }: { supplier: SupplierListing }) {
       className="group flex h-full w-60 shrink-0 snap-start flex-col rounded-2xl border border-border bg-card p-4 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/10 sm:w-64"
     >
       <div className="flex items-center justify-between">
-        {supplier.logoUrl ? (
-          <img
-            src={supplier.logoUrl}
-            alt={`${supplier.name} logo`}
-            className="h-11 w-11 rounded-xl object-cover"
-          />
-        ) : (
-          <span
-            className={`grid h-11 w-11 place-items-center rounded-xl bg-gradient-to-br ${supplier.gradient} text-sm font-bold text-white`}
-          >
-            {supplier.initials}
-          </span>
-        )}
+        <CompanyLogo
+          src={supplier.logoUrl}
+          name={supplier.name}
+          initials={supplier.initials}
+          fallbackClassName={`bg-gradient-to-br ${supplier.gradient}`}
+        />
         {supplier.verified && (
           <span className="inline-flex items-center gap-1 rounded-full bg-verified/10 px-2 py-0.5 text-[11px] font-semibold text-verified">
             <ShieldCheck className="h-3 w-3" />

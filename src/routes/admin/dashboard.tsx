@@ -297,8 +297,12 @@ function AdminDashboardPage() {
 
               <div className="space-y-4">
                 {selected.profile.business_logo && (
-                  <div className="w-24">
-                    <AdminMediaView path={selected.profile.business_logo} alt="Business logo" />
+                  <div className="flex justify-center">
+                    <AdminMediaView
+                      path={selected.profile.business_logo}
+                      alt="Business logo"
+                      variant="logo"
+                    />
                   </div>
                 )}
 

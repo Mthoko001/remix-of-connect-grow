@@ -4,6 +4,7 @@ import { Clock, MapPin, MessageCircle, ShieldCheck, Star } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { WhatsAppEnquiryDialog } from "@/components/customer/whatsapp-enquiry-dialog";
+import { CompanyLogo } from "@/components/company-logo";
 import { fetchPublicSupplierBySlug } from "@/lib/public-suppliers.functions";
 
 export const Route = createFileRoute("/suppliers/$slug")({
@@ -50,19 +51,12 @@ function SupplierPublicProfilePage() {
         {/* Header */}
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-start gap-4">
-            <span
-              className={`grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br ${supplier.gradient} text-xl font-bold text-white`}
-            >
-              {supplier.logoUrl ? (
-                <img
-                  src={supplier.logoUrl}
-                  alt={`${supplier.name} logo`}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                supplier.initials
-              )}
-            </span>
+            <CompanyLogo
+              src={supplier.logoUrl}
+              name={supplier.name}
+              initials={supplier.initials}
+              fallbackClassName={`bg-gradient-to-br ${supplier.gradient}`}
+            />
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
