@@ -1,17 +1,30 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { CheckCircle2, CreditCard, ShoppingCart, Trash2 } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { Check, CheckCircle2, Loader2, Star } from "lucide-react";
+import { toast } from "sonner";
 import { useSupplierSession } from "@/hooks/use-supplier-session";
-import { DashboardShell, PageHeader, Panel } from "@/components/supplier/dashboard-shell";
+import {
+  DashboardShell,
+  EmptyState,
+  MetricCard,
+  PageHeader,
+  Panel,
+} from "@/components/supplier/dashboard-shell";
 import { Button } from "@/components/ui/button";
 import { usePackages } from "@/hooks/use-packages";
 import { formatDuration, formatRand } from "@/lib/packages";
 import { fetchMyProfile, type SupplierProfileStatus } from "@/lib/supplier-profile";
 import {
-  fetchMySubscription,
-  testPlanAmountDisplay,
+  currentSubscription,
+  daysRemaining,
+  fetchMySubscriptions,
+  formatDate,
+  STATE_LABELS,
+  subscriptionState,
   type SubscriptionRow,
 } from "@/lib/subscription";
+import { startPackageCheckout } from "@/lib/payments.functions";
 
 export const Route = createFileRoute("/supplier/subscription")({
   head: () => ({
@@ -21,25 +34,35 @@ export const Route = createFileRoute("/supplier/subscription")({
 });
 
 function SupplierSubscriptionPage() {
-  const navigate = useNavigate();
   const { checking } = useSupplierSession();
   const [status, setStatus] = useState<SupplierProfileStatus | null>(null);
-  const [subscription, setSubscription] = useState<SubscriptionRow | null>(null);
+  const [history, setHistory] = useState<SubscriptionRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [inCart, setInCart] = useState(false);
+  const [payingId, setPayingId] = useState<number | null>(null);
   const { packages } = usePackages({ enabled: !checking });
-  const pkg = packages[0];
+  const startCheckout = useServerFn(startPackageCheckout);
 
   useEffect(() => {
     if (checking) return;
-    Promise.all([fetchMyProfile(), fetchMySubscription()])
-      .then(([profile, sub]) => {
+    Promise.all([fetchMyProfile(), fetchMySubscriptions()])
+      .then(([profile, subs]) => {
         setStatus((profile?.status as SupplierProfileStatus) ?? "draft");
-        setSubscription(sub);
+        setHistory(subs);
       })
       .catch(() => setStatus("draft"))
       .finally(() => setLoading(false));
   }, [checking]);
+
+  async function choose(packageId: number) {
+    setPayingId(packageId);
+    try {
+      const { redirectUrl } = await startCheckout({ data: { packageId } });
+      window.location.href = redirectUrl;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "We couldn't start the payment.");
+      setPayingId(null);
+    }
+  }
 
   if (checking || loading || status === null) {
     return (
@@ -50,7 +73,9 @@ function SupplierSubscriptionPage() {
   }
 
   const verified = status === "validated";
-  const isPaid = subscription?.subscription_status === "paid";
+  const current = currentSubscription(history);
+  const lastPaid = history.find((h) => h.subscription_status === "paid");
+  const expired = !current && lastPaid;
 
   return (
     <DashboardShell>
@@ -59,108 +84,110 @@ function SupplierSubscriptionPage() {
         subtitle="Your first 5 customer enquiries are free. After that, an active subscription is needed to keep receiving new enquiries."
       />
 
-      <Panel>
-        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-          <div className="flex items-start gap-4">
-            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand/10 text-brand">
-              <CreditCard className="h-5 w-5" />
-            </div>
-            <div>
-              <p className="text-base font-semibold text-foreground">{pkg?.name ?? "Annual Plan"}</p>
-              <p className="mt-1 text-2xl font-bold text-foreground">
-                {pkg ? formatRand(pkg.price) : "—"}
-                <span className="text-sm font-medium text-muted-foreground">
-                  /{formatDuration(pkg?.durationMonths ?? 12)}
-                </span>
-              </p>
-            </div>
-          </div>
-
-          {isPaid ? (
-            <span className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500/10 px-4 py-2.5 text-sm font-semibold text-emerald-700">
-              <CheckCircle2 className="h-4 w-4" />
-              Active
-            </span>
-          ) : (
-            <Button
-              onClick={() => setInCart(true)}
-              disabled={!verified || inCart}
-              className="w-full gap-2 sm:w-auto"
-            >
-              <ShoppingCart className="h-4 w-4" />
-              {inCart ? "Added to Cart" : "Add to Cart"}
-            </Button>
-          )}
+      {current ? (
+        <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <MetricCard label="Current Plan" value={current.tb_package?.name ?? "Subscription"} />
+          <MetricCard label="Status" value="Active" />
+          <MetricCard label="Expiry Date" value={formatDate(current.expires_at)} hint={`Started ${formatDate(current.starts_at)}`} />
+          <MetricCard label="Days Remaining" value={String(daysRemaining(current.expires_at) ?? "—")} />
         </div>
+      ) : expired ? (
+        <div className="mb-6 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 text-sm text-foreground">
+          Your subscription expired on {formatDate(lastPaid.expires_at)}. Renew below to keep receiving new enquiries.
+        </div>
+      ) : null}
 
-        {(status === "draft" || status === "pending_verification") && (
-          <p className="mt-4 text-sm text-muted-foreground">
-            Available once your profile is verified.{" "}
-            {status === "pending_verification"
-              ? "We're reviewing it now."
-              : "Submit your Business Profile for review to get started."}
-          </p>
-        )}
-        {status === "rejected" && (
-          <p className="mt-4 text-sm text-destructive">
-            Your profile wasn't approved. Please review and update your Business Profile, then check
-            back — you'll be able to subscribe once it's verified.
-          </p>
-        )}
-        {verified && !isPaid && !inCart && (
-          <p className="mt-4 text-sm text-emerald-700">
-            Your profile is verified — you're all set to subscribe.
-          </p>
-        )}
-        {isPaid && subscription?.paid_at && (
-          <p className="mt-4 text-sm text-muted-foreground">
-            Paid{" "}
-            {new Date(subscription.paid_at).toLocaleDateString([], {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            })}
-            {subscription.is_test && " — test-mode payment, no real money was charged"}.
-          </p>
+      {!verified && (
+        <p className="mb-6 rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
+          {status === "rejected"
+            ? "Your profile wasn't approved. Update your Business Profile and resubmit — you can subscribe once it's verified."
+            : "Packages become available once your business profile is verified."}
+        </p>
+      )}
+
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {packages.map((pkg) => (
+          <div
+            key={pkg.packageId}
+            className={`relative flex flex-col rounded-2xl border bg-card p-6 shadow-sm ${
+              pkg.isRecommended ? "border-brand ring-1 ring-brand" : "border-border/60"
+            }`}
+          >
+            {pkg.isRecommended && (
+              <span className="absolute -top-3 left-6 inline-flex items-center gap-1 rounded-full bg-brand px-2.5 py-1 text-xs font-semibold text-brand-foreground">
+                <Star className="h-3 w-3" /> Recommended
+              </span>
+            )}
+            <p className="text-base font-semibold text-foreground">{pkg.name}</p>
+            <p className="mt-2 text-3xl font-bold text-foreground">
+              {formatRand(pkg.price)}
+              <span className="text-sm font-medium text-muted-foreground">/{formatDuration(pkg.durationMonths)}</span>
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Billed once · valid for {pkg.durationMonths} {pkg.durationMonths === 1 ? "month" : "months"}
+            </p>
+            {pkg.description && <p className="mt-3 text-sm text-muted-foreground">{pkg.description}</p>}
+            <ul className="mt-4 flex-1 space-y-2">
+              {pkg.benefits.map((b) => (
+                <li key={b} className="flex items-start gap-2 text-sm text-foreground">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-brand" /> {b}
+                </li>
+              ))}
+            </ul>
+            <Button
+              className="mt-6 w-full gap-2"
+              disabled={!verified || payingId !== null}
+              onClick={() => void choose(pkg.packageId)}
+            >
+              {payingId === pkg.packageId && <Loader2 className="h-4 w-4 animate-spin" />}
+              {payingId === pkg.packageId ? "Redirecting to payment…" : current ? "Renew / extend" : "Choose package"}
+            </Button>
+          </div>
+        ))}
+      </div>
+      {packages.length === 0 && (
+        <EmptyState title="No packages available" description="Please check back soon." />
+      )}
+
+      <Panel title="Subscription history" className="mt-6">
+        {history.length === 0 ? (
+          <EmptyState title="No payments yet" description="Your subscription payments will show here." />
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="text-xs uppercase tracking-wide text-muted-foreground">
+                <tr>
+                  <th className="py-2 pr-4">Package</th>
+                  <th className="py-2 pr-4">Status</th>
+                  <th className="py-2 pr-4">Amount</th>
+                  <th className="py-2 pr-4">Paid</th>
+                  <th className="py-2">Expires</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {history.map((h) => {
+                  const state = subscriptionState(h);
+                  return (
+                    <tr key={h.subscription_id}>
+                      <td className="py-2 pr-4 text-foreground">{h.tb_package?.name ?? "Subscription"}</td>
+                      <td className="py-2 pr-4">
+                        <span className="inline-flex items-center gap-1 text-foreground">
+                          {state === "active" && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />}
+                          {STATE_LABELS[state]}
+                          {h.is_test && " (test)"}
+                        </span>
+                      </td>
+                      <td className="py-2 pr-4 text-foreground">{formatRand(Number(h.amount))}</td>
+                      <td className="py-2 pr-4 text-muted-foreground">{formatDate(h.paid_at)}</td>
+                      <td className="py-2 text-muted-foreground">{formatDate(h.expires_at)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
       </Panel>
-
-      {inCart && !isPaid && (
-        <Panel title="Your Cart" className="mt-6">
-          <div className="flex items-center justify-between border-b border-border pb-4">
-            <div>
-              <p className="text-sm font-semibold text-foreground">Annual Plan</p>
-              <p className="text-xs text-muted-foreground">1 × GrowMeOnline Supplier Subscription</p>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold text-foreground">
-                {testPlanAmountDisplay()}
-              </span>
-              <button
-                type="button"
-                onClick={() => setInCart(false)}
-                aria-label="Remove from cart"
-                className="text-muted-foreground hover:text-destructive"
-              >
-                <Trash2 className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-          <div className="flex items-center justify-between pt-4">
-            <p className="text-sm font-semibold text-foreground">Total</p>
-            <p className="text-lg font-bold text-foreground">{testPlanAmountDisplay()}</p>
-          </div>
-          <p className="mt-2 text-xs text-muted-foreground">
-            Test mode price, for testing the payment flow. The real price is shown above.
-          </p>
-          <Button
-            onClick={() => navigate({ to: "/supplier/checkout" })}
-            className="mt-4 w-full gap-2 sm:w-auto"
-          >
-            Proceed to Checkout
-          </Button>
-        </Panel>
-      )}
     </DashboardShell>
   );
 }
