@@ -20,11 +20,15 @@ export interface TemplateEntry {
 import { template as profileSubmitted } from './profile-submitted'
 import { template as profileApproved } from './profile-approved'
 import { template as profileRejected } from './profile-rejected'
+import { template as subscriptionActivated } from './subscription-activated'
+import { template as paymentFailed } from './payment-failed'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'profile-submitted': profileSubmitted,
   'profile-approved': profileApproved,
   'profile-rejected': profileRejected,
+  'subscription-activated': subscriptionActivated,
+  'payment-failed': paymentFailed,
   // Add templates here as they are created, e.g.:
   // 'welcome': welcomeTemplate,
 }
