@@ -132,6 +132,7 @@ export type Database = {
           description: string
           duration_months: number
           is_active: boolean
+          is_recommended: boolean
           name: string
           package_id: number
           price: number
@@ -146,6 +147,7 @@ export type Database = {
           description?: string
           duration_months?: number
           is_active?: boolean
+          is_recommended?: boolean
           name: string
           package_id?: never
           price: number
@@ -160,6 +162,7 @@ export type Database = {
           description?: string
           duration_months?: number
           is_active?: boolean
+          is_recommended?: boolean
           name?: string
           package_id?: never
           price?: number
@@ -204,32 +207,53 @@ export type Database = {
         Row: {
           amount: number
           created_at: string
+          expires_at: string | null
+          failure_reason: string | null
+          gateway: string
+          gateway_reference: string | null
           is_test: boolean
           package_id: number | null
           paid_at: string | null
+          payment_reference: string | null
+          starts_at: string | null
           subscription_id: number
           subscription_status: string
           supplier_account_id: string
+          updated_at: string
         }
         Insert: {
           amount: number
           created_at?: string
+          expires_at?: string | null
+          failure_reason?: string | null
+          gateway?: string
+          gateway_reference?: string | null
           is_test?: boolean
           package_id?: number | null
           paid_at?: string | null
+          payment_reference?: string | null
+          starts_at?: string | null
           subscription_id?: never
           subscription_status?: string
           supplier_account_id: string
+          updated_at?: string
         }
         Update: {
           amount?: number
           created_at?: string
+          expires_at?: string | null
+          failure_reason?: string | null
+          gateway?: string
+          gateway_reference?: string | null
           is_test?: boolean
           package_id?: number | null
           paid_at?: string | null
+          payment_reference?: string | null
+          starts_at?: string | null
           subscription_id?: never
           subscription_status?: string
           supplier_account_id?: string
+          updated_at?: string
         }
         Relationships: [
           {

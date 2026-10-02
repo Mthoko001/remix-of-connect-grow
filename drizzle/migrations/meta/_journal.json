@@ -71,6 +71,13 @@
       "when": 1790930010623,
       "tag": "0009_supplier_business_type",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1790936491597,
+      "tag": "0010_yoco_subscriptions",
+      "breakpoints": true
     }
   ]
 }
