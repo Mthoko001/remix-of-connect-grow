@@ -12,3 +12,5 @@
 - Free-enquiry quota (5) is enforced by a BEFORE INSERT trigger on tb_enquiry; UI checks via can_supplier_receive_enquiries are UX only. Why: the database is the only place customers cannot bypass.
 - Render supplier/company logos through the shared 80px CompanyLogo component; keep product photos on cover-fit media components. Why: logos must remain uncropped and proportional everywhere.
 - Public supplier product galleries use the shared full-screen lightbox and contained image scaling. Why: uploaded work samples must remain uncropped and browsable in place.
+- Subscriptions become 'paid' only in the signature-verified Yoco webhook (src/routes/api/public/yoco-webhook.ts); suppliers cannot insert subscription rows. Why: payment status must never rely on frontend logic.
+- Customer enquiries are saved through the createEnquiry server function, which then forwards them to Chatwoot best-effort. Why: Chatwoot credentials stay server-side and a Chatwoot outage never loses an enquiry.
