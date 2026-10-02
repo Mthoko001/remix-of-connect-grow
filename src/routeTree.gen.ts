@@ -22,6 +22,8 @@ import { Route as AdminEnquiriesRouteImport } from './routes/admin/enquiries'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPackagesRouteImport } from './routes/admin/packages'
 import { Route as AdminSuppliersRouteImport } from './routes/admin/suppliers'
+import { Route as PaymentFailedRouteImport } from './routes/payment/failed'
+import { Route as PaymentSuccessRouteImport } from './routes/payment/success'
 import { Route as SupplierDashboardRouteImport } from './routes/supplier/dashboard'
 import { Route as SupplierEnquiriesRouteImport } from './routes/supplier/enquiries'
 import { Route as SupplierProfileRouteImport } from './routes/supplier/profile'
@@ -100,6 +102,16 @@ const AdminPackagesRoute = AdminPackagesRouteImport.update({
 const AdminSuppliersRoute = AdminSuppliersRouteImport.update({
   id: '/admin/suppliers',
   path: '/admin/suppliers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentFailedRoute = PaymentFailedRouteImport.update({
+  id: '/payment/failed',
+  path: '/payment/failed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
+  id: '/payment/success',
+  path: '/payment/success',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SupplierDashboardRoute = SupplierDashboardRouteImport.update({
@@ -183,6 +195,8 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/profile': typeof SupplierProfileRoute
@@ -211,6 +225,8 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/profile': typeof SupplierProfileRoute
@@ -240,6 +256,8 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/profile': typeof SupplierProfileRoute
@@ -270,6 +288,8 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/packages'
     | '/admin/suppliers'
+    | '/payment/failed'
+    | '/payment/success'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
     | '/supplier/profile'
@@ -298,6 +318,8 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/packages'
     | '/admin/suppliers'
+    | '/payment/failed'
+    | '/payment/success'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
     | '/supplier/profile'
@@ -326,6 +348,8 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/packages'
     | '/admin/suppliers'
+    | '/payment/failed'
+    | '/payment/success'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
     | '/supplier/profile'
@@ -355,6 +379,8 @@ export interface RootRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
   AdminSuppliersRoute: typeof AdminSuppliersRoute
+  PaymentFailedRoute: typeof PaymentFailedRoute
+  PaymentSuccessRoute: typeof PaymentSuccessRoute
   SupplierDashboardRoute: typeof SupplierDashboardRoute
   SupplierEnquiriesRoute: typeof SupplierEnquiriesRoute
   SupplierProfileRoute: typeof SupplierProfileRoute
@@ -461,6 +487,20 @@ declare module '@tanstack/react-router' {
       path: '/admin/suppliers'
       fullPath: '/admin/suppliers'
       preLoaderRoute: typeof AdminSuppliersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment/failed': {
+      id: '/payment/failed'
+      path: '/payment/failed'
+      fullPath: '/payment/failed'
+      preLoaderRoute: typeof PaymentFailedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment/success': {
+      id: '/payment/success'
+      path: '/payment/success'
+      fullPath: '/payment/success'
+      preLoaderRoute: typeof PaymentSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/supplier/dashboard': {
@@ -572,6 +612,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminPackagesRoute: AdminPackagesRoute,
   AdminSuppliersRoute: AdminSuppliersRoute,
+  PaymentFailedRoute: PaymentFailedRoute,
+  PaymentSuccessRoute: PaymentSuccessRoute,
   SupplierDashboardRoute: SupplierDashboardRoute,
   SupplierEnquiriesRoute: SupplierEnquiriesRoute,
   SupplierProfileRoute: SupplierProfileRoute,
