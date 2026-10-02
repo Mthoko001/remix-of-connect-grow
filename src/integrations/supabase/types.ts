@@ -280,11 +280,18 @@ export type Database = {
           business_name: string
           category_id: number | null
           cell_no: string | null
+          closing_time: string
           date_created: string
           date_updated: string
+          is_product_seller: boolean
+          is_service_provider: boolean
           notes: string | null
+          opening_time: string
+          other_service: string | null
           product_images: Json
+          products_offered: string[]
           rejection_reason: string | null
+          service_categories: string[]
           status: string
           supplier_account_id: string
           supplier_profile_id: number
@@ -297,11 +304,18 @@ export type Database = {
           business_name?: string
           category_id?: number | null
           cell_no?: string | null
+          closing_time?: string
           date_created?: string
           date_updated?: string
+          is_product_seller?: boolean
+          is_service_provider?: boolean
           notes?: string | null
+          opening_time?: string
+          other_service?: string | null
           product_images?: Json
+          products_offered?: string[]
           rejection_reason?: string | null
+          service_categories?: string[]
           status?: string
           supplier_account_id: string
           supplier_profile_id?: never
@@ -314,11 +328,18 @@ export type Database = {
           business_name?: string
           category_id?: number | null
           cell_no?: string | null
+          closing_time?: string
           date_created?: string
           date_updated?: string
+          is_product_seller?: boolean
+          is_service_provider?: boolean
           notes?: string | null
+          opening_time?: string
+          other_service?: string | null
           product_images?: Json
+          products_offered?: string[]
           rejection_reason?: string | null
+          service_categories?: string[]
           status?: string
           supplier_account_id?: string
           supplier_profile_id?: never
@@ -349,8 +370,15 @@ export type Database = {
           business_logo: string | null
           business_name: string | null
           category_name: string | null
+          closing_time: string | null
+          is_product_seller: boolean | null
+          is_service_provider: boolean | null
+          opening_time: string | null
+          other_service: string | null
           product_images: Json | null
+          products_offered: string[] | null
           public_area: string | null
+          service_categories: string[] | null
           supplier_account_id: string | null
           supplier_profile_id: number | null
         }
