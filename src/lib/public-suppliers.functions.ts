@@ -11,6 +11,13 @@ const publicSupplierRowSchema = z.object({
   category_name: z.string().nullable(),
   business_logo: z.string().nullable().optional(),
   product_images: z.array(z.string()).nullable().optional(),
+  is_service_provider: z.boolean().nullable().optional(),
+  is_product_seller: z.boolean().nullable().optional(),
+  service_categories: z.array(z.string()).nullable().optional(),
+  other_service: z.string().nullable().optional(),
+  products_offered: z.array(z.string()).nullable().optional(),
+  opening_time: z.string().nullable().optional(),
+  closing_time: z.string().nullable().optional(),
 });
 
 type PublicSupplierRow = z.infer<typeof publicSupplierRowSchema>;
@@ -82,7 +89,10 @@ function toSupplierListing(profile: PublicSupplierRow, urls: SignedUrls): Suppli
     fullAddress: "",
     publicArea: area,
     cellNo: "",
-    businessHours: "Contact supplier for business hours.",
+    businessHours:
+      profile.opening_time && profile.closing_time
+        ? `${profile.opening_time} – ${profile.closing_time}`
+        : "Contact supplier for business hours.",
     whatsappNumber: "",
     gradient:
       AVATAR_GRADIENTS[profile.supplier_profile_id % AVATAR_GRADIENTS.length] ??
@@ -92,6 +102,16 @@ function toSupplierListing(profile: PublicSupplierRow, urls: SignedUrls): Suppli
     productImages: (profile.product_images ?? [])
       .map((path) => urls.get(path))
       .filter((u): u is string => Boolean(u)),
+    businessTypes: [
+      ...(profile.is_service_provider ? ["Service Provider"] : []),
+      ...(profile.is_product_seller ? ["Product Seller"] : []),
+    ],
+    services: profile.is_service_provider
+      ? (profile.service_categories ?? [])
+          .map((c) => (c === "Other" ? profile.other_service?.trim() || "" : c))
+          .filter(Boolean)
+      : [],
+    products: profile.is_product_seller ? (profile.products_offered ?? []) : [],
   };
 }
 
@@ -127,7 +147,7 @@ async function fetchPublicSupplierRows(query: string): Promise<PublicSupplierRow
 export const fetchPublicSuppliers = createServerFn({ method: "GET" }).handler(async () => {
   try {
     const profiles = await fetchPublicSupplierRows(
-      "select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name,business_logo,product_images&order=business_name.asc",
+      "select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time&order=business_name.asc",
     );
     const urls = await signMedia(profiles);
     return profiles.map((p) => toSupplierListing(p, urls));
@@ -148,7 +168,7 @@ export const fetchPublicSupplierBySlug = createServerFn({ method: "GET" })
     if (!Number.isSafeInteger(profileId) || profileId <= 0) return null;
 
     const profiles = await fetchPublicSupplierRows(
-      `select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name,business_logo,product_images&supplier_profile_id=eq.${profileId}&limit=1`,
+      `select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time&supplier_profile_id=eq.${profileId}&limit=1`,
     );
     const profile = profiles[0];
     if (!profile) return null;

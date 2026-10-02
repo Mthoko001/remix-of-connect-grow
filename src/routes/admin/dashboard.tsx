@@ -414,6 +414,33 @@ function AdminDashboardPage() {
                     </p>
                     <p className="text-sm text-foreground">{selected.profile.cell_no || "—"}</p>
                   </div>
+                  <ReviewField
+                    label="Business Type"
+                    value={
+                      [
+                        selected.profile.is_service_provider && "Service Provider",
+                        selected.profile.is_product_seller && "Product Seller",
+                      ]
+                        .filter(Boolean)
+                        .join(", ") || "—"
+                    }
+                  />
+                  <ReviewField
+                    label="Business Hours"
+                    value={`${selected.profile.opening_time?.slice(0, 5) ?? "—"} – ${selected.profile.closing_time?.slice(0, 5) ?? "—"}`}
+                  />
+                  <ReviewField
+                    label="Services Offered"
+                    value={
+                      selected.profile.service_categories
+                        ?.map((c) => (c === "Other" ? `Other: ${selected.profile?.other_service ?? ""}` : c))
+                        .join(", ") || "—"
+                    }
+                  />
+                  <ReviewField
+                    label="Products Offered"
+                    value={selected.profile.products_offered?.join(", ") || "—"}
+                  />
                 </div>
 
                 {productImagePaths(selected.profile.product_images).length > 0 && (
@@ -528,4 +555,13 @@ function StatusBadge({ status }: { status: SupplierProfileStatus }) {
     );
   }
   return <Badge variant="secondary">Draft</Badge>;
+}
+
+function ReviewField({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="space-y-1">
+      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p className="text-sm text-foreground">{value}</p>
+    </div>
+  );
 }
