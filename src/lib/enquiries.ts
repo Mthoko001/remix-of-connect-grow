@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
-import { isQuotaExhaustedDbError, SupplierQuotaExhaustedError } from "@/lib/lead-quota";
+import { SupplierQuotaExhaustedError } from "@/lib/lead-quota";
+import { createEnquiry } from "@/lib/enquiries.functions";
 
 const ENQUIRY_MEDIA_BUCKET = "enquiry-media";
 
