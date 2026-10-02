@@ -253,6 +253,14 @@ function PackageDialog({
             />
             <Label htmlFor="pk_active">Active (visible to suppliers)</Label>
           </div>
+          <div className="flex items-center gap-3">
+            <Switch
+              id="pk_recommended"
+              checked={form.isRecommended ?? false}
+              onCheckedChange={(v) => set("isRecommended", v)}
+            />
+            <Label htmlFor="pk_recommended">Show "Recommended" badge</Label>
+          </div>
           {formError && <p className="text-sm text-destructive">{formError}</p>}
         </div>
         <DialogFooter>

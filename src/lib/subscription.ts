@@ -1,54 +1,86 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 
-export type SubscriptionRow = Tables<"tb_subscription">;
+export type SubscriptionRow = Tables<"tb_subscription"> & {
+  tb_package: { name: string } | null;
+};
 
-const TEST_PLAN_AMOUNT = 5.0; // R5 — test-mode price. Real price lives in tb_package (admin-managed).
-// TODO: charge the package price once a real payment gateway is wired up.
+export type SubscriptionState = "active" | "expired" | "pending" | "failed" | "cancelled";
 
-async function getCurrentUserId(): Promise<string> {
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) throw new Error("Not signed in.");
-  return data.user.id;
+export function subscriptionState(row: Tables<"tb_subscription">): SubscriptionState {
+  if (row.subscription_status === "paid") {
+    const exp = row.expires_at ?? (row.paid_at ? addYear(row.paid_at) : null);
+    return exp && new Date(exp) > new Date() ? "active" : "expired";
+  }
+  if (row.subscription_status === "failed") return "failed";
+  if (row.subscription_status === "cancelled") return "cancelled";
+  return "pending";
 }
 
-/** The supplier's most recent subscription record, if any. */
-export async function fetchMySubscription(): Promise<SubscriptionRow | null> {
-  const supplierAccountId = await getCurrentUserId();
+function addYear(iso: string): string {
+  const d = new Date(iso);
+  d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString();
+}
+
+export const STATE_LABELS: Record<SubscriptionState, string> = {
+  active: "Active",
+  expired: "Expired",
+  pending: "Pending",
+  failed: "Failed",
+  cancelled: "Cancelled",
+};
+
+export function daysRemaining(expiresAt: string | null): number | null {
+  if (!expiresAt) return null;
+  return Math.max(0, Math.ceil((new Date(expiresAt).getTime() - Date.now()) / 86_400_000));
+}
+
+export function formatDate(iso: string | null | undefined): string {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("en-ZA", { day: "numeric", month: "long", year: "numeric" });
+}
+
+const SELECT = "*, tb_package(name)";
+
+/** All of the signed-in supplier's subscription records, newest first. */
+export async function fetchMySubscriptions(): Promise<SubscriptionRow[]> {
+  const { data: u } = await supabase.auth.getUser();
+  if (!u.user) throw new Error("Not signed in.");
   const { data, error } = await supabase
     .from("tb_subscription")
-    .select("*")
-    .eq("supplier_account_id", supplierAccountId)
-    .order("created_at", { ascending: false })
-    .limit(1)
+    .select(SELECT)
+    .eq("supplier_account_id", u.user.id)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as SubscriptionRow[];
+}
+
+export async function fetchSubscriptionById(id: number): Promise<SubscriptionRow | null> {
+  const { data, error } = await supabase
+    .from("tb_subscription")
+    .select(SELECT)
+    .eq("subscription_id", id)
     .maybeSingle();
   if (error) throw error;
-  return data;
+  return data as SubscriptionRow | null;
 }
 
-/**
- * Creates a TEST-MODE "paid" subscription record — no real payment gateway
- * involved, no real money moves. is_test stays true so this is always
- * distinguishable from a real transaction once a real gateway is wired up.
- */
-export async function createTestSubscription(packageId?: number): Promise<SubscriptionRow> {
-  const supplierAccountId = await getCurrentUserId();
+/** The currently active subscription, if any. */
+export function currentSubscription(rows: SubscriptionRow[]): SubscriptionRow | null {
+  return (
+    rows
+      .filter((r) => subscriptionState(r) === "active")
+      .sort((a, b) => (b.expires_at ?? "").localeCompare(a.expires_at ?? ""))[0] ?? null
+  );
+}
+
+/** Admin-only via RLS: every subscription with package name. */
+export async function fetchAllSubscriptions(): Promise<SubscriptionRow[]> {
   const { data, error } = await supabase
     .from("tb_subscription")
-    .insert({
-      supplier_account_id: supplierAccountId,
-      amount: TEST_PLAN_AMOUNT,
-      subscription_status: "paid",
-      is_test: true,
-      package_id: packageId ?? null,
-      paid_at: new Date().toISOString(),
-    })
-    .select("*")
-    .single();
+    .select(SELECT)
+    .order("created_at", { ascending: false });
   if (error) throw error;
-  return data;
-}
-
-export function testPlanAmountDisplay(): string {
-  return `R${TEST_PLAN_AMOUNT.toFixed(2)}`;
+  return (data ?? []) as SubscriptionRow[];
 }

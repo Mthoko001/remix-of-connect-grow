@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
-import { isQuotaExhaustedDbError, SupplierQuotaExhaustedError } from "@/lib/lead-quota";
+import { SupplierQuotaExhaustedError } from "@/lib/lead-quota";
+import { createEnquiry } from "@/lib/enquiries.functions";
 
 const ENQUIRY_MEDIA_BUCKET = "enquiry-media";
 
@@ -43,17 +44,19 @@ export async function submitEnquiry(input: SubmitEnquiryInput): Promise<void> {
     if (!uploadError) imagePath = path;
   }
 
-  const { error } = await supabase.from("tb_enquiry").insert({
-    supplier_account_id: input.supplierAccountId,
-    customer_name: input.customerName,
-    customer_email: input.customerEmail,
-    customer_cell: input.customerCell,
-    message: input.message,
-    channel: input.channel,
-    image_path: imagePath,
+  // Saved server-side so it can also be forwarded to Chatwoot; the DB quota trigger still applies.
+  const res = await createEnquiry({
+    data: {
+      supplierAccountId: input.supplierAccountId,
+      customerName: input.customerName,
+      customerEmail: input.customerEmail,
+      customerCell: input.customerCell,
+      message: input.message,
+      channel: input.channel,
+      imagePath,
+    },
   });
-  if (isQuotaExhaustedDbError(error)) throw new SupplierQuotaExhaustedError();
-  if (error) throw error;
+  if (res.quotaExhausted) throw new SupplierQuotaExhaustedError();
 }
 
 async function getCurrentUserId(): Promise<string> {

@@ -12,6 +12,7 @@ export type SubscriptionPackage = {
   benefits: string[];
   isActive: boolean;
   sortOrder: number;
+  isRecommended: boolean;
   dateCreated: string;
   dateUpdated: string;
   createdBy: string | null;
@@ -26,6 +27,7 @@ export type PackageInput = {
   benefits: string[];
   isActive: boolean;
   sortOrder: number;
+  isRecommended?: boolean;
 };
 
 function toPackage(row: PackageRow): SubscriptionPackage {
@@ -38,6 +40,7 @@ function toPackage(row: PackageRow): SubscriptionPackage {
     benefits: Array.isArray(row.benefits) ? row.benefits.map(String) : [],
     isActive: row.is_active,
     sortOrder: row.sort_order,
+    isRecommended: row.is_recommended,
     dateCreated: row.date_created,
     dateUpdated: row.date_updated,
     createdBy: row.created_by,
@@ -54,6 +57,7 @@ function toRow(input: PackageInput) {
     benefits: input.benefits,
     is_active: input.isActive,
     sort_order: input.sortOrder,
+    is_recommended: input.isRecommended ?? false,
   };
 }
 
