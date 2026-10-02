@@ -20,7 +20,7 @@ export async function createYocoCheckout(input: {
   const res = await fetch(`${YOCO_API}/checkouts`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${yoco SecretKeyPlaceholder()}`,
+      Authorization: `Bearer ${yocoSecretKey()}`,
       "Content-Type": "application/json",
       "Idempotency-Key": input.idempotencyKey,
     },
