@@ -21,6 +21,7 @@ export const ADMIN_NAV_ITEMS = [
   { label: "Live Suppliers", to: "/admin/suppliers", icon: Store },
   { label: "Categories", to: "/admin/categories", icon: Tags },
   { label: "Packages", to: "/admin/packages", icon: Package },
+  { label: "Subscriptions", to: "/admin/subscriptions", icon: CreditCard },
 ] as const;
 
 export function AdminShell({ email, children }: { email: string | null; children: ReactNode }) {
