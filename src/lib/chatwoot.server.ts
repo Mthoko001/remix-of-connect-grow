@@ -1,5 +1,5 @@
 // Server-only Chatwoot client. Reads CHATWOOT_URL, CHATWOOT_ACCOUNT_ID, CHATWOOT_API_TOKEN.
-const INBOX_NAME = "LeadLink Leads";
+const INBOX_NAMES = ["growmeonline leads", "leadlink leads"];
 
 export type ChatwootLead = {
   enquiryId: number;
@@ -42,8 +42,8 @@ function toE164(phone: string): string | undefined {
 
 async function findInboxId(): Promise<number> {
   const res = await call<{ payload: { id: number; name: string }[] }>("/inboxes");
-  const inbox = res.payload.find((i) => i.name.trim().toLowerCase() === INBOX_NAME.toLowerCase());
-  if (!inbox) throw new Error(`Chatwoot inbox "${INBOX_NAME}" not found.`);
+  const inbox = res.payload.find((i) => INBOX_NAMES.includes(i.name.trim().toLowerCase()));
+  if (!inbox) throw new Error("Chatwoot leads inbox not found.");
   return inbox.id;
 }
 
