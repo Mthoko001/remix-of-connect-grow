@@ -6,7 +6,8 @@ import { createEnquiry } from "@/lib/enquiries.functions";
 const ENQUIRY_MEDIA_BUCKET = "enquiry-media";
 
 export type EnquiryRow = Tables<"tb_enquiry">;
-export type EnquiryChannel = "whatsapp" | "in_app";
+// "whatsapp" kept only for historical rows; new enquiries are always "in_app".
+export type EnquiryChannel = "in_app";
 export type EnquiryStatus = "new" | "read" | "replied";
 
 export type SubmitEnquiryInput = {
@@ -22,7 +23,7 @@ export type SubmitEnquiryInput = {
 /**
  * Stores a customer enquiry. Callable by anonymous visitors — no login
  * required. Best-effort: callers should not block their primary action
- * (e.g. opening WhatsApp) on this succeeding.
+ * on Chatwoot succeeding — the server saves the lead first.
  *
  * IMPORTANT: do not chain `.select()` after this insert. The SELECT RLS
  * policy on tb_enquiry only covers `authenticated` (the owning supplier or

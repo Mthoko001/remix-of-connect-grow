@@ -125,7 +125,7 @@ export function InAppEnquiryDialog({
             <DialogHeader>
               <DialogTitle>Message {supplierName}</DialogTitle>
               <DialogDescription>
-                Send your enquiry directly — {supplierName} will respond to you here on GrowMeOnline.
+                Send your enquiry — {supplierName} will get back to you by email or phone.
               </DialogDescription>
             </DialogHeader>
 

@@ -4,7 +4,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Clock, MapPin, MessageCircle, ShieldCheck, Star } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
-import { WhatsAppEnquiryDialog } from "@/components/customer/whatsapp-enquiry-dialog";
+import { InAppEnquiryDialog } from "@/components/customer/in-app-enquiry-dialog";
 import { ImageGalleryLightbox } from "@/components/customer/image-gallery-lightbox";
 import { CompanyLogo } from "@/components/company-logo";
 import { Button } from "@/components/ui/button";
@@ -52,7 +52,7 @@ function StarRating({ rating }: { rating: number }) {
 
 function SupplierPublicProfilePage() {
   const supplier = Route.useLoaderData();
-  const [whatsappOpen, setWhatsappOpen] = useState(false);
+  const [enquiryOpen, setEnquiryOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const productImages = supplier.productImages ?? [];
 
@@ -109,11 +109,11 @@ function SupplierPublicProfilePage() {
           <div className="w-full sm:w-auto">
             <button
               type="button"
-              onClick={() => setWhatsappOpen(true)}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-transform hover:brightness-105 active:scale-[0.99] sm:w-auto"
+              onClick={() => setEnquiryOpen(true)}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-transform hover:brightness-105 active:scale-[0.99] sm:w-auto"
             >
               <MessageCircle className="h-4 w-4" />
-              Chat on WhatsApp
+              Send Enquiry
             </button>
           </div>
         </div>
@@ -207,9 +207,9 @@ function SupplierPublicProfilePage() {
 
       <Footer />
 
-      <WhatsAppEnquiryDialog
-        open={whatsappOpen}
-        onOpenChange={setWhatsappOpen}
+      <InAppEnquiryDialog
+        open={enquiryOpen}
+        onOpenChange={setEnquiryOpen}
         supplierAccountId={supplier.supplierAccountId}
         supplierName={supplier.name}
       />
