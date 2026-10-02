@@ -21,6 +21,7 @@ import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as AdminEnquiriesRouteImport } from './routes/admin/enquiries'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPackagesRouteImport } from './routes/admin/packages'
+import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
 import { Route as AdminSuppliersRouteImport } from './routes/admin/suppliers'
 import { Route as PaymentFailedRouteImport } from './routes/payment/failed'
 import { Route as PaymentSuccessRouteImport } from './routes/payment/success'
@@ -97,6 +98,11 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
 const AdminPackagesRoute = AdminPackagesRouteImport.update({
   id: '/admin/packages',
   path: '/admin/packages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
+  id: '/admin/subscriptions',
+  path: '/admin/subscriptions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSuppliersRoute = AdminSuppliersRouteImport.update({
@@ -194,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
@@ -224,6 +231,7 @@ export interface FileRoutesByTo {
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
@@ -255,6 +263,7 @@ export interface FileRoutesById {
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
@@ -287,6 +296,7 @@ export interface FileRouteTypes {
     | '/admin/enquiries'
     | '/admin/login'
     | '/admin/packages'
+    | '/admin/subscriptions'
     | '/admin/suppliers'
     | '/payment/failed'
     | '/payment/success'
@@ -317,6 +327,7 @@ export interface FileRouteTypes {
     | '/admin/enquiries'
     | '/admin/login'
     | '/admin/packages'
+    | '/admin/subscriptions'
     | '/admin/suppliers'
     | '/payment/failed'
     | '/payment/success'
@@ -347,6 +358,7 @@ export interface FileRouteTypes {
     | '/admin/enquiries'
     | '/admin/login'
     | '/admin/packages'
+    | '/admin/subscriptions'
     | '/admin/suppliers'
     | '/payment/failed'
     | '/payment/success'
@@ -378,6 +390,7 @@ export interface RootRouteChildren {
   AdminEnquiriesRoute: typeof AdminEnquiriesRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
+  AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminSuppliersRoute: typeof AdminSuppliersRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
@@ -480,6 +493,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/packages'
       fullPath: '/admin/packages'
       preLoaderRoute: typeof AdminPackagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/subscriptions': {
+      id: '/admin/subscriptions'
+      path: '/admin/subscriptions'
+      fullPath: '/admin/subscriptions'
+      preLoaderRoute: typeof AdminSubscriptionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/suppliers': {
@@ -611,6 +631,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminEnquiriesRoute: AdminEnquiriesRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminPackagesRoute: AdminPackagesRoute,
+  AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminSuppliersRoute: AdminSuppliersRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
