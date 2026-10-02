@@ -84,20 +84,28 @@ export async function pushLeadToChatwoot(lead: ChatwootLead): Promise<number> {
     }),
   });
   const content = [
-    `New lead for ${lead.supplierName}`,
+    "NEW LEAD",
     "",
+    `Supplier: ${lead.supplierName}`,
     `Supplier ID: ${lead.supplierId}`,
-    `Supplier Name: ${lead.supplierName}`,
-    `Customer Name: ${lead.customerName}`,
-    `Customer Phone: ${lead.customerPhone}`,
-    `Customer Email: ${lead.customerEmail}`,
+    `Customer: ${lead.customerName}`,
+    `Phone: ${lead.customerPhone}`,
+    `Email: ${lead.customerEmail}`,
     "",
-    "Lead Message:",
+    "Message:",
     lead.message,
   ].join("\n");
   await call(`/conversations/${conversation.id}/messages`, {
     method: "POST",
     body: JSON.stringify({ content, message_type: "incoming" }),
   });
+  try {
+    await call(`/conversations/${conversation.id}/labels`, {
+      method: "POST",
+      body: JSON.stringify({ labels: [`supplier_${lead.supplierId}`.toLowerCase(), "new_lead"] }),
+    });
+  } catch (err) {
+    console.error("Chatwoot labels failed", err);
+  }
   return conversation.id;
 }
