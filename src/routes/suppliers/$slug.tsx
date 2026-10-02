@@ -148,6 +148,36 @@ function SupplierPublicProfilePage() {
           </div>
         </section>
 
+        {((supplier.businessTypes?.length ?? 0) > 0 ||
+          (supplier.services?.length ?? 0) > 0 ||
+          (supplier.products?.length ?? 0) > 0) && (
+          <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {[
+              { label: "Business Type", items: supplier.businessTypes ?? [] },
+              { label: "Services Offered", items: supplier.services ?? [] },
+              { label: "Products Offered", items: supplier.products ?? [] },
+            ]
+              .filter((g) => g.items.length > 0)
+              .map((g) => (
+                <div key={g.label} className="rounded-xl border border-border bg-card p-4">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    {g.label}
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {g.items.map((item) => (
+                      <span
+                        key={item}
+                        className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-foreground"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+          </section>
+        )}
+
         {/* Product gallery */}
         {productImages.length > 0 && (
           <section className="mt-10">

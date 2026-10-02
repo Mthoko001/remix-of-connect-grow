@@ -64,7 +64,10 @@ function SuppliersListingPage() {
         s.verified &&
         (s.name.toLowerCase().includes(trimmedQuery) ||
           s.category.toLowerCase().includes(trimmedQuery) ||
-          s.location.toLowerCase().includes(trimmedQuery)),
+          s.location.toLowerCase().includes(trimmedQuery) ||
+          [...(s.businessTypes ?? []), ...(s.services ?? []), ...(s.products ?? [])].some((t) =>
+            t.toLowerCase().includes(trimmedQuery),
+          )),
     );
   }, [suppliers, trimmedQuery]);
 
