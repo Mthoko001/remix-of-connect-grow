@@ -79,6 +79,7 @@ export type Database = {
       tb_enquiry: {
         Row: {
           channel: string
+          chatwoot_conversation_id: number | null
           created_at: string
           customer_cell: string
           customer_email: string
@@ -91,6 +92,7 @@ export type Database = {
         }
         Insert: {
           channel: string
+          chatwoot_conversation_id?: number | null
           created_at?: string
           customer_cell: string
           customer_email: string
@@ -103,6 +105,7 @@ export type Database = {
         }
         Update: {
           channel?: string
+          chatwoot_conversation_id?: number | null
           created_at?: string
           customer_cell?: string
           customer_email?: string

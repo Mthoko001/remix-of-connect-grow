@@ -1,0 +1,1 @@
+ALTER TABLE public.tb_enquiry ADD COLUMN chatwoot_conversation_id bigint;
