@@ -40,7 +40,7 @@ export const createEnquiry = createServerFn({ method: "POST" })
         message: data.message,
         channel: data.channel,
         image_path: data.imagePath,
-        status: "new",
+        status: "pending_review",
       })
       .select("enquiry_id")
       .single();
@@ -67,6 +67,17 @@ export const createEnquiry = createServerFn({ method: "POST" })
         .eq("enquiry_id", row.enquiry_id);
     } catch (err) {
       console.error("Chatwoot forwarding failed", err);
+    }
+    try {
+      const { sendEnquirySubmittedEmails } = await import("@/lib/lead-emails.server");
+      await sendEnquirySubmittedEmails({
+        enquiryId: row.enquiry_id,
+        customerName: data.customerName,
+        customerEmail: data.customerEmail,
+        supplierName: profile.business_name,
+      });
+    } catch (err) {
+      console.error("Enquiry emails failed", err);
     }
     return { ok: true as const, quotaExhausted: false };
   });

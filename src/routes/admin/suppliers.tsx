@@ -178,7 +178,7 @@ function LiveSuppliersPage() {
                   <th className="px-4 py-3">Supplier email</th>
                   <th className="px-4 py-3">Profile</th>
                   <th className="px-4 py-3">Subscription</th>
-                  <th className="px-4 py-3">Total Enquiries</th>
+                  <th className="px-4 py-3">Qualified Leads</th>
                   <th className="px-4 py-3">Free Usage</th>
                   <th className="px-4 py-3">Monetization</th>
                   <th className="px-4 py-3">Joined</th>

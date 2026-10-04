@@ -85,6 +85,13 @@
       "when": 1790936721820,
       "tag": "0011_enquiry_chatwoot",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1791136097061,
+      "tag": "0012_qualified_lead_workflow",
+      "breakpoints": true
     }
   ]
 }
