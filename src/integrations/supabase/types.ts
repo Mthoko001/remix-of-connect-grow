@@ -87,6 +87,12 @@ export type Database = {
           enquiry_id: number
           image_path: string | null
           message: string
+          qualified_at: string | null
+          rejection_note: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewed_by_email: string | null
           status: string
           supplier_account_id: string
         }
@@ -100,6 +106,12 @@ export type Database = {
           enquiry_id?: never
           image_path?: string | null
           message: string
+          qualified_at?: string | null
+          rejection_note?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewed_by_email?: string | null
           status?: string
           supplier_account_id: string
         }
@@ -113,6 +125,12 @@ export type Database = {
           enquiry_id?: never
           image_path?: string | null
           message?: string
+          qualified_at?: string | null
+          rejection_note?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewed_by_email?: string | null
           status?: string
           supplier_account_id?: string
         }
@@ -421,6 +439,15 @@ export type Database = {
       }
     }
     Functions: {
+      admin_lead_kpis: {
+        Args: never
+        Returns: {
+          pending_review: number
+          qualified: number
+          rejected: number
+          total: number
+        }[]
+      }
       admin_supplier_monetization: {
         Args: never
         Returns: {
@@ -453,6 +480,15 @@ export type Database = {
           total_enquiries: number
         }[]
       }
+      get_my_lead_summary: {
+        Args: never
+        Returns: {
+          closed: number
+          in_progress: number
+          pending_review: number
+          qualified: number
+        }[]
+      }
       get_my_profile_view_stats: {
         Args: never
         Returns: {
@@ -467,6 +503,15 @@ export type Database = {
       record_profile_view: {
         Args: { _supplier_account_id: string; _visitor_id: string }
         Returns: boolean
+      }
+      review_enquiry: {
+        Args: {
+          _decision: string
+          _enquiry_id: number
+          _note?: string
+          _reason?: string
+        }
+        Returns: undefined
       }
       supplier_has_active_subscription: {
         Args: { _supplier_account_id: string }
