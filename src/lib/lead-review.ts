@@ -53,12 +53,15 @@ export async function reviewEnquiry(
   enquiryId: number,
   decision: { approve: true } | { approve: false; reason: RejectionReason; note?: string },
 ): Promise<void> {
-  const { error } = await supabase.rpc("review_enquiry", {
+  const args: { _enquiry_id: number; _decision: string; _reason?: string; _note?: string } = {
     _enquiry_id: enquiryId,
     _decision: decision.approve ? "approve" : "reject",
-    _reason: decision.approve ? undefined : decision.reason,
-    _note: decision.approve ? undefined : decision.note,
-  });
+  };
+  if (!decision.approve) {
+    args._reason = decision.reason;
+    if (decision.note?.trim()) args._note = decision.note.trim();
+  }
+  const { error } = await supabase.rpc("review_enquiry", args);
   if (!error) return;
   if (error.message.includes("SUPPLIER_QUOTA_EXHAUSTED")) throw new LeadQuotaExhaustedError();
   if (error.message.includes("LEAD_ALREADY_REVIEWED")) {
