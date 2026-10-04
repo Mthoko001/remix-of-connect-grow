@@ -5,6 +5,7 @@ import { Check, Loader2, Save, Sparkles, X } from "lucide-react";
 import { useAdminSession } from "@/hooks/use-admin-session";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { MonetizationKpiCards } from "@/components/admin/monetization-kpis";
+import { LeadKpiCards } from "@/components/admin/lead-kpis";
 import { AdminProfileViews } from "@/components/admin/profile-views-admin";
 import { AdminMediaView } from "@/components/admin/admin-media-view";
 import { Badge } from "@/components/ui/badge";
@@ -223,6 +224,7 @@ function AdminDashboardPage() {
         </p>
       </div>
 
+      <LeadKpiCards />
       <MonetizationKpiCards />
       <AdminProfileViews />
 
