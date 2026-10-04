@@ -22,6 +22,10 @@ import { template as profileApproved } from './profile-approved'
 import { template as profileRejected } from './profile-rejected'
 import { template as subscriptionActivated } from './subscription-activated'
 import { template as paymentFailed } from './payment-failed'
+import { template as enquiryReceived } from './enquiry-received'
+import { template as enquiryPendingReview } from './enquiry-pending-review'
+import { template as leadQualified } from './lead-qualified'
+import { template as enquiryRejected } from './enquiry-rejected'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'profile-submitted': profileSubmitted,
@@ -29,6 +33,10 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'profile-rejected': profileRejected,
   'subscription-activated': subscriptionActivated,
   'payment-failed': paymentFailed,
+  'enquiry-received': enquiryReceived,
+  'enquiry-pending-review': enquiryPendingReview,
+  'lead-qualified': leadQualified,
+  'enquiry-rejected': enquiryRejected,
   // Add templates here as they are created, e.g.:
   // 'welcome': welcomeTemplate,
 }
