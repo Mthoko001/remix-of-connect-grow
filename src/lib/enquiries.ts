@@ -2,13 +2,14 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { SupplierQuotaExhaustedError } from "@/lib/lead-quota";
 import { createEnquiry } from "@/lib/enquiries.functions";
+import type { LeadStatus } from "@/lib/lead-review";
 
 const ENQUIRY_MEDIA_BUCKET = "enquiry-media";
 
 export type EnquiryRow = Tables<"tb_enquiry">;
 // "whatsapp" kept only for historical rows; new enquiries are always "in_app".
 export type EnquiryChannel = "in_app";
-export type EnquiryStatus = "new" | "read" | "replied";
+export type EnquiryStatus = LeadStatus;
 
 export type SubmitEnquiryInput = {
   supplierAccountId: string;
@@ -80,7 +81,7 @@ export async function fetchMyEnquiries(): Promise<EnquiryRow[]> {
 
 export async function markEnquiryStatus(
   enquiryId: number,
-  status: Extract<EnquiryStatus, "read" | "replied">,
+  status: Extract<EnquiryStatus, "in_progress" | "closed">,
 ): Promise<void> {
   const { error } = await supabase
     .from("tb_enquiry")

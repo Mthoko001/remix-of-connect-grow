@@ -110,10 +110,10 @@ export function InAppEnquiryDialog({
               <CheckCircle2 className="h-6 w-6 text-emerald-600" />
             </div>
             <div>
-              <p className="text-base font-semibold text-foreground">Your message has been sent</p>
+              <p className="text-base font-semibold text-foreground">Thank you for your enquiry</p>
               <p className="mt-1.5 text-sm text-muted-foreground">
-                We've let {supplierName} know — please wait for their response. They'll reach out
-                using the email or cell number you provided.
+                Your enquiry has been received and is currently being reviewed by our team before
+                being sent to the supplier.
               </p>
             </div>
             <Button onClick={() => handleOpenChange(false)} className="mt-2 w-full">
@@ -125,7 +125,7 @@ export function InAppEnquiryDialog({
             <DialogHeader>
               <DialogTitle>Message {supplierName}</DialogTitle>
               <DialogDescription>
-                Send your enquiry — {supplierName} will get back to you by email or phone.
+                Send your enquiry — our team reviews it, then passes it to {supplierName}, who will get back to you by email or phone.
               </DialogDescription>
             </DialogHeader>
 
