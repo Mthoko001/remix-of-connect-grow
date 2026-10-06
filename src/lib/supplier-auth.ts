@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { PRIVACY_VERSION, TERMS_VERSION } from "@/lib/policies";
 
 export type SignUpWithEmailInput = {
   email: string;
@@ -19,6 +20,9 @@ export async function signUpSupplierWithEmail({
     password,
     options: {
       emailRedirectTo: `${window.location.origin}/supplier/dashboard`,
+      // Creating an account constitutes acceptance; the auth trigger records
+      // these versions + timestamp on tb_supplier_account.
+      data: { terms_version: TERMS_VERSION, privacy_version: PRIVACY_VERSION },
     },
   });
 

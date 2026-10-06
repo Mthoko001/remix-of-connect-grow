@@ -7,6 +7,7 @@ import { signUpSupplierWithEmail } from "@/lib/supplier-auth";
 import { Logo } from "@/components/landing/logo";
 import { toast } from "sonner";
 import { Eye, EyeOff, ShieldCheck, Loader2 } from "lucide-react";
+import { isStrongPassword } from "@/lib/policies";
 
 export const Route = createFileRoute("/supplier/signup")({
   head: () => ({
@@ -52,6 +53,8 @@ function SupplierSignupPage() {
     if (!EMAIL_RE.test(email)) next.email = "Enter a valid email address.";
     if (password.length < MIN_PASSWORD_LENGTH)
       next.password = `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
+    else if (!isStrongPassword(password))
+      next.password = "Use upper and lower case letters and at least one number.";
     if (confirmPassword !== password) next.confirmPassword = "Passwords don't match.";
     setErrors(next);
     if (next.email || next.password || next.confirmPassword) return;
@@ -217,15 +220,6 @@ function SupplierSignupPage() {
 
                 <MockTurnstile />
 
-                {/* Consent text */}
-                <p className="text-xs leading-relaxed text-muted-foreground">
-                  By creating an account, you agree to GrowMeOnline's{" "}
-                  <span className="font-medium text-foreground">Terms of Service</span>{" "}
-                  and{" "}
-                  <span className="font-medium text-foreground">Privacy Policy</span>
-                  .
-                </p>
-
                 {errors.form && <p className="text-sm text-destructive">{errors.form}</p>}
 
                 <Button
@@ -236,6 +230,29 @@ function SupplierSignupPage() {
                   {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
                   {submitting ? "Creating account…" : "Create supplier account"}
                 </Button>
+
+                {/* Consent text — creating an account constitutes acceptance */}
+                <p className="text-center text-xs leading-relaxed text-muted-foreground">
+                  By creating an account, you agree to the GrowMeOnline{" "}
+                  <a
+                    href="/terms-and-conditions"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-primary underline underline-offset-2 hover:text-primary/80"
+                  >
+                    Terms & Conditions
+                  </a>{" "}
+                  and{" "}
+                  <a
+                    href="/privacy-policy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-primary underline underline-offset-2 hover:text-primary/80"
+                  >
+                    Privacy Policy
+                  </a>
+                  .
+                </p>
               </form>
             </>
           )}
