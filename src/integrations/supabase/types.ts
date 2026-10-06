@@ -344,22 +344,37 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          policies_accepted_at: string | null
+          privacy_accepted: boolean
+          privacy_version: string | null
           status: string
           supplier_account_id: string
+          terms_accepted: boolean
+          terms_version: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           email: string
+          policies_accepted_at?: string | null
+          privacy_accepted?: boolean
+          privacy_version?: string | null
           status?: string
           supplier_account_id: string
+          terms_accepted?: boolean
+          terms_version?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           email?: string
+          policies_accepted_at?: string | null
+          privacy_accepted?: boolean
+          privacy_version?: string | null
           status?: string
           supplier_account_id?: string
+          terms_accepted?: boolean
+          terms_version?: string | null
           updated_at?: string
         }
         Relationships: []
