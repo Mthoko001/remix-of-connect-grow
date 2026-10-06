@@ -9,12 +9,19 @@ export type LeadStatus = "pending_review" | "qualified" | "rejected" | "in_progr
 
 export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
   pending_review: "Pending Review",
-  qualified: "Approved",
+  qualified: "Qualified",
   rejected: "Rejected",
   in_progress: "In Progress",
   closed: "Closed",
   archived: "Archived",
 };
+
+/** Statuses that count toward a supplier's free-lead quota (anything an admin has qualified). */
+export const QUOTA_COUNTED_STATUSES: LeadStatus[] = ["qualified", "in_progress", "closed"];
+
+export function countQuotaLeads(statuses: string[]): number {
+  return statuses.filter((s) => QUOTA_COUNTED_STATUSES.includes(s as LeadStatus)).length;
+}
 
 /** Statuses a supplier is allowed to see. */
 export const SUPPLIER_VISIBLE_STATUSES: LeadStatus[] = ["qualified", "in_progress", "closed"];
@@ -22,18 +29,26 @@ export const SUPPLIER_VISIBLE_STATUSES: LeadStatus[] = ["qualified", "in_progres
 export const REJECTION_REASONS = [
   { value: "spam", label: "Spam" },
   { value: "duplicate", label: "Duplicate" },
-  { value: "incorrect_supplier", label: "Incorrect Supplier" },
+  { value: "wrong_category", label: "Wrong Category" },
+  { value: "wrong_supplier", label: "Wrong Supplier" },
   { value: "outside_service_area", label: "Outside Service Area" },
-  { value: "invalid_contact_information", label: "Invalid Contact Information" },
-  { value: "incomplete_enquiry", label: "Incomplete Enquiry" },
-  { value: "not_relevant", label: "Not Relevant" },
+  { value: "incomplete_information", label: "Incomplete Information" },
+  { value: "invalid_contact_details", label: "Invalid Contact Details" },
   { value: "other", label: "Other" },
 ] as const;
 
 export type RejectionReason = (typeof REJECTION_REASONS)[number]["value"];
 
+/** Labels for reasons used before the reason list changed. */
+const LEGACY_REASON_LABELS: Record<string, string> = {
+  incorrect_supplier: "Incorrect Supplier",
+  invalid_contact_information: "Invalid Contact Information",
+  incomplete_enquiry: "Incomplete Enquiry",
+  not_relevant: "Not Relevant",
+};
+
 export function rejectionReasonLabel(value: string | null | undefined): string {
-  return REJECTION_REASONS.find((r) => r.value === value)?.label ?? value ?? "";
+  return REJECTION_REASONS.find((r) => r.value === value)?.label ?? (value ? LEGACY_REASON_LABELS[value] ?? value : "");
 }
 
 export function leadStatusLabel(status: string): string {
@@ -125,6 +140,7 @@ export type EnquiryEdit = {
   customerEmail: string;
   customerCell: string;
   message: string;
+  subject: string;
 };
 
 /** Admin corrects an enquiry's details. Logged in the audit trail. */
@@ -135,6 +151,7 @@ export async function editEnquiry(enquiryId: number, edit: EnquiryEdit): Promise
     _customer_email: edit.customerEmail,
     _customer_cell: edit.customerCell,
     _message: edit.message,
+    _subject: edit.subject,
   });
   if (error) throw error;
 }

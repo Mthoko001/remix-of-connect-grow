@@ -87,7 +87,7 @@ export function LeadGenerationStatusCard({
             Lead status summary
           </p>
           <dl className="grid grid-cols-3 gap-4">
-            <Stat label="Approved" value={String(summary.qualified)} />
+            <Stat label="Qualified" value={String(summary.qualified)} />
             <Stat label="In Progress" value={String(summary.inProgress)} />
             <Stat label="Closed" value={String(summary.closed)} />
           </dl>
