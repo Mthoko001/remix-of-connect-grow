@@ -1,15 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
+import { enquirySchema } from "@/lib/enquiry-schema";
 
-const enquirySchema = z.object({
-  supplierAccountId: z.string().uuid(),
-  customerName: z.string().trim().min(1).max(100),
-  customerEmail: z.string().trim().email().max(255),
-  customerCell: z.string().trim().min(6).max(30),
-  message: z.string().trim().min(1).max(2000),
-  channel: z.literal("in_app"),
-  imagePath: z.string().max(300).nullable(),
-});
 
 /**
  * Public: saves a customer enquiry (the database quota trigger still applies)
@@ -38,6 +29,7 @@ export const createEnquiry = createServerFn({ method: "POST" })
         customer_email: data.customerEmail,
         customer_cell: data.customerCell,
         message: data.message,
+        subject: data.subject,
         channel: data.channel,
         image_path: data.imagePath,
         status: "pending_review",
@@ -60,6 +52,7 @@ export const createEnquiry = createServerFn({ method: "POST" })
         customerPhone: data.customerCell,
         customerEmail: data.customerEmail,
         message: data.message,
+        subject: data.subject,
       });
       await supabaseAdmin
         .from("tb_enquiry")

@@ -131,6 +131,7 @@ function EnquiryCard({
               {enquiry.customer_cell}
             </span>
           </div>
+          {enquiry.subject && <p className="mt-2 text-sm font-semibold text-foreground">{enquiry.subject}</p>}
           <p className="mt-2 whitespace-pre-line text-sm text-foreground">{enquiry.message}</p>
           {imageUrl && (
             <a

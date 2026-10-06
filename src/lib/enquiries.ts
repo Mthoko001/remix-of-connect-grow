@@ -16,6 +16,7 @@ export type SubmitEnquiryInput = {
   customerName: string;
   customerEmail: string;
   customerCell: string;
+  subject: string;
   message: string;
   channel: EnquiryChannel;
   image?: File | null;
@@ -53,6 +54,7 @@ export async function submitEnquiry(input: SubmitEnquiryInput): Promise<void> {
       customerName: input.customerName,
       customerEmail: input.customerEmail,
       customerCell: input.customerCell,
+      subject: input.subject,
       message: input.message,
       channel: input.channel,
       imagePath,

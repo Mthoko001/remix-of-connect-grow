@@ -44,7 +44,7 @@ import { sendLeadDecisionNotifications } from "@/lib/lead-emails.functions";
 export const Route = createFileRoute("/admin/enquiries")({
   head: () => ({
     meta: [
-      { title: "Enquiry Management — GrowMeOnline Admin" },
+      { title: "Lead Qualification Queue — GrowMeOnline Admin" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -55,7 +55,7 @@ type Tab = "all" | LeadStatus;
 
 const TABS: { value: Tab; label: string }[] = [
   { value: "pending_review", label: "Pending Review" },
-  { value: "qualified", label: "Approved" },
+  { value: "qualified", label: "Qualified" },
   { value: "in_progress", label: "In Progress" },
   { value: "closed", label: "Closed" },
   { value: "rejected", label: "Rejected" },
@@ -88,7 +88,7 @@ function AdminLeadQueuePage() {
   const [search, setSearch] = useState("");
   const [audit, setAudit] = useState<EnquiryAuditEntry[]>([]);
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState({ customerName: "", customerEmail: "", customerCell: "", message: "" });
+  const [draft, setDraft] = useState({ customerName: "", customerEmail: "", customerCell: "", message: "", subject: "" });
 
   async function loadRows() {
     setLoading(true);
@@ -118,6 +118,7 @@ function AdminLeadQueuePage() {
         customerEmail: selected.customer_email,
         customerCell: selected.customer_cell,
         message: selected.message,
+        subject: selected.subject ?? "",
       });
       void fetchEnquiryAudit(selected.enquiry_id).then(setAudit).catch(() => setAudit([]));
     }
@@ -132,7 +133,7 @@ function AdminLeadQueuePage() {
       return rows.filter((r) => {
         if (tab !== "all" && r.status !== tab) return false;
         if (!q) return true;
-        return [r.customer_name, r.customer_email, r.customer_cell, r.message, r.supplier_business_name, r.supplier_category, r.supplier_location]
+        return [r.customer_name, r.customer_email, r.customer_cell, r.subject, r.message, r.supplier_business_name, r.supplier_category, r.supplier_location]
           .some((v) => v?.toLowerCase().includes(q));
       });
     },
@@ -181,7 +182,7 @@ function AdminLeadQueuePage() {
 
   async function handleSaveEdit() {
     if (!selected) return;
-    if (!draft.customerName.trim() || !draft.customerEmail.trim() || !draft.customerCell.trim() || !draft.message.trim()) {
+    if (!draft.customerName.trim() || !draft.customerEmail.trim() || !draft.customerCell.trim() || !draft.message.trim() || !draft.subject.trim()) {
       toast.error("All fields are required.");
       return;
     }
@@ -211,7 +212,7 @@ function AdminLeadQueuePage() {
     <AdminShell email={email}>
       <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-          Enquiry Management
+          Lead Qualification Queue
         </h1>
         <p className="mt-1.5 text-sm text-muted-foreground">
           Review each customer enquiry before it is released to the supplier. Only approved leads
@@ -249,16 +250,18 @@ function AdminLeadQueuePage() {
         </div>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-border bg-card">
-          <table className="w-full min-w-[1100px] text-sm">
+          <table className="w-full min-w-[1300px] text-sm">
             <thead className="border-b border-border bg-muted/40 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Date Submitted</th>
                 <th className="px-4 py-3">Customer Name</th>
-                <th className="px-4 py-3">Contact Number</th>
+                <th className="px-4 py-3">Email</th>
+                <th className="px-4 py-3">Phone Number</th>
                 <th className="px-4 py-3">Category</th>
                 <th className="px-4 py-3">Location</th>
                 <th className="px-4 py-3">Supplier</th>
-                <th className="px-4 py-3">Message Preview</th>
+                <th className="px-4 py-3">Subject</th>
+                <th className="px-4 py-3">Message</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3" />
               </tr>
@@ -270,6 +273,7 @@ function AdminLeadQueuePage() {
                     {formatDateTime(row.created_at)}
                   </td>
                   <td className="px-4 py-3 font-medium text-foreground">{row.customer_name}</td>
+                  <td className="px-4 py-3 text-xs text-muted-foreground">{row.customer_email}</td>
                   <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">{row.customer_cell}</td>
                   <td className="px-4 py-3 text-muted-foreground">{row.supplier_category ?? "—"}</td>
                   <td className="max-w-[160px] px-4 py-3 text-muted-foreground">
@@ -277,6 +281,9 @@ function AdminLeadQueuePage() {
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {row.supplier_business_name || <span className="italic">Unknown</span>}
+                  </td>
+                  <td className="max-w-[180px] px-4 py-3 font-medium text-foreground">
+                    <p className="line-clamp-2">{row.subject || "—"}</p>
                   </td>
                   <td className="max-w-[220px] px-4 py-3 text-muted-foreground">
                     <p className="line-clamp-2">{row.message}</p>
@@ -340,6 +347,10 @@ function AdminLeadQueuePage() {
                       <Input id="edit_cell" maxLength={30} value={draft.customerCell} onChange={(e) => setDraft({ ...draft, customerCell: e.target.value })} />
                     </div>
                     <div className="space-y-1.5">
+                      <Label htmlFor="edit_subject">Subject</Label>
+                      <Input id="edit_subject" maxLength={120} value={draft.subject} onChange={(e) => setDraft({ ...draft, subject: e.target.value })} />
+                    </div>
+                    <div className="space-y-1.5">
                       <Label htmlFor="edit_msg">Message</Label>
                       <Textarea id="edit_msg" rows={4} maxLength={2000} value={draft.message} onChange={(e) => setDraft({ ...draft, message: e.target.value })} />
                     </div>
@@ -353,6 +364,7 @@ function AdminLeadQueuePage() {
                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                       Message
                     </p>
+                    <p className="text-sm font-semibold text-foreground">{selected.subject || "No subject"}</p>
                     <p className="whitespace-pre-line text-sm text-foreground">{selected.message}</p>
                   </div>
                 )}
@@ -384,7 +396,7 @@ function AdminLeadQueuePage() {
                         <HistoryRow label="Reviewed by" value={selected.reviewed_by_email ?? "System (legacy)"} />
                         <HistoryRow
                           label="Action"
-                          value={selected.status === "rejected" ? "Rejected" : "Approved"}
+                          value={selected.status === "rejected" ? "Rejected" : "Qualified"}
                         />
                       </>
                     )}
@@ -482,11 +494,11 @@ function AdminLeadQueuePage() {
                     <>
                       <Button variant="outline" onClick={() => setRejecting(true)} disabled={acting} className="gap-1.5">
                         <X className="h-4 w-4" />
-                        Reject Enquiry
+                        Reject Lead
                       </Button>
                       <Button onClick={() => void handleDecision({ approve: true })} disabled={acting} className="gap-1.5">
                         {acting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-                        Approve Enquiry
+                        Approve Lead
                       </Button>
                     </>
                   )}

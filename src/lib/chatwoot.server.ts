@@ -9,6 +9,7 @@ export type ChatwootLead = {
   customerPhone: string;
   customerEmail: string;
   message: string;
+  subject?: string | null;
 };
 
 function config() {
@@ -91,6 +92,7 @@ export async function pushLeadToChatwoot(lead: ChatwootLead): Promise<number> {
     `Customer: ${lead.customerName}`,
     `Phone: ${lead.customerPhone}`,
     `Email: ${lead.customerEmail}`,
+    `Subject: ${lead.subject ?? "—"}`,
     "",
     "Message:",
     lead.message,

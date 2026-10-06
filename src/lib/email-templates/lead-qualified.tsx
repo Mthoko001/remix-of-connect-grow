@@ -20,7 +20,7 @@ const LeadQualifiedEmail = ({ businessName }: { businessName?: string }) => (
 
 export const template = {
   component: LeadQualifiedEmail,
-  subject: 'New Qualified Lead Received',
+  subject: 'You Have a New Qualified Lead',
   displayName: 'Supplier: qualified lead',
   previewData: { businessName: 'Acme Plumbing' },
 } satisfies TemplateEntry
