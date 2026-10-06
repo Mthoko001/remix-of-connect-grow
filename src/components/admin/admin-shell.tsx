@@ -18,7 +18,7 @@ import { Logo } from "@/components/landing/logo";
 
 export const ADMIN_NAV_ITEMS = [
   { label: "Overview", to: "/admin/dashboard", icon: LayoutDashboard },
-  { label: "Lead Queue", to: "/admin/enquiries", icon: Mail },
+  { label: "Enquiries", to: "/admin/enquiries", icon: Mail },
   { label: "Live Suppliers", to: "/admin/suppliers", icon: Store },
   { label: "Categories", to: "/admin/categories", icon: Tags },
   { label: "Packages", to: "/admin/packages", icon: Package },
