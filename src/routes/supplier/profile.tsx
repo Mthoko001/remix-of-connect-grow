@@ -1,3 +1,4 @@
+import { PROVINCES } from "@/lib/location";
 import { useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
