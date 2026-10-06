@@ -94,6 +94,7 @@ export type Database = {
           reviewed_by: string | null
           reviewed_by_email: string | null
           status: string
+          subject: string | null
           supplier_account_id: string
         }
         Insert: {
@@ -113,6 +114,7 @@ export type Database = {
           reviewed_by?: string | null
           reviewed_by_email?: string | null
           status?: string
+          subject?: string | null
           supplier_account_id: string
         }
         Update: {
@@ -132,6 +134,7 @@ export type Database = {
           reviewed_by?: string | null
           reviewed_by_email?: string | null
           status?: string
+          subject?: string | null
           supplier_account_id?: string
         }
         Relationships: [
@@ -494,6 +497,7 @@ export type Database = {
           _customer_name: string
           _enquiry_id: number
           _message: string
+          _subject?: string
         }
         Returns: undefined
       }
