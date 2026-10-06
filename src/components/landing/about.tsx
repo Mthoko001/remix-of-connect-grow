@@ -1,7 +1,7 @@
 export function About({ verifiedCount }: { verifiedCount: number }) {
   const STATS = [
     { value: String(verifiedCount), label: "Verified suppliers" },
-    { value: "5", label: "Free enquiries for new suppliers" },
+    { value: "5", label: "Free qualified leads for new suppliers" },
     { value: "0%", label: "Commission on jobs" },
   ];
   return (
