@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { updatePassword } from "@/lib/supplier-auth";
+import { isStrongPassword, passwordChecks } from "@/lib/policies";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
@@ -62,8 +63,8 @@ function ResetPasswordPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+    if (!isStrongPassword(password)) {
+      setError("Your password doesn't meet all the requirements below.");
       return;
     }
     if (password !== confirmPassword) {
@@ -74,14 +75,23 @@ function ResetPasswordPage() {
     setSubmitting(true);
     try {
       await updatePassword(password);
+      // End the temporary recovery session so the user signs in fresh.
+      await supabase.auth.signOut();
       setDone(true);
-      setTimeout(() => navigate({ to: "/supplier/dashboard" }), 1500);
-    } catch {
-      setError("Couldn't update your password. Please request a new reset link.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      setError(
+        /same|different/i.test(msg)
+          ? "Your new password must be different from your old one."
+          : /weak|pwned|leaked/i.test(msg)
+            ? "This password is too common or has appeared in a data breach. Please choose another."
+            : "Couldn't update your password. Please request a new reset link.",
+      );
     } finally {
       setSubmitting(false);
     }
   }
+  const checks = passwordChecks(password);
 
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4 py-10 sm:py-16">
@@ -125,13 +135,18 @@ function ResetPasswordPage() {
 
           {linkState === "valid" && done && (
             <>
-              <div className="mx-auto mt-6 grid h-12 w-12 place-items-center rounded-full bg-emerald-500/10">
-                <CheckCircle2 className="h-6 w-6 text-emerald-600" />
+              <div className="mx-auto mt-6 grid h-12 w-12 place-items-center rounded-full bg-verified/15">
+                <CheckCircle2 className="h-6 w-6 text-verified" />
               </div>
               <h1 className="mt-4 text-2xl font-bold tracking-tight text-foreground">
                 Password updated
               </h1>
-              <p className="mt-2 text-sm text-muted-foreground">Taking you to your dashboard…</p>
+              <p className="mt-2 text-sm text-muted-foreground" role="status">
+                Your password has been updated successfully.
+              </p>
+              <Button className="mt-6 h-10 w-full" onClick={() => navigate({ to: "/login" })}>
+                Back to Login
+              </Button>
             </>
           )}
 
@@ -171,6 +186,16 @@ function ResetPasswordPage() {
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
+                  <ul className="mt-2 space-y-1 text-xs" aria-label="Password requirements">
+                    {checks.map((c) => (
+                      <li
+                        key={c.label}
+                        className={c.ok ? "text-verified" : "text-muted-foreground"}
+                      >
+                        {c.ok ? "✓" : "•"} {c.label}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
                 <div className="space-y-1.5">
