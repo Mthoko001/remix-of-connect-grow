@@ -1,13 +1,15 @@
 import { Link } from "@tanstack/react-router";
 import { Logo } from "./logo";
 
-// TODO: add Contact, Terms and Privacy once those pages exist.
+// TODO: add Contact once that page exists.
 const QUICK_LINKS = [
   { label: "About", href: "/#about" },
   { label: "How It Works", href: "/#how-it-works" },
   { label: "Browse Suppliers", href: "/suppliers" },
   { label: "Pricing", href: "/pricing" },
   { label: "List My Business", href: "/supplier/signup" },
+  { label: "Terms & Conditions", href: "/terms-and-conditions" },
+  { label: "Privacy Policy", href: "/privacy-policy" },
 ] as const;
 
 // TODO: add social media links once real accounts exist.
