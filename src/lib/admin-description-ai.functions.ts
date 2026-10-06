@@ -8,18 +8,6 @@ const suggestionInputSchema = z.object({
   description: z.string().trim().min(1).max(1000),
 });
 
-const geminiResponseSchema = z.object({
-  candidates: z
-    .array(
-      z.object({
-        content: z.object({
-          parts: z.array(z.object({ text: z.string() })),
-        }),
-      }),
-    )
-    .optional(),
-});
-
 export const suggestBusinessDescription = createServerFn({ method: "POST" })
   .validator(suggestionInputSchema)
   .handler(async ({ data }) => {
@@ -63,60 +51,82 @@ export const suggestBusinessDescription = createServerFn({ method: "POST" })
       throw new Error("Only admins and suppliers with a profile can request suggestions.");
     }
 
-    const apiKey = process.env["GEMINI_API_KEY"];
-    if (!apiKey) {
-      throw new Error("Gemini is not configured. Add GEMINI_API_KEY to the server environment.");
-    }
+    const apiKey = process.env["LOVABLE_API_KEY"];
+    if (!apiKey) throw new Error("AI suggestions are not configured on the server.");
 
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": apiKey,
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              role: "user",
-              parts: [
-                {
-                  text: [
-                    "Rewrite the supplier business description below as a polished, persuasive single paragraph that helps potential customers understand the business.",
-                    "Aim for 6-7 complete sentences and roughly 100-150 words, which should display as about 6-7 lines in the description area. Use relevant details and concrete benefits already supported by the original.",
-                    "Do not invent or imply services, credentials, locations, guarantees, results, or experience that the original does not state. Do not add filler to reach the target length; if the source lacks detail, keep the rewrite shorter and factual.",
-                    "Keep the meaning and language of the original. Return only the paragraph, with no heading, bullets, quotation marks, or line breaks. Maximum 1000 characters.",
-                    "",
-                    "Original description:",
-                    data.description,
-                  ].join("\n"),
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            temperature: 0.4,
-            maxOutputTokens: 500,
-          },
-        }),
+    const prompt = [
+      "Rewrite the supplier business description below as a polished, persuasive single paragraph that helps potential customers understand the business.",
+      "Aim for 6-7 complete sentences and roughly 100-150 words. Use relevant details and concrete benefits already supported by the original.",
+      "Do not invent or imply services, credentials, locations, guarantees, results, or experience that the original does not state. Do not add filler to reach the target length; if the source lacks detail, keep the rewrite shorter and factual.",
+      "Keep the meaning and language of the original. Return only the paragraph, with no heading, bullets, quotation marks, or line breaks. Maximum 1000 characters.",
+      "",
+      "Original description:",
+      data.description,
+    ].join("\n");
+
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/responses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Lovable-API-Key": apiKey,
+        "X-Lovable-AIG-SDK": "fetch",
       },
-    );
+      body: JSON.stringify({
+        model: "openai/gpt-6-astra",
+        input: prompt,
+        stream: true,
+        store: false,
+        reasoning: { effort: "low", summary: "auto" },
+        include: ["reasoning.encrypted_content"],
+      }),
+    });
 
-    if (!response.ok) {
-      if (response.status === 429) {
-        throw new Error("Gemini is rate-limited right now. Please try again shortly.");
+    if (!response.ok || !response.body) {
+      const detail = await response.text().catch(() => "");
+      console.error("AI description suggestion failed:", response.status, detail.slice(0, 300));
+      if (response.status === 429) throw new Error("AI is busy right now. Please try again shortly.");
+      if (response.status === 402 || response.status === 403) {
+        let message = "AI suggestions are unavailable right now.";
+        try {
+          const parsed = JSON.parse(detail) as { message?: string; error?: { message?: string } };
+          message = parsed.message ?? parsed.error?.message ?? message;
+        } catch {
+          /* keep default */
+        }
+        throw new Error(message);
       }
-      console.error("Gemini description suggestion failed with status:", response.status);
-      throw new Error("Gemini couldn't generate a suggestion. Please try again.");
+      throw new Error("Couldn't generate a suggestion. Please try again.");
     }
 
-    const result = geminiResponseSchema.parse(await response.json());
-    const suggestion = result.candidates?.[0]?.content.parts
-      .map((part) => part.text)
-      .join("")
-      .trim();
-    if (!suggestion) throw new Error("Gemini returned an empty suggestion. Please try again.");
+    // Consume the SSE stream server-side and collect the output text.
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let text = "";
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      for (const line of lines) {
+        if (!line.startsWith("data:")) continue;
+        const payload = line.slice(5).trim();
+        if (!payload || payload === "[DONE]") continue;
+        try {
+          const event = JSON.parse(payload) as { type?: string; delta?: string };
+          if (event.type === "response.output_text.delta" && event.delta) text += event.delta;
+          if (event.type === "error" || event.type === "response.failed") {
+            throw new Error("Couldn't generate a suggestion. Please try again.");
+          }
+        } catch (err) {
+          if (err instanceof Error && err.message.startsWith("Couldn't")) throw err;
+        }
+      }
+    }
+
+    const suggestion = text.trim();
+    if (!suggestion) throw new Error("The AI returned an empty suggestion. Please try again.");
     if (suggestion.length > 1000) {
       throw new Error("The suggestion is longer than 1000 characters. Please try again.");
     }

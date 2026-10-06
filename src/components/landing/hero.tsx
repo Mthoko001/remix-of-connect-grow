@@ -71,7 +71,7 @@ function HeroVisual() {
           </span>
           <div>
             <p className="text-xs font-semibold text-foreground">New enquiry received</p>
-            <p className="text-[11px] text-muted-foreground">via WhatsApp · just now</p>
+            <p className="text-[11px] text-muted-foreground">just now</p>
           </div>
         </div>
       </div>
@@ -97,7 +97,7 @@ export function Hero() {
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
             GrowMeOnline connects customers directly with verified businesses — no
             middlemen, no guesswork. Compare trusted suppliers and reach out
-            instantly via WhatsApp.
+            instantly.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">

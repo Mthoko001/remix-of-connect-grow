@@ -79,6 +79,7 @@ export type Database = {
       tb_enquiry: {
         Row: {
           channel: string
+          chatwoot_conversation_id: number | null
           created_at: string
           customer_cell: string
           customer_email: string
@@ -86,11 +87,19 @@ export type Database = {
           enquiry_id: number
           image_path: string | null
           message: string
+          qualified_at: string | null
+          rejection_note: string | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewed_by_email: string | null
           status: string
+          subject: string | null
           supplier_account_id: string
         }
         Insert: {
           channel: string
+          chatwoot_conversation_id?: number | null
           created_at?: string
           customer_cell: string
           customer_email: string
@@ -98,11 +107,19 @@ export type Database = {
           enquiry_id?: never
           image_path?: string | null
           message: string
+          qualified_at?: string | null
+          rejection_note?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewed_by_email?: string | null
           status?: string
+          subject?: string | null
           supplier_account_id: string
         }
         Update: {
           channel?: string
+          chatwoot_conversation_id?: number | null
           created_at?: string
           customer_cell?: string
           customer_email?: string
@@ -110,7 +127,14 @@ export type Database = {
           enquiry_id?: never
           image_path?: string | null
           message?: string
+          qualified_at?: string | null
+          rejection_note?: string | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewed_by_email?: string | null
           status?: string
+          subject?: string | null
           supplier_account_id?: string
         }
         Relationships: [
@@ -123,6 +147,50 @@ export type Database = {
           },
         ]
       }
+      tb_enquiry_audit: {
+        Row: {
+          action: string
+          admin_account_id: string | null
+          admin_email: string | null
+          created_at: string
+          details: Json | null
+          enquiry_audit_id: number
+          enquiry_id: number
+          new_status: string | null
+          original_status: string | null
+        }
+        Insert: {
+          action: string
+          admin_account_id?: string | null
+          admin_email?: string | null
+          created_at?: string
+          details?: Json | null
+          enquiry_audit_id?: never
+          enquiry_id: number
+          new_status?: string | null
+          original_status?: string | null
+        }
+        Update: {
+          action?: string
+          admin_account_id?: string | null
+          admin_email?: string | null
+          created_at?: string
+          details?: Json | null
+          enquiry_audit_id?: never
+          enquiry_id?: number
+          new_status?: string | null
+          original_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tb_enquiry_audit_enquiry_id_fkey"
+            columns: ["enquiry_id"]
+            isOneToOne: false
+            referencedRelation: "tb_enquiry"
+            referencedColumns: ["enquiry_id"]
+          },
+        ]
+      }
       tb_package: {
         Row: {
           benefits: Json
@@ -132,6 +200,7 @@ export type Database = {
           description: string
           duration_months: number
           is_active: boolean
+          is_recommended: boolean
           name: string
           package_id: number
           price: number
@@ -146,6 +215,7 @@ export type Database = {
           description?: string
           duration_months?: number
           is_active?: boolean
+          is_recommended?: boolean
           name: string
           package_id?: never
           price: number
@@ -160,6 +230,7 @@ export type Database = {
           description?: string
           duration_months?: number
           is_active?: boolean
+          is_recommended?: boolean
           name?: string
           package_id?: never
           price?: number
@@ -168,36 +239,89 @@ export type Database = {
         }
         Relationships: []
       }
+      tb_profile_view: {
+        Row: {
+          profile_view_id: number
+          supplier_account_id: string
+          viewed_at: string
+          viewer_account_id: string | null
+          visitor_hash: string
+        }
+        Insert: {
+          profile_view_id?: never
+          supplier_account_id: string
+          viewed_at?: string
+          viewer_account_id?: string | null
+          visitor_hash: string
+        }
+        Update: {
+          profile_view_id?: never
+          supplier_account_id?: string
+          viewed_at?: string
+          viewer_account_id?: string | null
+          visitor_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tb_profile_view_supplier_account_id_fkey"
+            columns: ["supplier_account_id"]
+            isOneToOne: false
+            referencedRelation: "tb_supplier_account"
+            referencedColumns: ["supplier_account_id"]
+          },
+        ]
+      }
       tb_subscription: {
         Row: {
           amount: number
           created_at: string
+          expires_at: string | null
+          failure_reason: string | null
+          gateway: string
+          gateway_reference: string | null
           is_test: boolean
           package_id: number | null
           paid_at: string | null
+          payment_reference: string | null
+          starts_at: string | null
           subscription_id: number
           subscription_status: string
           supplier_account_id: string
+          updated_at: string
         }
         Insert: {
           amount: number
           created_at?: string
+          expires_at?: string | null
+          failure_reason?: string | null
+          gateway?: string
+          gateway_reference?: string | null
           is_test?: boolean
           package_id?: number | null
           paid_at?: string | null
+          payment_reference?: string | null
+          starts_at?: string | null
           subscription_id?: never
           subscription_status?: string
           supplier_account_id: string
+          updated_at?: string
         }
         Update: {
           amount?: number
           created_at?: string
+          expires_at?: string | null
+          failure_reason?: string | null
+          gateway?: string
+          gateway_reference?: string | null
           is_test?: boolean
           package_id?: number | null
           paid_at?: string | null
+          payment_reference?: string | null
+          starts_at?: string | null
           subscription_id?: never
           subscription_status?: string
           supplier_account_id?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -248,11 +372,18 @@ export type Database = {
           business_name: string
           category_id: number | null
           cell_no: string | null
+          closing_time: string
           date_created: string
           date_updated: string
+          is_product_seller: boolean
+          is_service_provider: boolean
           notes: string | null
+          opening_time: string
+          other_service: string | null
           product_images: Json
+          products_offered: string[]
           rejection_reason: string | null
+          service_categories: string[]
           status: string
           supplier_account_id: string
           supplier_profile_id: number
@@ -265,11 +396,18 @@ export type Database = {
           business_name?: string
           category_id?: number | null
           cell_no?: string | null
+          closing_time?: string
           date_created?: string
           date_updated?: string
+          is_product_seller?: boolean
+          is_service_provider?: boolean
           notes?: string | null
+          opening_time?: string
+          other_service?: string | null
           product_images?: Json
+          products_offered?: string[]
           rejection_reason?: string | null
+          service_categories?: string[]
           status?: string
           supplier_account_id: string
           supplier_profile_id?: never
@@ -282,11 +420,18 @@ export type Database = {
           business_name?: string
           category_id?: number | null
           cell_no?: string | null
+          closing_time?: string
           date_created?: string
           date_updated?: string
+          is_product_seller?: boolean
+          is_service_provider?: boolean
           notes?: string | null
+          opening_time?: string
+          other_service?: string | null
           product_images?: Json
+          products_offered?: string[]
           rejection_reason?: string | null
+          service_categories?: string[]
           status?: string
           supplier_account_id?: string
           supplier_profile_id?: never
@@ -317,8 +462,15 @@ export type Database = {
           business_logo: string | null
           business_name: string | null
           category_name: string | null
+          closing_time: string | null
+          is_product_seller: boolean | null
+          is_service_provider: boolean | null
+          opening_time: string | null
+          other_service: string | null
           product_images: Json | null
+          products_offered: string[] | null
           public_area: string | null
+          service_categories: string[] | null
           supplier_account_id: string | null
           supplier_profile_id: number | null
         }
@@ -334,6 +486,30 @@ export type Database = {
       }
     }
     Functions: {
+      admin_archive_enquiry: {
+        Args: { _enquiry_id: number }
+        Returns: undefined
+      }
+      admin_edit_enquiry: {
+        Args: {
+          _customer_cell: string
+          _customer_email: string
+          _customer_name: string
+          _enquiry_id: number
+          _message: string
+          _subject?: string
+        }
+        Returns: undefined
+      }
+      admin_lead_kpis: {
+        Args: never
+        Returns: {
+          pending_review: number
+          qualified: number
+          rejected: number
+          total: number
+        }[]
+      }
       admin_supplier_monetization: {
         Args: never
         Returns: {
@@ -341,6 +517,16 @@ export type Database = {
           monetization_status: string
           supplier_account_id: string
           total_enquiries: number
+        }[]
+      }
+      admin_top_profile_views: {
+        Args: { _limit?: number }
+        Returns: {
+          business_name: string
+          platform_total: number
+          supplier_account_id: string
+          total_views: number
+          views_this_month: number
         }[]
       }
       can_supplier_receive_enquiries: {
@@ -356,7 +542,39 @@ export type Database = {
           total_enquiries: number
         }[]
       }
+      get_my_lead_summary: {
+        Args: never
+        Returns: {
+          closed: number
+          in_progress: number
+          pending_review: number
+          qualified: number
+        }[]
+      }
+      get_my_profile_view_stats: {
+        Args: never
+        Returns: {
+          daily: Json
+          total_views: number
+          views_last_month: number
+          views_this_month: number
+          views_this_week: number
+        }[]
+      }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      record_profile_view: {
+        Args: { _supplier_account_id: string; _visitor_id: string }
+        Returns: boolean
+      }
+      review_enquiry: {
+        Args: {
+          _decision: string
+          _enquiry_id: number
+          _note?: string
+          _reason?: string
+        }
+        Returns: undefined
+      }
       supplier_has_active_subscription: {
         Args: { _supplier_account_id: string }
         Returns: boolean

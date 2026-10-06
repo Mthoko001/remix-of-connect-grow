@@ -22,6 +22,9 @@ export type SupplierListing = {
   source?: "live";
   logoUrl?: string | null;
   productImages?: string[];
+  businessTypes?: string[];
+  services?: string[];
+  products?: string[];
 };
 
 

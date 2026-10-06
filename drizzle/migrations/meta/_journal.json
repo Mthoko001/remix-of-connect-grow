@@ -57,6 +57,55 @@
       "when": 1790834569408,
       "tag": "0007_revoke_subscription_check_from_authenticated",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790893292260,
+      "tag": "0008_profile_views",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1790930010623,
+      "tag": "0009_supplier_business_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1790936491597,
+      "tag": "0010_yoco_subscriptions",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1790936721820,
+      "tag": "0011_enquiry_chatwoot",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1791136097061,
+      "tag": "0012_qualified_lead_workflow",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1791286031307,
+      "tag": "0013_enquiry_moderation_audit",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1791298399635,
+      "tag": "0014_enquiry_subject_and_reasons",
+      "breakpoints": true
     }
   ]
 }

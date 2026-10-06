@@ -1,18 +1,22 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
-import { isQuotaExhaustedDbError, SupplierQuotaExhaustedError } from "@/lib/lead-quota";
+import { SupplierQuotaExhaustedError } from "@/lib/lead-quota";
+import { createEnquiry } from "@/lib/enquiries.functions";
+import type { LeadStatus } from "@/lib/lead-review";
 
 const ENQUIRY_MEDIA_BUCKET = "enquiry-media";
 
 export type EnquiryRow = Tables<"tb_enquiry">;
-export type EnquiryChannel = "whatsapp" | "in_app";
-export type EnquiryStatus = "new" | "read" | "replied";
+// "whatsapp" kept only for historical rows; new enquiries are always "in_app".
+export type EnquiryChannel = "in_app";
+export type EnquiryStatus = LeadStatus;
 
 export type SubmitEnquiryInput = {
   supplierAccountId: string;
   customerName: string;
   customerEmail: string;
   customerCell: string;
+  subject: string;
   message: string;
   channel: EnquiryChannel;
   image?: File | null;
@@ -21,7 +25,7 @@ export type SubmitEnquiryInput = {
 /**
  * Stores a customer enquiry. Callable by anonymous visitors — no login
  * required. Best-effort: callers should not block their primary action
- * (e.g. opening WhatsApp) on this succeeding.
+ * on Chatwoot succeeding — the server saves the lead first.
  *
  * IMPORTANT: do not chain `.select()` after this insert. The SELECT RLS
  * policy on tb_enquiry only covers `authenticated` (the owning supplier or
@@ -43,17 +47,20 @@ export async function submitEnquiry(input: SubmitEnquiryInput): Promise<void> {
     if (!uploadError) imagePath = path;
   }
 
-  const { error } = await supabase.from("tb_enquiry").insert({
-    supplier_account_id: input.supplierAccountId,
-    customer_name: input.customerName,
-    customer_email: input.customerEmail,
-    customer_cell: input.customerCell,
-    message: input.message,
-    channel: input.channel,
-    image_path: imagePath,
+  // Saved server-side so it can also be forwarded to Chatwoot; the DB quota trigger still applies.
+  const res = await createEnquiry({
+    data: {
+      supplierAccountId: input.supplierAccountId,
+      customerName: input.customerName,
+      customerEmail: input.customerEmail,
+      customerCell: input.customerCell,
+      subject: input.subject,
+      message: input.message,
+      channel: input.channel,
+      imagePath,
+    },
   });
-  if (isQuotaExhaustedDbError(error)) throw new SupplierQuotaExhaustedError();
-  if (error) throw error;
+  if (res.quotaExhausted) throw new SupplierQuotaExhaustedError();
 }
 
 async function getCurrentUserId(): Promise<string> {
@@ -76,7 +83,7 @@ export async function fetchMyEnquiries(): Promise<EnquiryRow[]> {
 
 export async function markEnquiryStatus(
   enquiryId: number,
-  status: Extract<EnquiryStatus, "read" | "replied">,
+  status: Extract<EnquiryStatus, "in_progress" | "closed">,
 ): Promise<void> {
   const { error } = await supabase
     .from("tb_enquiry")

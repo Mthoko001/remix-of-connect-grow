@@ -26,7 +26,7 @@ export const Route = createFileRoute("/pricing")({
 const FEATURES = [
   "Verified business listing on GrowMeOnline",
   "Business profile with logo and up to 6 photos",
-  "Customer enquiries via WhatsApp and in-app messaging",
+  "Customer enquiries delivered to your leads inbox",
   "Supplier dashboard with enquiry tracking",
   "Listed in category browsing and search",
   "Verified badge shown to customers",

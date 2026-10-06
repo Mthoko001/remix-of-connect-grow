@@ -24,6 +24,11 @@ import {
   MonetizationBadge,
   QuotaExhaustedBanner,
 } from "@/components/supplier/lead-status";
+import {
+  ProfileViewMetrics,
+  ProfileViewsChart,
+  useProfileViewStats,
+} from "@/components/supplier/profile-views-panel";
 
 export const Route = createFileRoute("/supplier/dashboard")({
   head: () => ({
@@ -38,7 +43,8 @@ function SupplierDashboardPage() {
   const [completeFields, setCompleteFields] = useState<number | null>(null);
   const [status, setStatus] = useState<SupplierProfileStatus | null>(null);
   const [enquiries, setEnquiries] = useState<EnquiryRow[]>([]);
-  const { leadStatus } = useLeadStatus(!checking);
+  const { leadStatus, summary } = useLeadStatus(!checking);
+  const viewStats = useProfileViewStats(!checking);
 
   useEffect(() => {
     if (checking) return;
@@ -182,8 +188,8 @@ function SupplierDashboardPage() {
       )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <MetricCard label="Profile Views" value="0" />
-        <MetricCard label="Enquiries" value={String(enquiries.length)} />
+        <MetricCard label="Profile Views" value={viewStats ? String(viewStats.total) : "—"} />
+        <MetricCard label="Qualified Leads" value={String(enquiries.length)} />
         <MetricCard label="Conversion Rate" value="—" />
         <MetricCard
           label="Subscription Status"
@@ -191,13 +197,16 @@ function SupplierDashboardPage() {
         />
       </div>
 
-      {leadStatus && <LeadGenerationStatusCard leadStatus={leadStatus} />}
+      <ProfileViewMetrics stats={viewStats} />
+      <ProfileViewsChart stats={viewStats} />
 
-      <Panel title="Recent enquiries" className="mt-6">
+      {leadStatus && <LeadGenerationStatusCard leadStatus={leadStatus} summary={summary} />}
+
+      <Panel title="Recent qualified leads" className="mt-6">
         {enquiries.length === 0 ? (
           <EmptyState
-            title="No enquiries yet"
-            description="When customers reach out, they'll show up here."
+            title="No qualified leads yet"
+            description="When our team approves a customer enquiry, it will show up here."
           />
         ) : (
           <div className="divide-y divide-border">

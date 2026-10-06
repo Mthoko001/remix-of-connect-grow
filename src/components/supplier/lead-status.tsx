@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Panel } from "@/components/supplier/dashboard-shell";
 import { MONETIZATION_LABELS, type LeadStatus, type MonetizationStatus } from "@/lib/lead-quota";
+import type { LeadSummary } from "@/lib/lead-review";
 
 export function MonetizationBadge({ status }: { status: MonetizationStatus }) {
   const label = MONETIZATION_LABELS[status];
@@ -25,13 +26,10 @@ export function QuotaExhaustedBanner() {
         <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
         <div>
           <p className="text-sm font-semibold text-foreground">
-            Your free enquiry allowance has been used.
+            You have reached your free qualified lead limit.
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            You have already received 5 customer enquiries through GrowMeOnline.
-          </p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Activate your subscription to continue receiving new customer enquiries.
+            Activate a subscription to continue receiving qualified customer leads.
           </p>
         </div>
       </div>
@@ -46,7 +44,13 @@ export function QuotaExhaustedBanner() {
   );
 }
 
-export function LeadGenerationStatusCard({ leadStatus }: { leadStatus: LeadStatus }) {
+export function LeadGenerationStatusCard({
+  leadStatus,
+  summary,
+}: {
+  leadStatus: LeadStatus;
+  summary?: LeadSummary | null;
+}) {
   const pct = (leadStatus.freeUsed / leadStatus.freeLimit) * 100;
   return (
     <Panel title="Lead Generation Status" className="mt-6">
@@ -55,13 +59,13 @@ export function LeadGenerationStatusCard({ leadStatus }: { leadStatus: LeadStatu
         <MonetizationBadge status={leadStatus.status} />
       </div>
       <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <Stat label="Total enquiries" value={String(leadStatus.totalEnquiries)} />
+        <Stat label="Qualified leads received" value={String(leadStatus.totalEnquiries)} />
         <Stat
-          label="Free enquiries used"
+          label="Qualified Leads Used"
           value={`${leadStatus.freeUsed} / ${leadStatus.freeLimit}`}
         />
         <Stat
-          label="Free remaining"
+          label="Remaining Free Leads"
           value={leadStatus.hasActiveSubscription ? "Unlimited" : String(leadStatus.freeRemaining)}
         />
         <Stat
@@ -70,13 +74,25 @@ export function LeadGenerationStatusCard({ leadStatus }: { leadStatus: LeadStatu
         />
       </dl>
       <div className="mt-5">
-        <Progress value={pct} aria-label="Free enquiries used" />
+        <Progress value={pct} aria-label="Qualified Leads Used" />
         <p className="mt-2 text-xs text-muted-foreground">
           {leadStatus.hasActiveSubscription
-            ? "Your subscription is active — enquiries are unlimited."
-            : `${leadStatus.freeUsed} of ${leadStatus.freeLimit} free enquiries used.`}
+            ? "Your subscription is active — qualified leads are unlimited."
+            : `${leadStatus.freeUsed} of ${leadStatus.freeLimit} first qualified leads used (free).`}
         </p>
       </div>
+      {summary && (
+        <div className="mt-5 border-t border-border/60 pt-4">
+          <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Lead status summary
+          </p>
+          <dl className="grid grid-cols-3 gap-4">
+            <Stat label="Qualified" value={String(summary.qualified)} />
+            <Stat label="In Progress" value={String(summary.inProgress)} />
+            <Stat label="Closed" value={String(summary.closed)} />
+          </dl>
+        </div>
+      )}
     </Panel>
   );
 }

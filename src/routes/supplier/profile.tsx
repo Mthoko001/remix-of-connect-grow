@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { BusinessTypeFields } from "@/components/supplier/business-type-fields";
 import { supabase } from "@/integrations/supabase/client";
 import { suggestBusinessDescription } from "@/lib/admin-description-ai.functions";
 import {
@@ -329,6 +330,8 @@ function SupplierProfilePage() {
               </div>
             </div>
           </Panel>
+
+          <BusinessTypeFields draft={draft} updateField={updateField} />
 
           <div className="flex flex-wrap items-center justify-end gap-3">
             {(status === "draft" || status === "rejected") && (

@@ -21,8 +21,10 @@ import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 import { Route as AdminEnquiriesRouteImport } from './routes/admin/enquiries'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPackagesRouteImport } from './routes/admin/packages'
+import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
 import { Route as AdminSuppliersRouteImport } from './routes/admin/suppliers'
-import { Route as SupplierCheckoutRouteImport } from './routes/supplier/checkout'
+import { Route as PaymentFailedRouteImport } from './routes/payment/failed'
+import { Route as PaymentSuccessRouteImport } from './routes/payment/success'
 import { Route as SupplierDashboardRouteImport } from './routes/supplier/dashboard'
 import { Route as SupplierEnquiriesRouteImport } from './routes/supplier/enquiries'
 import { Route as SupplierProfileRouteImport } from './routes/supplier/profile'
@@ -32,6 +34,7 @@ import { Route as SupplierSubscriptionRouteImport } from './routes/supplier/subs
 import { Route as SuppliersIndexRouteImport } from './routes/suppliers/index'
 import { Route as SuppliersSlugRouteImport } from './routes/suppliers/$slug'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as ApiPublicYocoWebhookRouteImport } from './routes/api/public/yoco-webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
@@ -97,14 +100,24 @@ const AdminPackagesRoute = AdminPackagesRouteImport.update({
   path: '/admin/packages',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
+  id: '/admin/subscriptions',
+  path: '/admin/subscriptions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminSuppliersRoute = AdminSuppliersRouteImport.update({
   id: '/admin/suppliers',
   path: '/admin/suppliers',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SupplierCheckoutRoute = SupplierCheckoutRouteImport.update({
-  id: '/supplier/checkout',
-  path: '/supplier/checkout',
+const PaymentFailedRoute = PaymentFailedRouteImport.update({
+  id: '/payment/failed',
+  path: '/payment/failed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentSuccessRoute = PaymentSuccessRouteImport.update({
+  id: '/payment/success',
+  path: '/payment/success',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SupplierDashboardRoute = SupplierDashboardRouteImport.update({
@@ -152,6 +165,11 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicYocoWebhookRoute = ApiPublicYocoWebhookRouteImport.update({
+  id: '/api/public/yoco-webhook',
+  path: '/api/public/yoco-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
   id: '/lovable/email/auth/preview',
   path: '/lovable/email/auth/preview',
@@ -182,8 +200,10 @@ export interface FileRoutesByFullPath {
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
-  '/supplier/checkout': typeof SupplierCheckoutRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/profile': typeof SupplierProfileRoute
@@ -193,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/suppliers/$slug': typeof SuppliersSlugRoute
   '/suppliers/': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/api/public/yoco-webhook': typeof ApiPublicYocoWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -210,8 +231,10 @@ export interface FileRoutesByTo {
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
-  '/supplier/checkout': typeof SupplierCheckoutRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/profile': typeof SupplierProfileRoute
@@ -221,6 +244,7 @@ export interface FileRoutesByTo {
   '/suppliers/$slug': typeof SuppliersSlugRoute
   '/suppliers': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/api/public/yoco-webhook': typeof ApiPublicYocoWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -239,8 +263,10 @@ export interface FileRoutesById {
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/packages': typeof AdminPackagesRoute
+  '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
-  '/supplier/checkout': typeof SupplierCheckoutRoute
+  '/payment/failed': typeof PaymentFailedRoute
+  '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
   '/supplier/enquiries': typeof SupplierEnquiriesRoute
   '/supplier/profile': typeof SupplierProfileRoute
@@ -250,6 +276,7 @@ export interface FileRoutesById {
   '/suppliers/$slug': typeof SuppliersSlugRoute
   '/suppliers/': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/api/public/yoco-webhook': typeof ApiPublicYocoWebhookRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
@@ -269,8 +296,10 @@ export interface FileRouteTypes {
     | '/admin/enquiries'
     | '/admin/login'
     | '/admin/packages'
+    | '/admin/subscriptions'
     | '/admin/suppliers'
-    | '/supplier/checkout'
+    | '/payment/failed'
+    | '/payment/success'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
     | '/supplier/profile'
@@ -280,6 +309,7 @@ export interface FileRouteTypes {
     | '/suppliers/$slug'
     | '/suppliers/'
     | '/.lovable/oauth/consent'
+    | '/api/public/yoco-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
@@ -297,8 +327,10 @@ export interface FileRouteTypes {
     | '/admin/enquiries'
     | '/admin/login'
     | '/admin/packages'
+    | '/admin/subscriptions'
     | '/admin/suppliers'
-    | '/supplier/checkout'
+    | '/payment/failed'
+    | '/payment/success'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
     | '/supplier/profile'
@@ -308,6 +340,7 @@ export interface FileRouteTypes {
     | '/suppliers/$slug'
     | '/suppliers'
     | '/.lovable/oauth/consent'
+    | '/api/public/yoco-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
@@ -325,8 +358,10 @@ export interface FileRouteTypes {
     | '/admin/enquiries'
     | '/admin/login'
     | '/admin/packages'
+    | '/admin/subscriptions'
     | '/admin/suppliers'
-    | '/supplier/checkout'
+    | '/payment/failed'
+    | '/payment/success'
     | '/supplier/dashboard'
     | '/supplier/enquiries'
     | '/supplier/profile'
@@ -336,6 +371,7 @@ export interface FileRouteTypes {
     | '/suppliers/$slug'
     | '/suppliers/'
     | '/.lovable/oauth/consent'
+    | '/api/public/yoco-webhook'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/transactional/preview'
@@ -354,8 +390,10 @@ export interface RootRouteChildren {
   AdminEnquiriesRoute: typeof AdminEnquiriesRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPackagesRoute: typeof AdminPackagesRoute
+  AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminSuppliersRoute: typeof AdminSuppliersRoute
-  SupplierCheckoutRoute: typeof SupplierCheckoutRoute
+  PaymentFailedRoute: typeof PaymentFailedRoute
+  PaymentSuccessRoute: typeof PaymentSuccessRoute
   SupplierDashboardRoute: typeof SupplierDashboardRoute
   SupplierEnquiriesRoute: typeof SupplierEnquiriesRoute
   SupplierProfileRoute: typeof SupplierProfileRoute
@@ -365,6 +403,7 @@ export interface RootRouteChildren {
   SuppliersSlugRoute: typeof SuppliersSlugRoute
   SuppliersIndexRoute: typeof SuppliersIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
+  ApiPublicYocoWebhookRoute: typeof ApiPublicYocoWebhookRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
@@ -456,6 +495,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPackagesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/subscriptions': {
+      id: '/admin/subscriptions'
+      path: '/admin/subscriptions'
+      fullPath: '/admin/subscriptions'
+      preLoaderRoute: typeof AdminSubscriptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/suppliers': {
       id: '/admin/suppliers'
       path: '/admin/suppliers'
@@ -463,11 +509,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSuppliersRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/supplier/checkout': {
-      id: '/supplier/checkout'
-      path: '/supplier/checkout'
-      fullPath: '/supplier/checkout'
-      preLoaderRoute: typeof SupplierCheckoutRouteImport
+    '/payment/failed': {
+      id: '/payment/failed'
+      path: '/payment/failed'
+      fullPath: '/payment/failed'
+      preLoaderRoute: typeof PaymentFailedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment/success': {
+      id: '/payment/success'
+      path: '/payment/success'
+      fullPath: '/payment/success'
+      preLoaderRoute: typeof PaymentSuccessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/supplier/dashboard': {
@@ -533,6 +586,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/yoco-webhook': {
+      id: '/api/public/yoco-webhook'
+      path: '/api/public/yoco-webhook'
+      fullPath: '/api/public/yoco-webhook'
+      preLoaderRoute: typeof ApiPublicYocoWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lovable/email/auth/preview': {
       id: '/lovable/email/auth/preview'
       path: '/lovable/email/auth/preview'
@@ -571,8 +631,10 @@ const rootRouteChildren: RootRouteChildren = {
   AdminEnquiriesRoute: AdminEnquiriesRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminPackagesRoute: AdminPackagesRoute,
+  AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminSuppliersRoute: AdminSuppliersRoute,
-  SupplierCheckoutRoute: SupplierCheckoutRoute,
+  PaymentFailedRoute: PaymentFailedRoute,
+  PaymentSuccessRoute: PaymentSuccessRoute,
   SupplierDashboardRoute: SupplierDashboardRoute,
   SupplierEnquiriesRoute: SupplierEnquiriesRoute,
   SupplierProfileRoute: SupplierProfileRoute,
@@ -582,6 +644,7 @@ const rootRouteChildren: RootRouteChildren = {
   SuppliersSlugRoute: SuppliersSlugRoute,
   SuppliersIndexRoute: SuppliersIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
+  ApiPublicYocoWebhookRoute: ApiPublicYocoWebhookRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,

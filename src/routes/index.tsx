@@ -15,13 +15,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "GrowMeOnline connects customers with verified local suppliers. List your business, get verified, and start receiving enquiries via WhatsApp or in-app chat.",
+          "GrowMeOnline connects customers with verified local suppliers. List your business, get verified, and start receiving enquiries straight to their inbox.",
       },
       { property: "og:title", content: "GrowMeOnline — Find Trusted Local Suppliers" },
       {
         property: "og:description",
         content:
-          "GrowMeOnline connects customers with verified local suppliers. List your business, get verified, and start receiving enquiries via WhatsApp or in-app chat.",
+          "GrowMeOnline connects customers with verified local suppliers. List your business, get verified, and start receiving enquiries straight to their inbox.",
       },
     ],
   }),

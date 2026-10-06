@@ -14,7 +14,19 @@ export type SupplierProfileDraft = {
   cell_no: string;
   business_logo: string | null;
   product_images: string[];
+  is_service_provider: boolean;
+  is_product_seller: boolean;
+  service_categories: string[];
+  other_service: string;
+  products_offered: string[];
+  opening_time: string;
+  closing_time: string;
 };
+
+export const SERVICE_CATEGORIES = [
+  "Plumbing", "Electrical", "Construction", "IT Services", "Marketing", "SEO",
+  "Graphic Design", "Accounting", "Legal", "Cleaning", "Security", "Other",
+] as const;
 
 export const EMPTY_DRAFT: SupplierProfileDraft = {
   business_name: "",
@@ -23,6 +35,13 @@ export const EMPTY_DRAFT: SupplierProfileDraft = {
   cell_no: "",
   business_logo: null,
   product_images: [],
+  is_service_provider: false,
+  is_product_seller: false,
+  service_categories: [],
+  other_service: "",
+  products_offered: [],
+  opening_time: "09:00",
+  closing_time: "17:00",
 };
 
 /** Required fields used by the completeness indicator. */
@@ -57,6 +76,14 @@ export function missingFields(draft: SupplierProfileDraft): string[] {
     (field) => String(draft[field] ?? "").trim().length === 0,
   ).map((field) => FIELD_LABELS[field] ?? String(field));
   if (draft.product_images.length === 0) missing.push("At least one product image");
+  if (!draft.is_service_provider && !draft.is_product_seller) missing.push("Business type");
+  if (draft.is_service_provider && draft.service_categories.length === 0)
+    missing.push("At least one service category");
+  if (draft.is_service_provider && draft.service_categories.includes("Other") && !draft.other_service.trim())
+    missing.push("Specify your other service");
+  if (draft.is_product_seller && draft.products_offered.length === 0)
+    missing.push("At least one product offered");
+  if (!draft.opening_time || !draft.closing_time) missing.push("Business hours");
   return missing;
 }
 
@@ -69,6 +96,13 @@ export function toDraft(row: SupplierProfileRow | null): SupplierProfileDraft {
     cell_no: row.cell_no ?? "",
     business_logo: row.business_logo,
     product_images: Array.isArray(row.product_images) ? (row.product_images as string[]) : [],
+    is_service_provider: row.is_service_provider,
+    is_product_seller: row.is_product_seller,
+    service_categories: row.service_categories ?? [],
+    other_service: row.other_service ?? "",
+    products_offered: row.products_offered ?? [],
+    opening_time: (row.opening_time ?? "09:00").slice(0, 5),
+    closing_time: (row.closing_time ?? "17:00").slice(0, 5),
   };
 }
 
@@ -119,6 +153,16 @@ export async function saveProfileDraft(draft: SupplierProfileDraft): Promise<Sup
         cell_no: draft.cell_no || null,
         business_logo: draft.business_logo,
         product_images: draft.product_images,
+        is_service_provider: draft.is_service_provider,
+        is_product_seller: draft.is_product_seller,
+        service_categories: draft.is_service_provider ? draft.service_categories : [],
+        other_service:
+          draft.is_service_provider && draft.service_categories.includes("Other")
+            ? draft.other_service.trim() || null
+            : null,
+        products_offered: draft.is_product_seller ? draft.products_offered : [],
+        opening_time: draft.opening_time || "09:00",
+        closing_time: draft.closing_time || "17:00",
         updated_by: supplierAccountId,
         date_updated: new Date().toISOString(),
       },

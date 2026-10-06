@@ -20,6 +20,13 @@ export type SupplierReviewProfile = {
   status: SupplierProfileStatus;
   rejection_reason: string | null;
   date_updated: string;
+  is_service_provider: boolean;
+  is_product_seller: boolean;
+  service_categories: string[];
+  other_service: string | null;
+  products_offered: string[];
+  opening_time: string;
+  closing_time: string;
 };
 
 export type SupplierReviewRow = {
@@ -54,7 +61,7 @@ export async function fetchSupplierReviewRows(): Promise<SupplierReviewRow[]> {
       supabase
         .from("tb_supplier_profile")
         .select(
-          "supplier_profile_id, supplier_account_id, business_name, business_description, address, cell_no, business_logo, product_images, notes, status, rejection_reason, date_updated",
+          "supplier_profile_id, supplier_account_id, business_name, business_description, address, cell_no, business_logo, product_images, notes, status, rejection_reason, date_updated, is_service_provider, is_product_seller, service_categories, other_service, products_offered, opening_time, closing_time",
         ),
     ]);
 

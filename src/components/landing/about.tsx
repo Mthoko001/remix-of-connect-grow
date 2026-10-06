@@ -19,7 +19,7 @@ export function About({ verifiedCount }: { verifiedCount: number }) {
             find businesses they can actually trust. Every supplier on GrowMeOnline
             is reviewed and verified before they go live, so you're never
             gambling on quality. And because enquiries go straight to the
-            supplier — via WhatsApp — there's no middleman
+            supplier there's no middleman
             taking a cut of the conversation.
           </p>
           <p className="mt-4 text-lg leading-relaxed text-muted-foreground">

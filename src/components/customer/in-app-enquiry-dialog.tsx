@@ -20,7 +20,7 @@ import {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-type FormErrors = { name?: string; email?: string; cell?: string; issue?: string };
+type FormErrors = { name?: string; email?: string; cell?: string; subject?: string; issue?: string };
 
 export function InAppEnquiryDialog({
   open,
@@ -37,6 +37,7 @@ export function InAppEnquiryDialog({
   const [email, setEmail] = useState("");
   const [cell, setCell] = useState("");
   const [issue, setIssue] = useState("");
+  const [subject, setSubject] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
@@ -49,6 +50,7 @@ export function InAppEnquiryDialog({
     setEmail("");
     setCell("");
     setIssue("");
+    setSubject("");
     setImage(null);
     setErrors({});
     setSubmitError(null);
@@ -66,6 +68,7 @@ export function InAppEnquiryDialog({
     if (!name.trim()) fieldErrors.name = "Enter your name.";
     if (!EMAIL_RE.test(email)) fieldErrors.email = "Enter a valid email address.";
     if (!cell.trim()) fieldErrors.cell = "Enter your cell number.";
+    if (!subject.trim()) fieldErrors.subject = "Enter a subject.";
     if (!issue.trim()) fieldErrors.issue = "Describe what you need help with.";
     setErrors(fieldErrors);
     if (Object.keys(fieldErrors).length > 0) return;
@@ -85,6 +88,7 @@ export function InAppEnquiryDialog({
         customerName: name.trim(),
         customerEmail: email.trim(),
         customerCell: cell.trim(),
+        subject: subject.trim(),
         message: issue.trim(),
         channel: "in_app",
         image,
@@ -110,10 +114,10 @@ export function InAppEnquiryDialog({
               <CheckCircle2 className="h-6 w-6 text-emerald-600" />
             </div>
             <div>
-              <p className="text-base font-semibold text-foreground">Your message has been sent</p>
+              <p className="text-base font-semibold text-foreground">Thank you for your enquiry</p>
               <p className="mt-1.5 text-sm text-muted-foreground">
-                We've let {supplierName} know — please wait for their response. They'll reach out
-                using the email or cell number you provided.
+                Your enquiry has been received and is currently being reviewed by our team.
+                Once approved, it will be forwarded to the supplier.
               </p>
             </div>
             <Button onClick={() => handleOpenChange(false)} className="mt-2 w-full">
@@ -125,7 +129,7 @@ export function InAppEnquiryDialog({
             <DialogHeader>
               <DialogTitle>Message {supplierName}</DialogTitle>
               <DialogDescription>
-                Send your enquiry directly — {supplierName} will respond to you here on GrowMeOnline.
+                Send your enquiry — our team reviews it, then passes it to {supplierName}, who will get back to you by email or phone.
               </DialogDescription>
             </DialogHeader>
 
@@ -166,6 +170,19 @@ export function InAppEnquiryDialog({
                   />
                   {errors.cell && <p className="text-sm text-destructive">{errors.cell}</p>}
                 </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="ia_subject">Subject</Label>
+                <Input
+                  id="ia_subject"
+                  value={subject}
+                  maxLength={120}
+                  onChange={(e) => setSubject(e.target.value)}
+                  placeholder="e.g. Quote for kitchen tiling"
+                  aria-invalid={!!errors.subject}
+                />
+                {errors.subject && <p className="text-sm text-destructive">{errors.subject}</p>}
               </div>
 
               <div className="space-y-1.5">
