@@ -5,14 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
  * TODO: automated qualification (spam scoring, duplicate detection) can later call the same
  * `review_enquiry` database function with a system reviewer instead of an admin.
  */
-export type LeadStatus = "pending_review" | "qualified" | "rejected" | "in_progress" | "closed";
+export type LeadStatus = "pending_review" | "qualified" | "rejected" | "in_progress" | "closed" | "archived";
 
 export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
   pending_review: "Pending Review",
-  qualified: "Qualified",
+  qualified: "Approved",
   rejected: "Rejected",
   in_progress: "In Progress",
   closed: "Closed",
+  archived: "Archived",
 };
 
 /** Statuses a supplier is allowed to see. */
@@ -111,4 +112,48 @@ export async function fetchMyLeadSummary(): Promise<LeadSummary> {
     inProgress: row?.in_progress ?? 0,
     closed: row?.closed ?? 0,
   };
+}
+
+/** Admin archives an enquiry (hidden from suppliers; kept for audit). */
+export async function archiveEnquiry(enquiryId: number): Promise<void> {
+  const { error } = await supabase.rpc("admin_archive_enquiry", { _enquiry_id: enquiryId });
+  if (error) throw error;
+}
+
+export type EnquiryEdit = {
+  customerName: string;
+  customerEmail: string;
+  customerCell: string;
+  message: string;
+};
+
+/** Admin corrects an enquiry's details. Logged in the audit trail. */
+export async function editEnquiry(enquiryId: number, edit: EnquiryEdit): Promise<void> {
+  const { error } = await supabase.rpc("admin_edit_enquiry", {
+    _enquiry_id: enquiryId,
+    _customer_name: edit.customerName,
+    _customer_email: edit.customerEmail,
+    _customer_cell: edit.customerCell,
+    _message: edit.message,
+  });
+  if (error) throw error;
+}
+
+export type EnquiryAuditEntry = {
+  enquiry_audit_id: number;
+  admin_email: string | null;
+  action: string;
+  original_status: string | null;
+  new_status: string | null;
+  created_at: string;
+};
+
+export async function fetchEnquiryAudit(enquiryId: number): Promise<EnquiryAuditEntry[]> {
+  const { data, error } = await supabase
+    .from("tb_enquiry_audit")
+    .select("enquiry_audit_id, admin_email, action, original_status, new_status, created_at")
+    .eq("enquiry_id", enquiryId)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return data ?? [];
 }

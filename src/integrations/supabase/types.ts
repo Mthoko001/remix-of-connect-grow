@@ -144,6 +144,50 @@ export type Database = {
           },
         ]
       }
+      tb_enquiry_audit: {
+        Row: {
+          action: string
+          admin_account_id: string | null
+          admin_email: string | null
+          created_at: string
+          details: Json | null
+          enquiry_audit_id: number
+          enquiry_id: number
+          new_status: string | null
+          original_status: string | null
+        }
+        Insert: {
+          action: string
+          admin_account_id?: string | null
+          admin_email?: string | null
+          created_at?: string
+          details?: Json | null
+          enquiry_audit_id?: never
+          enquiry_id: number
+          new_status?: string | null
+          original_status?: string | null
+        }
+        Update: {
+          action?: string
+          admin_account_id?: string | null
+          admin_email?: string | null
+          created_at?: string
+          details?: Json | null
+          enquiry_audit_id?: never
+          enquiry_id?: number
+          new_status?: string | null
+          original_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tb_enquiry_audit_enquiry_id_fkey"
+            columns: ["enquiry_id"]
+            isOneToOne: false
+            referencedRelation: "tb_enquiry"
+            referencedColumns: ["enquiry_id"]
+          },
+        ]
+      }
       tb_package: {
         Row: {
           benefits: Json
@@ -439,6 +483,20 @@ export type Database = {
       }
     }
     Functions: {
+      admin_archive_enquiry: {
+        Args: { _enquiry_id: number }
+        Returns: undefined
+      }
+      admin_edit_enquiry: {
+        Args: {
+          _customer_cell: string
+          _customer_email: string
+          _customer_name: string
+          _enquiry_id: number
+          _message: string
+        }
+        Returns: undefined
+      }
       admin_lead_kpis: {
         Args: never
         Returns: {
