@@ -12,11 +12,11 @@ export const PROVINCES = [
 ] as const;
 
 export type LocationParts = {
-  province?: string | null;
-  city?: string | null;
-  suburb?: string | null;
-  postalCode?: string | null;
-  streetAddress?: string | null;
+  province?: string | null | undefined;
+  city?: string | null | undefined;
+  suburb?: string | null | undefined;
+  postalCode?: string | null | undefined;
+  streetAddress?: string | null | undefined;
 };
 
 const clean = (v?: string | null) => (v ?? "").trim();
