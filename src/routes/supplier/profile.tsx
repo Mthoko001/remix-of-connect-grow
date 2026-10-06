@@ -168,7 +168,7 @@ function SupplierProfilePage() {
             { headers: { Accept: "application/json" } },
           );
           if (!res.ok) throw new Error("Lookup failed");
-          const data = (await res.json()) as { address?: Record<string, string> };
+          const data = (await res.json()) as { address?: Partial<Record<"state" | "city" | "municipality" | "town" | "county" | "suburb" | "neighbourhood" | "village" | "hamlet" | "house_number" | "road" | "postcode", string>> };
           const a = data.address;
           if (!a) throw new Error("No address found for your location.");
           const province = PROVINCES.find((p) => p.name.toLowerCase() === (a.state ?? "").toLowerCase())?.name;
