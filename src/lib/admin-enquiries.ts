@@ -4,6 +4,7 @@ import type { EnquiryRow } from "@/lib/enquiries";
 export type AdminEnquiryRow = EnquiryRow & {
   supplier_business_name: string | null;
   supplier_category: string | null;
+  supplier_location: string | null;
 };
 
 /** Every enquiry across every supplier (any status), newest first. Admin-only via RLS. */
@@ -14,7 +15,7 @@ export async function fetchAllEnquiries(): Promise<AdminEnquiryRow[]> {
     { data: categories, error: categoryError },
   ] = await Promise.all([
     supabase.from("tb_enquiry").select("*").order("created_at", { ascending: false }),
-    supabase.from("tb_supplier_profile").select("supplier_account_id, business_name, category_id"),
+    supabase.from("tb_supplier_profile").select("supplier_account_id, business_name, category_id, address"),
     supabase.from("tb_category").select("category_id, name"),
   ]);
 
@@ -30,6 +31,7 @@ export async function fetchAllEnquiries(): Promise<AdminEnquiryRow[]> {
     return {
       ...row,
       supplier_business_name: profile?.business_name ?? null,
+      supplier_location: profile?.address ?? null,
       supplier_category: profile?.category_id ? (categoryName.get(profile.category_id) ?? null) : null,
     };
   });
