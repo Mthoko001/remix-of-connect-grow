@@ -166,7 +166,7 @@ function LoginPage() {
                   to="/forgot-password"
                   className="text-xs font-medium text-primary underline-offset-4 hover:underline"
                 >
-                  Forgot password?
+                  Forgot Password?
                 </Link>
               </div>
               <div className="relative">
