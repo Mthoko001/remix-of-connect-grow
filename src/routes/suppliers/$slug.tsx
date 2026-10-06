@@ -97,11 +97,12 @@ function SupplierPublicProfilePage() {
     void recordProfileView(supplier.supplierAccountId);
   }, [supplier.supplierAccountId]);
 
-  // Only non-contact, structured fields. Never phone, email, street address or website.
+  // Only non-contact fields. Never phone, email or website; street address only if supplier provided one.
   const info = [
     { label: "Industry", value: supplier.category, icon: Building2 },
     { label: "Business Type", value: businessTypes.join(" & "), icon: Briefcase },
-    { label: "Service Area", value: supplier.publicArea, icon: MapPin },
+    { label: "Location", value: supplier.location, icon: MapPin },
+    { label: "Business Address", value: supplier.fullAddress, icon: MapPin },
     { label: "Operating Hours", value: supplier.businessHours, icon: Clock },
   ].filter((i) => i.value && i.value.trim().length > 0);
 

@@ -1,3 +1,4 @@
+import { PROVINCES } from "@/lib/location";
 import { useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
@@ -163,14 +164,23 @@ function SupplierProfilePage() {
         try {
           const { latitude, longitude } = position.coords;
           const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`,
+            `https://nominatim.openstreetmap.org/reverse?format=jsonv2&addressdetails=1&lat=${latitude}&lon=${longitude}`,
             { headers: { Accept: "application/json" } },
           );
           if (!res.ok) throw new Error("Lookup failed");
-          const data = (await res.json()) as { display_name?: string };
-          if (!data.display_name) throw new Error("No address found for your location.");
-          updateField("address", data.display_name);
-          toast.success("Address filled from your current location.");
+          const data = (await res.json()) as { address?: Partial<Record<"state" | "city" | "municipality" | "town" | "county" | "suburb" | "neighbourhood" | "village" | "hamlet" | "house_number" | "road" | "postcode", string>> };
+          const a = data.address;
+          if (!a) throw new Error("No address found for your location.");
+          const province = PROVINCES.find((p) => p.name.toLowerCase() === (a.state ?? "").toLowerCase())?.name;
+          const city = a.city || a.municipality || a.town || a.county || "";
+          const suburb = a.suburb || a.neighbourhood || a.village || a.hamlet || "";
+          const street = [a.house_number, a.road].filter(Boolean).join(" ");
+          if (province) updateField("province", province);
+          if (city) updateField("city", city);
+          if (suburb) updateField("suburb", suburb);
+          if (a.postcode) updateField("postal_code", a.postcode);
+          if (street) updateField("street_address", street);
+          toast.success("Location filled in. Please check the details.");
         } catch {
           toast.error("Couldn't determine an address for your location. Please enter it manually.");
         } finally {
@@ -295,9 +305,9 @@ function SupplierProfilePage() {
                   </div>
                 )}
               </div>
-              <div className="space-y-1.5">
+              <fieldset className="space-y-3 rounded-lg border border-border p-4">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="address">Address</Label>
+                  <legend className="text-sm font-medium">Business Location</legend>
                   <button
                     type="button"
                     onClick={handleUseCurrentLocation}
@@ -312,13 +322,65 @@ function SupplierProfilePage() {
                     {locating ? "Locating…" : "Use my current location"}
                   </button>
                 </div>
-                <Input
-                  id="address"
-                  placeholder="Street, suburb, city"
-                  value={draft.address}
-                  onChange={(e) => updateField("address", e.target.value)}
-                />
-              </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <Label htmlFor="province">Province *</Label>
+                    <select
+                      id="province"
+                      value={draft.province}
+                      onChange={(e) => updateField("province", e.target.value)}
+                      className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+                    >
+                      <option value="">Select province</option>
+                      {PROVINCES.map((p) => (
+                        <option key={p.code} value={p.name}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="city">City / Town *</Label>
+                    <Input
+                      id="city"
+                      placeholder="e.g. eThekwini"
+                      value={draft.city}
+                      onChange={(e) => updateField("city", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="suburb">Suburb / Area *</Label>
+                    <Input
+                      id="suburb"
+                      placeholder="e.g. Risecliff"
+                      value={draft.suburb}
+                      onChange={(e) => updateField("suburb", e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="postal_code">Postal Code (Optional)</Label>
+                    <Input
+                      id="postal_code"
+                      inputMode="numeric"
+                      placeholder="e.g. 4051"
+                      value={draft.postal_code}
+                      onChange={(e) => updateField("postal_code", e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="street_address">Street Address (Optional)</Label>
+                  <Input
+                    id="street_address"
+                    placeholder="e.g. 12 Main Road"
+                    value={draft.street_address}
+                    onChange={(e) => updateField("street_address", e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Shown only on your full profile page. Listings show suburb, city and province.
+                  </p>
+                </div>
+              </fieldset>
               <div className="space-y-1.5">
                 <Label htmlFor="cell_no">Cell Number</Label>
                 <Input

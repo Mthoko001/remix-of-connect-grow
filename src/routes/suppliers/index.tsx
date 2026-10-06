@@ -56,20 +56,45 @@ function SuppliersListingPage() {
   const featured = useMemo(() => getFeaturedSuppliers(6, suppliers), [suppliers]);
   const categoryRows = useMemo(() => groupSuppliersByCategory(suppliers), [suppliers]);
 
+  const [province, setProvince] = useState("");
+  const [city, setCity] = useState("");
+  const [suburb, setSuburb] = useState("");
+  const uniq = (xs: (string | undefined)[]) =>
+    Array.from(new Set(xs.filter((x): x is string => Boolean(x)))).sort((a, b) => a.localeCompare(b));
+  const provinceOptions = useMemo(() => uniq(suppliers.map((s) => s.province)), [suppliers]);
+  const cityOptions = useMemo(
+    () => uniq(suppliers.filter((s) => !province || s.province === province).map((s) => s.city)),
+    [suppliers, province],
+  );
+  const suburbOptions = useMemo(
+    () =>
+      uniq(
+        suppliers
+          .filter((s) => (!province || s.province === province) && (!city || s.city === city))
+          .map((s) => s.suburb),
+      ),
+    [suppliers, province, city],
+  );
+  const hasLocationFilter = Boolean(province || city || suburb);
+
   const trimmedQuery = query.trim().toLowerCase();
   const searchResults = useMemo(() => {
-    if (!trimmedQuery) return [];
+    if (!trimmedQuery && !hasLocationFilter) return [];
     return suppliers.filter(
       (s) =>
         s.verified &&
-        (s.name.toLowerCase().includes(trimmedQuery) ||
+        (!province || s.province === province) &&
+        (!city || s.city === city) &&
+        (!suburb || s.suburb === suburb) &&
+        (!trimmedQuery ||
+          s.name.toLowerCase().includes(trimmedQuery) ||
           s.category.toLowerCase().includes(trimmedQuery) ||
           s.location.toLowerCase().includes(trimmedQuery) ||
           [...(s.businessTypes ?? []), ...(s.services ?? []), ...(s.products ?? [])].some((t) =>
             t.toLowerCase().includes(trimmedQuery),
           )),
     );
-  }, [suppliers, trimmedQuery]);
+  }, [suppliers, trimmedQuery, hasLocationFilter, province, city, suburb]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -93,6 +118,22 @@ function SuppliersListingPage() {
               className="h-11 w-full rounded-lg border border-border bg-card pl-10 pr-4 text-sm outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
             />
           </div>
+
+          {provinceOptions.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-2" aria-label="Filter by location">
+              <LocationSelect label="Province" value={province} options={provinceOptions}
+                onChange={(v) => { setProvince(v); setCity(""); setSuburb(""); }} />
+              <LocationSelect label="City / Town" value={city} options={cityOptions}
+                onChange={(v) => { setCity(v); setSuburb(""); }} />
+              <LocationSelect label="Suburb / Area" value={suburb} options={suburbOptions} onChange={setSuburb} />
+              {hasLocationFilter && (
+                <button type="button" onClick={() => { setProvince(""); setCity(""); setSuburb(""); }}
+                  className="text-sm font-medium text-primary hover:underline">
+                  Clear
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {suppliers.length === 0 ? (
@@ -102,12 +143,12 @@ function SuppliersListingPage() {
               Suppliers appear here as soon as GrowMeOnline verifies them.
             </p>
           </div>
-        ) : trimmedQuery ? (
+        ) : trimmedQuery || hasLocationFilter ? (
           searchResults.length === 0 ? (
             <div className="rounded-xl border border-dashed border-border bg-card py-16 text-center">
               <p className="text-sm font-medium text-foreground">No suppliers found</p>
               <p className="mt-1 text-sm text-muted-foreground">
-                Try a different name, category, or city.
+                Try a different name, category, or location.
               </p>
             </div>
           ) : (
@@ -134,5 +175,18 @@ function SuppliersListingPage() {
 
       <Footer />
     </div>
+  );
+}
+
+function LocationSelect({ label, value, options, onChange }: {
+  label: string; value: string; options: string[]; onChange: (v: string) => void;
+}) {
+  return (
+    <select aria-label={label} value={value} onChange={(e) => onChange(e.target.value)}
+      disabled={options.length === 0}
+      className="h-10 rounded-lg border border-border bg-card px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-brand/40 disabled:opacity-50">
+      <option value="">All {label.toLowerCase()}</option>
+      {options.map((o) => <option key={o} value={o}>{o}</option>)}
+    </select>
   );
 }

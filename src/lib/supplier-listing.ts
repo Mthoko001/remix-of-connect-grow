@@ -10,8 +10,11 @@ export type SupplierListing = {
   location: string;
   verified: boolean;
   description: string;
-  /** Full street address — internal only, never shown to customers. */
+  /** Full business address (only when the supplier provided a street address). */
   fullAddress: string;
+  province?: string;
+  city?: string;
+  suburb?: string;
   /** Suburb/city/postal code only — safe to show on the public profile. */
   publicArea: string;
   cellNo: string;

@@ -387,6 +387,7 @@ export type Database = {
           business_name: string
           category_id: number | null
           cell_no: string | null
+          city: string | null
           closing_time: string
           date_created: string
           date_updated: string
@@ -395,11 +396,15 @@ export type Database = {
           notes: string | null
           opening_time: string
           other_service: string | null
+          postal_code: string | null
           product_images: Json
           products_offered: string[]
+          province: string | null
           rejection_reason: string | null
           service_categories: string[]
           status: string
+          street_address: string | null
+          suburb: string | null
           supplier_account_id: string
           supplier_profile_id: number
           updated_by: string | null
@@ -411,6 +416,7 @@ export type Database = {
           business_name?: string
           category_id?: number | null
           cell_no?: string | null
+          city?: string | null
           closing_time?: string
           date_created?: string
           date_updated?: string
@@ -419,11 +425,15 @@ export type Database = {
           notes?: string | null
           opening_time?: string
           other_service?: string | null
+          postal_code?: string | null
           product_images?: Json
           products_offered?: string[]
+          province?: string | null
           rejection_reason?: string | null
           service_categories?: string[]
           status?: string
+          street_address?: string | null
+          suburb?: string | null
           supplier_account_id: string
           supplier_profile_id?: never
           updated_by?: string | null
@@ -435,6 +445,7 @@ export type Database = {
           business_name?: string
           category_id?: number | null
           cell_no?: string | null
+          city?: string | null
           closing_time?: string
           date_created?: string
           date_updated?: string
@@ -443,11 +454,15 @@ export type Database = {
           notes?: string | null
           opening_time?: string
           other_service?: string | null
+          postal_code?: string | null
           product_images?: Json
           products_offered?: string[]
+          province?: string | null
           rejection_reason?: string | null
           service_categories?: string[]
           status?: string
+          street_address?: string | null
+          suburb?: string | null
           supplier_account_id?: string
           supplier_profile_id?: never
           updated_by?: string | null
@@ -477,15 +492,20 @@ export type Database = {
           business_logo: string | null
           business_name: string | null
           category_name: string | null
+          city: string | null
           closing_time: string | null
           is_product_seller: boolean | null
           is_service_provider: boolean | null
           opening_time: string | null
           other_service: string | null
+          postal_code: string | null
           product_images: Json | null
           products_offered: string[] | null
+          province: string | null
           public_area: string | null
           service_categories: string[] | null
+          street_address: string | null
+          suburb: string | null
           supplier_account_id: string | null
           supplier_profile_id: number | null
         }
