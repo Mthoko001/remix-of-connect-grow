@@ -396,7 +396,7 @@ function AdminLeadQueuePage() {
                         <HistoryRow label="Reviewed by" value={selected.reviewed_by_email ?? "System (legacy)"} />
                         <HistoryRow
                           label="Action"
-                          value={selected.status === "rejected" ? "Rejected" : "Approved"}
+                          value={selected.status === "rejected" ? "Rejected" : "Qualified"}
                         />
                       </>
                     )}
