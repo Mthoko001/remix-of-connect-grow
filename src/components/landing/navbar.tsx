@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Logo } from "./logo";
 import { CategoriesDesktopMenu, CategoriesMobileMenu } from "./categories-menu";
-import { buildCategoryTree, fetchAllCategories, type CategoryNode } from "@/lib/categories";
+import { buildCategoryTree, fetchActiveCategories, type CategoryNode } from "@/lib/categories";
 
 // Real routes use TanStack's type-safe <Link> (SPA navigation, no full
 // reload); in-page anchors stay plain <a href>. Categories is
@@ -23,7 +23,7 @@ export function Navbar() {
   const [categoryTree, setCategoryTree] = useState<CategoryNode[]>([]);
 
   useEffect(() => {
-    fetchAllCategories()
+    fetchActiveCategories()
       .then((flat) => setCategoryTree(buildCategoryTree(flat)))
       .catch(() => setCategoryTree([]));
   }, []);
