@@ -23,7 +23,7 @@ export function CategorySelect({
     <Select
       value={value ? String(value) : undefined}
       onValueChange={(v) => onChange(Number(v))}
-      disabled={disabled}
+      disabled={disabled ?? false}
     >
       <SelectTrigger id={id}>
         <SelectValue placeholder="Select a category" />
