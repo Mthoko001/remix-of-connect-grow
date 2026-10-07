@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Logo } from "./logo";
 import { CategoriesDesktopMenu, CategoriesMobileMenu } from "./categories-menu";
-import { buildCategoryTree, fetchAllCategories, type CategoryNode } from "@/lib/categories";
+import { buildCategoryTree, fetchActiveCategories, type CategoryNode } from "@/lib/categories";
 
 // Real routes use TanStack's type-safe <Link> (SPA navigation, no full
 // reload); in-page anchors stay plain <a href>. Categories is
@@ -15,6 +15,7 @@ const NAV_LINKS: NavLink[] = [
   { label: "How It Works", href: "/#how-it-works" },
   { label: "Pricing", to: "/pricing" },
   { label: "About Us", href: "/#about" },
+  { label: "Contact Us", href: "/#contact" },
 ];
 
 export function Navbar() {
@@ -22,7 +23,7 @@ export function Navbar() {
   const [categoryTree, setCategoryTree] = useState<CategoryNode[]>([]);
 
   useEffect(() => {
-    fetchAllCategories()
+    fetchActiveCategories()
       .then((flat) => setCategoryTree(buildCategoryTree(flat)))
       .catch(() => setCategoryTree([]));
   }, []);
@@ -51,7 +52,7 @@ export function Navbar() {
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
           {NAV_LINKS.slice(0, 2).map((l) => renderLink(l, undefined, desktopLinkClass))}
           <CategoriesDesktopMenu categories={categoryTree} />
           {NAV_LINKS.slice(2).map((l) => renderLink(l, undefined, desktopLinkClass))}
@@ -66,7 +67,7 @@ export function Navbar() {
           </a>
           <a
             href="/supplier/signup"
-            className="inline-flex items-center rounded-xl bg-gradient-to-r from-brand to-brand-glow px-4 py-2 text-sm font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30"
+            className="inline-flex items-center rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30"
           >
             List My Business
           </a>
@@ -128,7 +129,7 @@ export function Navbar() {
               <a
                 href="/supplier/signup"
                 onClick={() => setOpen(false)}
-                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-brand to-brand-glow px-4 py-2.5 text-sm font-semibold text-brand-foreground shadow-lg shadow-brand/25"
+                className="inline-flex items-center justify-center rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-brand-foreground shadow-lg shadow-brand/25"
               >
                 List My Business
               </a>

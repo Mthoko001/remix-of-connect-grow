@@ -1,12 +1,5 @@
-// Placeholder CTAs use plain <a href> because the target route files
-// (/supplier/signup, /search) are not built yet — avoids TanStack type-safe
-// link errors. Swap to <Link> when the routes exist.
-
-const HERO_LISTINGS = [
-  { initials: "BS", name: "Bright Solar Solutions", category: "Solar & Energy", location: "Cape Town" },
-  { initials: "AP", name: "Apex Plumbing Co.", category: "Plumbing", location: "Johannesburg" },
-  { initials: "LE", name: "Lumen Electrical", category: "Electrical", location: "Durban" },
-];
+import { Link } from "@tanstack/react-router";
+import type { SupplierListing } from "@/lib/supplier-listing";
 
 function VerifiedBadge({ className = "" }: { className?: string }) {
   return (
@@ -20,7 +13,8 @@ function VerifiedBadge({ className = "" }: { className?: string }) {
   );
 }
 
-function HeroVisual() {
+function HeroVisual({ suppliers }: { suppliers: SupplierListing[] }) {
+  const rows = suppliers.slice(0, 3);
   return (
     <div className="relative">
       <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-tr from-brand/20 via-brand-glow/10 to-transparent blur-2xl" />
@@ -39,29 +33,39 @@ function HeroVisual() {
           </div>
         </div>
 
-        {/* listing rows */}
-        <div className="space-y-2.5 p-2">
-          {HERO_LISTINGS.map((row) => (
-            <div
-              key={row.name}
-              className="flex items-center gap-3 rounded-xl border border-border bg-background p-3"
-            >
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand to-brand-glow text-sm font-bold text-brand-foreground">
-                {row.initials}
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-semibold text-foreground">{row.name}</p>
-                <p className="truncate text-xs text-muted-foreground">
-                  {row.category} · {row.location}
-                </p>
+        {rows.length === 0 ? (
+          <div className="m-2 rounded-xl border border-dashed border-border bg-background px-4 py-10 text-center">
+            <p className="text-sm font-semibold text-foreground">
+              Verified suppliers are joining GrowMeOnline
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Be the first to list your business and get discovered.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-2.5 p-2">
+            {rows.map((row) => (
+              <div
+                key={row.slug}
+                className="flex items-center gap-3 rounded-xl border border-border bg-background p-3"
+              >
+                <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-gradient-to-br ${row.gradient} text-sm font-bold text-white`}>
+                  {row.initials}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-foreground">{row.name}</p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {row.category} · {row.location}
+                  </p>
+                </div>
+                <VerifiedBadge />
               </div>
-              <VerifiedBadge />
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* floating enquiry badge */}
+      {/* floating lead badge */}
       <div className="absolute -bottom-4 -left-4 hidden rounded-xl border border-border bg-card p-3 shadow-xl sm:block">
         <div className="flex items-center gap-2">
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-verified/15 text-verified">
@@ -70,7 +74,7 @@ function HeroVisual() {
             </svg>
           </span>
           <div>
-            <p className="text-xs font-semibold text-foreground">New enquiry received</p>
+            <p className="text-xs font-semibold text-foreground">New qualified lead received</p>
             <p className="text-[11px] text-muted-foreground">just now</p>
           </div>
         </div>
@@ -79,7 +83,7 @@ function HeroVisual() {
   );
 }
 
-export function Hero() {
+export function Hero({ liveSuppliers = [] }: { liveSuppliers?: SupplierListing[] }) {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand/5 via-background to-background" />
@@ -87,32 +91,32 @@ export function Hero() {
         <div className="max-w-xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-verified" />
-            Trusted local suppliers, verified by GrowMeOnline
+            Verified suppliers across South Africa
           </span>
 
           <h1 className="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            Find trusted local suppliers for your next project
+            Grow Your Business Online.{" "}
+            <span className="text-brand">Connect with Customers Ready to Buy.</span>
           </h1>
 
           <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-            GrowMeOnline connects customers directly with verified businesses — no
-            middlemen, no guesswork. Compare trusted suppliers and reach out
-            instantly.
+            GrowMeOnline connects customers with verified suppliers, service
+            providers, and product sellers across South Africa.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href="/supplier/signup"
-              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-brand to-brand-glow px-6 py-3.5 text-base font-semibold text-brand-foreground shadow-xl shadow-brand/25 transition-all hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-brand/30"
+            <Link
+              to="/supplier/signup"
+              className="inline-flex items-center justify-center rounded-xl bg-brand px-6 py-3.5 text-base font-semibold text-brand-foreground shadow-xl shadow-brand/25 transition-all hover:-translate-y-0.5 hover:shadow-2xl hover:shadow-brand/30"
             >
               List My Business
-            </a>
-            <a
-              href="/suppliers"
+            </Link>
+            <Link
+              to="/suppliers"
               className="inline-flex items-center justify-center rounded-xl border border-border bg-background px-6 py-3.5 text-base font-semibold text-foreground transition-colors hover:bg-accent"
             >
-              Find a Supplier
-            </a>
+              Browse Suppliers
+            </Link>
           </div>
 
           <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
@@ -128,12 +132,12 @@ export function Hero() {
                 <path d="m9 12 2 2 4-4" />
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
               </svg>
-              No middleman fees
+              First 5 qualified leads free
             </div>
           </div>
         </div>
 
-        <HeroVisual />
+        <HeroVisual suppliers={liveSuppliers} />
       </div>
     </section>
   );

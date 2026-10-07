@@ -48,6 +48,7 @@ export type Database = {
         Row: {
           category_id: number
           created_at: string
+          is_active: boolean
           name: string
           parent_category_id: number | null
           slug: string
@@ -55,6 +56,7 @@ export type Database = {
         Insert: {
           category_id?: never
           created_at?: string
+          is_active?: boolean
           name: string
           parent_category_id?: number | null
           slug: string
@@ -62,6 +64,7 @@ export type Database = {
         Update: {
           category_id?: never
           created_at?: string
+          is_active?: boolean
           name?: string
           parent_category_id?: number | null
           slug?: string
@@ -344,22 +347,37 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          policies_accepted_at: string | null
+          privacy_accepted: boolean
+          privacy_version: string | null
           status: string
           supplier_account_id: string
+          terms_accepted: boolean
+          terms_version: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           email: string
+          policies_accepted_at?: string | null
+          privacy_accepted?: boolean
+          privacy_version?: string | null
           status?: string
           supplier_account_id: string
+          terms_accepted?: boolean
+          terms_version?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           email?: string
+          policies_accepted_at?: string | null
+          privacy_accepted?: boolean
+          privacy_version?: string | null
           status?: string
           supplier_account_id?: string
+          terms_accepted?: boolean
+          terms_version?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -371,8 +389,11 @@ export type Database = {
           business_logo: string | null
           business_name: string
           category_id: number | null
+          category_review_required: boolean
           cell_no: string | null
+          city: string | null
           closing_time: string
+          cover_image: string | null
           date_created: string
           date_updated: string
           is_product_seller: boolean
@@ -380,11 +401,15 @@ export type Database = {
           notes: string | null
           opening_time: string
           other_service: string | null
+          postal_code: string | null
           product_images: Json
           products_offered: string[]
+          province: string | null
           rejection_reason: string | null
           service_categories: string[]
           status: string
+          street_address: string | null
+          suburb: string | null
           supplier_account_id: string
           supplier_profile_id: number
           updated_by: string | null
@@ -395,8 +420,11 @@ export type Database = {
           business_logo?: string | null
           business_name?: string
           category_id?: number | null
+          category_review_required?: boolean
           cell_no?: string | null
+          city?: string | null
           closing_time?: string
+          cover_image?: string | null
           date_created?: string
           date_updated?: string
           is_product_seller?: boolean
@@ -404,11 +432,15 @@ export type Database = {
           notes?: string | null
           opening_time?: string
           other_service?: string | null
+          postal_code?: string | null
           product_images?: Json
           products_offered?: string[]
+          province?: string | null
           rejection_reason?: string | null
           service_categories?: string[]
           status?: string
+          street_address?: string | null
+          suburb?: string | null
           supplier_account_id: string
           supplier_profile_id?: never
           updated_by?: string | null
@@ -419,8 +451,11 @@ export type Database = {
           business_logo?: string | null
           business_name?: string
           category_id?: number | null
+          category_review_required?: boolean
           cell_no?: string | null
+          city?: string | null
           closing_time?: string
+          cover_image?: string | null
           date_created?: string
           date_updated?: string
           is_product_seller?: boolean
@@ -428,11 +463,15 @@ export type Database = {
           notes?: string | null
           opening_time?: string
           other_service?: string | null
+          postal_code?: string | null
           product_images?: Json
           products_offered?: string[]
+          province?: string | null
           rejection_reason?: string | null
           service_categories?: string[]
           status?: string
+          street_address?: string | null
+          suburb?: string | null
           supplier_account_id?: string
           supplier_profile_id?: never
           updated_by?: string | null
@@ -462,15 +501,21 @@ export type Database = {
           business_logo: string | null
           business_name: string | null
           category_name: string | null
+          city: string | null
           closing_time: string | null
+          cover_image: string | null
           is_product_seller: boolean | null
           is_service_provider: boolean | null
           opening_time: string | null
           other_service: string | null
+          postal_code: string | null
           product_images: Json | null
           products_offered: string[] | null
+          province: string | null
           public_area: string | null
           service_categories: string[] | null
+          street_address: string | null
+          suburb: string | null
           supplier_account_id: string | null
           supplier_profile_id: number | null
         }
@@ -489,6 +534,14 @@ export type Database = {
       admin_archive_enquiry: {
         Args: { _enquiry_id: number }
         Returns: undefined
+      }
+      admin_category_supplier_counts: {
+        Args: never
+        Returns: {
+          category_id: number
+          live_count: number
+          supplier_count: number
+        }[]
       }
       admin_edit_enquiry: {
         Args: {

@@ -11,6 +11,11 @@ export type SupplierProfileDraft = {
   business_name: string;
   business_description: string;
   address: string;
+  province: string;
+  city: string;
+  suburb: string;
+  postal_code: string;
+  street_address: string;
   cell_no: string;
   business_logo: string | null;
   product_images: string[];
@@ -21,6 +26,7 @@ export type SupplierProfileDraft = {
   products_offered: string[];
   opening_time: string;
   closing_time: string;
+  category_id: number | null;
 };
 
 export const SERVICE_CATEGORIES = [
@@ -32,6 +38,11 @@ export const EMPTY_DRAFT: SupplierProfileDraft = {
   business_name: "",
   business_description: "",
   address: "",
+  province: "",
+  city: "",
+  suburb: "",
+  postal_code: "",
+  street_address: "",
   cell_no: "",
   business_logo: null,
   product_images: [],
@@ -42,17 +53,20 @@ export const EMPTY_DRAFT: SupplierProfileDraft = {
   products_offered: [],
   opening_time: "09:00",
   closing_time: "17:00",
+  category_id: null,
 };
 
 /** Required fields used by the completeness indicator. */
 export const REQUIRED_FIELDS = [
   "business_name",
   "business_description",
-  "address",
+  "province",
+  "city",
+  "suburb",
   "cell_no",
 ] as const satisfies readonly (keyof SupplierProfileDraft)[];
 
-/** Total fields counted for completeness (4 required + product images). Logo is optional. */
+/** Total fields counted for completeness (required fields + product images). Logo is optional. */
 export const TOTAL_TRACKED_FIELDS = REQUIRED_FIELDS.length + 1;
 
 export function countCompleteFields(draft: SupplierProfileDraft): number {
@@ -66,7 +80,9 @@ export function countCompleteFields(draft: SupplierProfileDraft): number {
 const FIELD_LABELS: Record<string, string> = {
   business_name: "Business Name",
   business_description: "Description",
-  address: "Address",
+  province: "Province",
+  city: "City / Town",
+  suburb: "Suburb / Area",
   cell_no: "Cell Number",
 };
 
@@ -75,6 +91,7 @@ export function missingFields(draft: SupplierProfileDraft): string[] {
   const missing: string[] = REQUIRED_FIELDS.filter(
     (field) => String(draft[field] ?? "").trim().length === 0,
   ).map((field) => FIELD_LABELS[field] ?? String(field));
+  if (!draft.category_id) missing.push("Category");
   if (draft.product_images.length === 0) missing.push("At least one product image");
   if (!draft.is_service_provider && !draft.is_product_seller) missing.push("Business type");
   if (draft.is_service_provider && draft.service_categories.length === 0)
@@ -93,6 +110,11 @@ export function toDraft(row: SupplierProfileRow | null): SupplierProfileDraft {
     business_name: row.business_name ?? "",
     business_description: row.business_description ?? "",
     address: row.address ?? "",
+    province: row.province ?? "",
+    city: row.city ?? "",
+    suburb: row.suburb ?? "",
+    postal_code: row.postal_code ?? "",
+    street_address: row.street_address ?? "",
     cell_no: row.cell_no ?? "",
     business_logo: row.business_logo,
     product_images: Array.isArray(row.product_images) ? (row.product_images as string[]) : [],
@@ -103,7 +125,15 @@ export function toDraft(row: SupplierProfileRow | null): SupplierProfileDraft {
     products_offered: row.products_offered ?? [],
     opening_time: (row.opening_time ?? "09:00").slice(0, 5),
     closing_time: (row.closing_time ?? "17:00").slice(0, 5),
+    category_id: row.category_id,
   };
+}
+
+function composeAddress(d: SupplierProfileDraft): string {
+  return [d.street_address, d.suburb, d.city, d.province, d.postal_code]
+    .map((v) => v.trim())
+    .filter(Boolean)
+    .join(", ");
 }
 
 export async function getCurrentUserId(): Promise<string> {
@@ -149,7 +179,13 @@ export async function saveProfileDraft(draft: SupplierProfileDraft): Promise<Sup
         supplier_account_id: supplierAccountId,
         business_name: draft.business_name,
         business_description: draft.business_description || null,
-        address: draft.address || null,
+        // Legacy single-line address kept in sync for admin views.
+        address: composeAddress(draft) || null,
+        province: draft.province.trim() || null,
+        city: draft.city.trim() || null,
+        suburb: draft.suburb.trim() || null,
+        postal_code: draft.postal_code.trim() || null,
+        street_address: draft.street_address.trim() || null,
         cell_no: draft.cell_no || null,
         business_logo: draft.business_logo,
         product_images: draft.product_images,
@@ -163,6 +199,9 @@ export async function saveProfileDraft(draft: SupplierProfileDraft): Promise<Sup
         products_offered: draft.is_product_seller ? draft.products_offered : [],
         opening_time: draft.opening_time || "09:00",
         closing_time: draft.closing_time || "17:00",
+        category_id: draft.category_id,
+        // Picking a category resolves any "Category Review Required" flag.
+        ...(draft.category_id ? { category_review_required: false } : {}),
         updated_by: supplierAccountId,
         date_updated: new Date().toISOString(),
       },

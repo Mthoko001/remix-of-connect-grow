@@ -28,16 +28,21 @@ export const RecoveryEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Heading style={h1}>Reset your password</Heading>
+        <Text style={text}>Hello,</Text>
         <Text style={text}>
-          We received a request to reset your password for {siteName}. Click
-          the button below to choose a new password.
+          We received a request to reset your {siteName} password. Click the
+          button below to create a new password.
         </Text>
         <Button className="dm-btn" style={button} href={confirmationUrl}>
           Reset Password
         </Button>
         <Text style={footer}>
-          If you didn't request a password reset, you can safely ignore this
-          email. Your password will not be changed.
+          If you did not make this request, you may safely ignore this email.
+        </Text>
+        <Text style={footer}>
+          Regards,
+          <br />
+          {siteName} Team
         </Text>
       </Container>
     </Body>

@@ -1,7 +1,7 @@
 export function About({ verifiedCount }: { verifiedCount: number }) {
   const STATS = [
     { value: String(verifiedCount), label: "Verified suppliers" },
-    { value: "5", label: "Free enquiries for new suppliers" },
+    { value: "5", label: "Free qualified leads for new suppliers" },
     { value: "0%", label: "Commission on jobs" },
   ];
   return (
@@ -30,7 +30,7 @@ export function About({ verifiedCount }: { verifiedCount: number }) {
           <div className="mt-8">
             <a
               href="/supplier/signup"
-              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-brand to-brand-glow px-6 py-3 text-sm font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30"
+              className="inline-flex items-center justify-center rounded-xl bg-brand px-6 py-3 text-sm font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30"
             >
               List My Business
             </a>

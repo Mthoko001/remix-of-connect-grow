@@ -79,10 +79,9 @@ function ForgotPasswordPage() {
               <h1 className="mt-4 text-2xl font-bold tracking-tight text-foreground">
                 Check your email
               </h1>
-              <p className="mt-2 text-sm text-muted-foreground">
-                If an account exists for{" "}
-                <span className="font-medium text-foreground">{email}</span>, we've sent a link to
-                reset your password. It may take a minute to arrive.
+              <p className="mt-2 text-sm text-muted-foreground" role="status">
+                If an account exists for this email address, password reset instructions have
+                been sent.
               </p>
             </>
           ) : (
