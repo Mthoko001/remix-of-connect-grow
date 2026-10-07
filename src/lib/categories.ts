@@ -15,6 +15,31 @@ export async function fetchAllCategories(): Promise<CategoryRow[]> {
   return data ?? [];
 }
 
+/** Active categories for pickers; includes `keepId` even if inactive so current values still render. */
+export async function fetchActiveCategories(keepId?: number | null): Promise<CategoryRow[]> {
+  const all = await fetchAllCategories();
+  return all.filter((c) => c.is_active || c.category_id === keepId);
+}
+
+export async function setCategoryActive(categoryId: number, isActive: boolean): Promise<void> {
+  const { error } = await supabase
+    .from("tb_category")
+    .update({ is_active: isActive })
+    .eq("category_id", categoryId);
+  if (error) throw error;
+}
+
+/** Supplier counts per category (admin only). */
+export async function fetchCategorySupplierCounts(): Promise<
+  Map<number, { total: number; live: number }>
+> {
+  const { data, error } = await supabase.rpc("admin_category_supplier_counts");
+  if (error) throw error;
+  return new Map(
+    (data ?? []).map((r) => [r.category_id, { total: r.supplier_count, live: r.live_count }]),
+  );
+}
+
 /** Categories arranged into a parent/child tree, top-level first. */
 export function buildCategoryTree(flat: CategoryRow[]): CategoryNode[] {
   const byId = new Map<number, CategoryNode>(

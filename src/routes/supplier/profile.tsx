@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { CategorySelect } from "@/components/category-select";
 import { BusinessTypeFields } from "@/components/supplier/business-type-fields";
 import { supabase } from "@/integrations/supabase/client";
 import { suggestBusinessDescription } from "@/lib/admin-description-ai.functions";
@@ -232,6 +233,14 @@ function SupplierProfilePage() {
                   placeholder="e.g. Acme Plumbing Co."
                   value={draft.business_name}
                   onChange={(e) => updateField("business_name", e.target.value)}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="category_id">Category *</Label>
+                <CategorySelect
+                  id="category_id"
+                  value={draft.category_id}
+                  onChange={(id) => updateField("category_id", id)}
                 />
               </div>
               <div className="space-y-1.5">
