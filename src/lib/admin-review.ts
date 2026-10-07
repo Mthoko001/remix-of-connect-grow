@@ -27,6 +27,12 @@ export type SupplierReviewProfile = {
   products_offered: string[];
   opening_time: string;
   closing_time: string;
+  category_id: number | null;
+  cover_image: string | null;
+  category_review_required: boolean;
+  province: string | null;
+  city: string | null;
+  suburb: string | null;
 };
 
 export type SupplierReviewRow = {
@@ -61,7 +67,7 @@ export async function fetchSupplierReviewRows(): Promise<SupplierReviewRow[]> {
       supabase
         .from("tb_supplier_profile")
         .select(
-          "supplier_profile_id, supplier_account_id, business_name, business_description, address, cell_no, business_logo, product_images, notes, status, rejection_reason, date_updated, is_service_provider, is_product_seller, service_categories, other_service, products_offered, opening_time, closing_time",
+          "supplier_profile_id, supplier_account_id, business_name, business_description, address, cell_no, business_logo, product_images, notes, status, rejection_reason, date_updated, is_service_provider, is_product_seller, service_categories, other_service, products_offered, opening_time, closing_time, category_id, cover_image, category_review_required, province, city, suburb",
         ),
     ]);
 
@@ -182,4 +188,49 @@ export async function notifySupplierOfDecision(input: {
     console.error("Could not send supplier notification email:", err);
     return { sent: false };
   }
+}
+
+export type AdminProfilePatch = Partial<{
+  category_id: number | null;
+  cover_image: string | null;
+  business_logo: string | null;
+  product_images: string[];
+  opening_time: string;
+  closing_time: string;
+  cell_no: string | null;
+  service_categories: string[];
+  products_offered: string[];
+}>;
+
+/** Admin edits to a supplier profile during review (admin UPDATE policy on tb_supplier_profile). */
+export async function adminUpdateSupplierProfile(
+  supplierAccountId: string,
+  patch: AdminProfilePatch,
+): Promise<void> {
+  const { data: auth } = await supabase.auth.getUser();
+  const { error } = await supabase
+    .from("tb_supplier_profile")
+    .update({
+      ...patch,
+      ...(patch.category_id ? { category_review_required: false } : {}),
+      updated_by: auth.user?.id ?? null,
+      date_updated: new Date().toISOString(),
+    })
+    .eq("supplier_account_id", supplierAccountId);
+  if (error) throw error;
+}
+
+/** Uploads an admin-provided image into the supplier's own media folder. */
+export async function adminUploadSupplierMedia(
+  supplierAccountId: string,
+  file: File,
+  kind: "logo" | "cover" | "products",
+): Promise<string> {
+  const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "-").slice(-80);
+  const path = `${supplierAccountId}/${kind}/${Date.now()}-${safe}`;
+  const { error } = await supabase.storage
+    .from("supplier-media")
+    .upload(path, file, { upsert: true, contentType: file.type });
+  if (error) throw error;
+  return path;
 }

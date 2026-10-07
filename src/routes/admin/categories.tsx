@@ -6,6 +6,8 @@ import { useAdminSession } from "@/hooks/use-admin-session";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { PageHeader, Panel } from "@/components/supplier/dashboard-shell";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -38,6 +40,8 @@ import {
   createCategory,
   deleteCategory,
   fetchAllCategories,
+  fetchCategorySupplierCounts,
+  setCategoryActive,
   updateCategory,
   type CategoryNode,
   type CategoryRow,
@@ -56,6 +60,7 @@ function CategoriesPage() {
   const { email, checking } = useAdminSession();
   const [categories, setCategories] = useState<CategoryRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [counts, setCounts] = useState<Map<number, { total: number; live: number }>>(new Map());
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<CategoryRow | null>(null);
@@ -70,7 +75,12 @@ function CategoriesPage() {
   async function loadCategories() {
     setLoading(true);
     try {
-      setCategories(await fetchAllCategories());
+      const [cats, c] = await Promise.all([
+        fetchAllCategories(),
+        fetchCategorySupplierCounts().catch(() => new Map()),
+      ]);
+      setCategories(cats);
+      setCounts(c);
     } catch {
       toast.error("Couldn't load categories.");
     } finally {
@@ -134,6 +144,16 @@ function CategoriesPage() {
     }
   }
 
+  async function handleToggle(category: CategoryRow, active: boolean) {
+    try {
+      await setCategoryActive(category.category_id, active);
+      toast.success(active ? `"${category.name}" reactivated.` : `"${category.name}" deactivated.`);
+      await loadCategories();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Couldn't update this category.");
+    }
+  }
+
   async function handleDelete() {
     if (!deleting) return;
     setDeletingBusy(true);
@@ -163,7 +183,7 @@ function CategoriesPage() {
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <PageHeader
           title="Categories"
-          subtitle="Manage the categories shown in the site's Categories menu and used on supplier profiles."
+          subtitle="Suppliers pick from active categories. Deactivated ones are hidden from the profile form and menus but stay on suppliers already using them."
         />
         <Button onClick={() => openCreate()} className="gap-2">
           <Plus className="h-4 w-4" />
@@ -191,6 +211,8 @@ function CategoriesPage() {
                 onEdit={openEdit}
                 onDelete={setDeleting}
                 onAddChild={openCreate}
+                onToggle={(c, a) => void handleToggle(c, a)}
+                counts={counts}
               />
             ))}
           </ul>
@@ -271,17 +293,44 @@ function CategoryTreeItem({
   onEdit,
   onDelete,
   onAddChild,
+  onToggle,
+  counts,
 }: {
   node: CategoryNode;
   onEdit: (c: CategoryRow) => void;
   onDelete: (c: CategoryRow) => void;
   onAddChild: (parentId: number) => void;
+  onToggle: (c: CategoryRow, active: boolean) => void;
+  counts: Map<number, { total: number; live: number }>;
 }) {
+  const meta = (c: CategoryRow) => {
+    const n = counts.get(c.category_id);
+    return (
+      <>
+        <span className="text-xs text-muted-foreground">
+          {n?.total ?? 0} supplier{n?.total === 1 ? "" : "s"} · {n?.live ?? 0} live
+        </span>
+        {!c.is_active && <Badge variant="secondary">Inactive</Badge>}
+      </>
+    );
+  };
+  const toggle = (c: CategoryRow) => (
+    <Switch
+      checked={c.is_active}
+      onCheckedChange={(v) => onToggle(c, v)}
+      aria-label={c.is_active ? `Deactivate ${c.name}` : `Reactivate ${c.name}`}
+      className="mr-2"
+    />
+  );
   return (
     <li>
       <div className="flex items-center justify-between px-4 py-3">
-        <span className="font-medium text-foreground">{node.name}</span>
+        <span className="flex flex-wrap items-center gap-2">
+          <span className="font-medium text-foreground">{node.name}</span>
+          {meta(node)}
+        </span>
         <div className="flex items-center gap-1">
+          {toggle(node)}
           <Button
             variant="ghost"
             size="sm"
@@ -306,8 +355,10 @@ function CategoryTreeItem({
               <span className="flex items-center gap-2 text-sm text-foreground">
                 <CornerDownRight className="h-3.5 w-3.5 text-muted-foreground" />
                 {child.name}
+                {meta(child)}
               </span>
               <div className="flex items-center gap-1">
+                {toggle(child)}
                 <Button variant="ghost" size="icon" onClick={() => onEdit(child)} aria-label="Edit">
                   <Pencil className="h-4 w-4" />
                 </Button>

@@ -26,6 +26,7 @@ export type SupplierProfileDraft = {
   products_offered: string[];
   opening_time: string;
   closing_time: string;
+  category_id: number | null;
 };
 
 export const SERVICE_CATEGORIES = [
@@ -52,6 +53,7 @@ export const EMPTY_DRAFT: SupplierProfileDraft = {
   products_offered: [],
   opening_time: "09:00",
   closing_time: "17:00",
+  category_id: null,
 };
 
 /** Required fields used by the completeness indicator. */
@@ -89,6 +91,7 @@ export function missingFields(draft: SupplierProfileDraft): string[] {
   const missing: string[] = REQUIRED_FIELDS.filter(
     (field) => String(draft[field] ?? "").trim().length === 0,
   ).map((field) => FIELD_LABELS[field] ?? String(field));
+  if (!draft.category_id) missing.push("Category");
   if (draft.product_images.length === 0) missing.push("At least one product image");
   if (!draft.is_service_provider && !draft.is_product_seller) missing.push("Business type");
   if (draft.is_service_provider && draft.service_categories.length === 0)
@@ -122,6 +125,7 @@ export function toDraft(row: SupplierProfileRow | null): SupplierProfileDraft {
     products_offered: row.products_offered ?? [],
     opening_time: (row.opening_time ?? "09:00").slice(0, 5),
     closing_time: (row.closing_time ?? "17:00").slice(0, 5),
+    category_id: row.category_id,
   };
 }
 
@@ -195,6 +199,9 @@ export async function saveProfileDraft(draft: SupplierProfileDraft): Promise<Sup
         products_offered: draft.is_product_seller ? draft.products_offered : [],
         opening_time: draft.opening_time || "09:00",
         closing_time: draft.closing_time || "17:00",
+        category_id: draft.category_id,
+        // Picking a category resolves any "Category Review Required" flag.
+        ...(draft.category_id ? { category_review_required: false } : {}),
         updated_by: supplierAccountId,
         date_updated: new Date().toISOString(),
       },

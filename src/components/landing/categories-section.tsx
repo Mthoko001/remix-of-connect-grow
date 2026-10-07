@@ -16,7 +16,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { fetchAllCategories, type CategoryRow } from "@/lib/categories";
+import { fetchActiveCategories, type CategoryRow } from "@/lib/categories";
 
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   Plumbing: Wrench,
@@ -41,7 +41,7 @@ export function CategoriesSection() {
   const [categories, setCategories] = useState<CategoryRow[]>([]);
 
   useEffect(() => {
-    fetchAllCategories()
+    fetchActiveCategories()
       .then((flat) => setCategories(flat.filter((c) => !c.parent_category_id)))
       .catch(() => setCategories([]));
   }, []);
