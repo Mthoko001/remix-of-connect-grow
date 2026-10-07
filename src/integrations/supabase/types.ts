@@ -48,6 +48,7 @@ export type Database = {
         Row: {
           category_id: number
           created_at: string
+          is_active: boolean
           name: string
           parent_category_id: number | null
           slug: string
@@ -55,6 +56,7 @@ export type Database = {
         Insert: {
           category_id?: never
           created_at?: string
+          is_active?: boolean
           name: string
           parent_category_id?: number | null
           slug: string
@@ -62,6 +64,7 @@ export type Database = {
         Update: {
           category_id?: never
           created_at?: string
+          is_active?: boolean
           name?: string
           parent_category_id?: number | null
           slug?: string
@@ -386,9 +389,11 @@ export type Database = {
           business_logo: string | null
           business_name: string
           category_id: number | null
+          category_review_required: boolean
           cell_no: string | null
           city: string | null
           closing_time: string
+          cover_image: string | null
           date_created: string
           date_updated: string
           is_product_seller: boolean
@@ -415,9 +420,11 @@ export type Database = {
           business_logo?: string | null
           business_name?: string
           category_id?: number | null
+          category_review_required?: boolean
           cell_no?: string | null
           city?: string | null
           closing_time?: string
+          cover_image?: string | null
           date_created?: string
           date_updated?: string
           is_product_seller?: boolean
@@ -444,9 +451,11 @@ export type Database = {
           business_logo?: string | null
           business_name?: string
           category_id?: number | null
+          category_review_required?: boolean
           cell_no?: string | null
           city?: string | null
           closing_time?: string
+          cover_image?: string | null
           date_created?: string
           date_updated?: string
           is_product_seller?: boolean
@@ -494,6 +503,7 @@ export type Database = {
           category_name: string | null
           city: string | null
           closing_time: string | null
+          cover_image: string | null
           is_product_seller: boolean | null
           is_service_provider: boolean | null
           opening_time: string | null
@@ -524,6 +534,14 @@ export type Database = {
       admin_archive_enquiry: {
         Args: { _enquiry_id: number }
         Returns: undefined
+      }
+      admin_category_supplier_counts: {
+        Args: never
+        Returns: {
+          category_id: number
+          live_count: number
+          supplier_count: number
+        }[]
       }
       admin_edit_enquiry: {
         Args: {
