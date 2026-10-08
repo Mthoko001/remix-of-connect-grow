@@ -504,6 +504,7 @@ export type Database = {
           city: string | null
           closing_time: string | null
           cover_image: string | null
+          date_created: string | null
           is_product_seller: boolean | null
           is_service_provider: boolean | null
           opening_time: string | null

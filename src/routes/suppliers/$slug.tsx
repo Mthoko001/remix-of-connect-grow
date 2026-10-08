@@ -3,6 +3,7 @@ import { recordProfileView } from "@/lib/profile-views";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import {
   Briefcase,
+  CalendarDays,
   Building2,
   CheckCircle2,
   Clock,
@@ -22,6 +23,8 @@ import { InAppEnquiryDialog } from "@/components/customer/in-app-enquiry-dialog"
 import { ImageGalleryLightbox } from "@/components/customer/image-gallery-lightbox";
 import { CompanyLogo } from "@/components/company-logo";
 import { Button } from "@/components/ui/button";
+import { ShareBusiness } from "@/components/customer/share-business";
+import { absoluteUrl, categoryCover, SITE_URL } from "@/lib/category-cover";
 import { fetchPublicSupplierBySlug } from "@/lib/public-suppliers.functions";
 
 export const Route = createFileRoute("/suppliers/$slug")({
@@ -30,22 +33,29 @@ export const Route = createFileRoute("/suppliers/$slug")({
     if (!supplier) throw notFound();
     return supplier;
   },
-  head: ({ loaderData }) => {
-    const title = loaderData ? `${loaderData.name} — GrowMeOnline` : "Supplier — GrowMeOnline";
-    const description =
-      loaderData?.description ?? "View this supplier's business profile on GrowMeOnline.";
+  head: ({ loaderData: s }) => {
+    if (!s) return { meta: [{ title: "Supplier — GrowMeOnline" }] };
+    const title = `${s.name} — ${s.verified ? "Verified " : ""}${s.category} Supplier | GrowMeOnline`;
+    const short = s.description.replace(/\s+/g, " ").slice(0, 155);
+    const description = `${s.category} · ${s.location}. ${short}`;
+    const image = absoluteUrl(s.coverUrl ?? categoryCover(s.category));
+    const url = `${SITE_URL}/suppliers/${s.slug}`;
     return {
       meta: [
-      { title },
-      {
-        name: "description",
-        content: description,
-      },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "profile" },
+        { property: "og:url", content: url },
+        { property: "og:site_name", content: "GrowMeOnline" },
+        { property: "og:image", content: image },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: image },
       ],
+      links: [{ rel: "canonical", href: url }],
     };
   },
   component: SupplierPublicProfilePage,
@@ -93,6 +103,11 @@ function SupplierPublicProfilePage() {
   const products = supplier.products ?? [];
   const businessTypes = supplier.businessTypes ?? [];
 
+  const profileUrl = `${SITE_URL}/suppliers/${supplier.slug}`;
+  const memberSince = supplier.memberSince
+    ? new Date(supplier.memberSince).toLocaleDateString("en-ZA", { month: "long", year: "numeric" })
+    : "";
+
   useEffect(() => {
     void recordProfileView(supplier.supplierAccountId);
   }, [supplier.supplierAccountId]);
@@ -120,7 +135,16 @@ function SupplierPublicProfilePage() {
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:py-10">
         {/* Hero */}
         <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <div className="h-28 bg-gradient-to-r from-primary/80 via-primary/50 to-accent sm:h-40" />
+          <div className="relative h-40 sm:h-56 lg:h-64">
+            <img
+              src={supplier.coverUrl ?? categoryCover(supplier.category)}
+              alt={`${supplier.category} cover`}
+              width={1600}
+              height={640}
+              className="h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/10 to-transparent" />
+          </div>
           <div className="px-5 pb-6 sm:px-8">
             <div className="-mt-10 flex flex-col gap-4 sm:-mt-12 sm:flex-row sm:items-end sm:justify-between">
               <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-end">
@@ -140,7 +164,7 @@ function SupplierPublicProfilePage() {
                     {supplier.verified && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-verified/10 px-2.5 py-1 text-xs font-semibold text-verified">
                         <ShieldCheck className="h-3.5 w-3.5" />
-                        Verified
+                        Verified Supplier
                       </span>
                     )}
                   </div>
@@ -151,6 +175,12 @@ function SupplierPublicProfilePage() {
                     <MapPin className="h-4 w-4" />
                     {supplier.location}
                   </p>
+                  {memberSince && (
+                    <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+                      <CalendarDays className="h-4 w-4" />
+                      Member since {memberSince}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="sm:pb-1">{enquiryButton}</div>
@@ -252,6 +282,7 @@ function SupplierPublicProfilePage() {
                 </dl>
               </Section>
             )}
+            <ShareBusiness url={profileUrl} name={supplier.name} />
             <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
               <p className="text-sm font-semibold text-foreground">Interested in this business?</p>
               <p className="mt-1 text-xs text-muted-foreground">
