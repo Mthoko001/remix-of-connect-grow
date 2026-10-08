@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import type { SupplierListing } from "@/lib/supplier-listing";
+import { categoryCover } from "@/lib/category-cover";
 import { formatFullAddress, formatShortLocation } from "@/lib/location";
 
 const publicSupplierRowSchema = z.object({
@@ -24,6 +25,7 @@ const publicSupplierRowSchema = z.object({
   suburb: z.string().nullable().optional(),
   postal_code: z.string().nullable().optional(),
   street_address: z.string().nullable().optional(),
+  date_created: z.string().nullable().optional(),
 });
 
 type PublicSupplierRow = z.infer<typeof publicSupplierRowSchema>;
@@ -37,7 +39,7 @@ const AVATAR_GRADIENTS = [
   "from-rose-500 to-pink-600",
 ];
 
-function slugify(value: string): string {
+export function slugify(value: string): string {
   return value
     .toLowerCase()
     .trim()
@@ -77,7 +79,24 @@ async function signMedia(rows: PublicSupplierRow[]): Promise<SignedUrls> {
   return map;
 }
 
-function toSupplierListing(profile: PublicSupplierRow, urls: SignedUrls): SupplierListing {
+/** Unique name-based slugs; duplicates of a name get "-<profileId>" appended. */
+function buildSlugs(rows: PublicSupplierRow[]): Map<number, string> {
+  const counts = new Map<string, number>();
+  const base = (r: PublicSupplierRow) => slugify(r.business_name) || "supplier";
+  for (const r of rows) counts.set(base(r), (counts.get(base(r)) ?? 0) + 1);
+  return new Map(
+    rows.map((r) => {
+      const b = base(r);
+      return [r.supplier_profile_id, (counts.get(b) ?? 0) > 1 ? `${b}-${r.supplier_profile_id}` : b];
+    }),
+  );
+}
+
+function toSupplierListing(
+  profile: PublicSupplierRow,
+  urls: SignedUrls,
+  slug: string,
+): SupplierListing {
   const name = profile.business_name.trim() || "GrowMeOnline Supplier";
   const parts = {
     province: profile.province,
@@ -90,7 +109,9 @@ function toSupplierListing(profile: PublicSupplierRow, urls: SignedUrls): Suppli
   const area = formatShortLocation(parts) || profile.public_area?.trim() || "Location not provided";
 
   return {
-    slug: `live-${profile.supplier_profile_id}-${slugify(name) || "supplier"}`,
+    slug,
+    memberSince: profile.date_created ?? null,
+    coverUrl: categoryCover(profile.category_name),
     supplierAccountId: profile.supplier_account_id,
     name,
     initials: initials(name),
@@ -164,10 +185,11 @@ async function fetchPublicSupplierRows(query: string): Promise<PublicSupplierRow
 export const fetchPublicSuppliers = createServerFn({ method: "GET" }).handler(async () => {
   try {
     const profiles = await fetchPublicSupplierRows(
-      "select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time,province,city,suburb,postal_code,street_address&order=business_name.asc",
+      "select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time,province,city,suburb,postal_code,street_address,date_created&order=business_name.asc",
     );
     const urls = await signMedia(profiles);
-    return profiles.map((p) => toSupplierListing(p, urls));
+    const slugs = buildSlugs(profiles);
+    return profiles.map((p) => toSupplierListing(p, urls, slugs.get(p.supplier_profile_id)!));
   } catch (error) {
     // Fail soft: show an empty directory rather than crash the page.
     console.error(error);
@@ -178,16 +200,15 @@ export const fetchPublicSuppliers = createServerFn({ method: "GET" }).handler(as
 export const fetchPublicSupplierBySlug = createServerFn({ method: "GET" })
   .validator(z.string())
   .handler(async ({ data: slug }) => {
-    const match = /^live-(\d+)-/.exec(slug);
-    if (!match) return null;
-
-    const profileId = Number(match[1]);
-    if (!Number.isSafeInteger(profileId) || profileId <= 0) return null;
-
     const profiles = await fetchPublicSupplierRows(
-      `select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time,province,city,suburb,postal_code,street_address&supplier_profile_id=eq.${profileId}&limit=1`,
+      "select=supplier_profile_id,supplier_account_id,business_name,business_description,public_area,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time,province,city,suburb,postal_code,street_address,date_created",
     );
-    const profile = profiles[0];
+    const slugs = buildSlugs(profiles);
+    // Legacy "live-<id>-name" links keep working.
+    const legacyId = /^live-(\d+)-/.exec(slug)?.[1];
+    const profile = profiles.find((p) =>
+      legacyId ? p.supplier_profile_id === Number(legacyId) : slugs.get(p.supplier_profile_id) === slug,
+    );
     if (!profile) return null;
-    return toSupplierListing(profile, await signMedia([profile]));
+    return toSupplierListing(profile, await signMedia([profile]), slugs.get(profile.supplier_profile_id)!);
   });

@@ -28,6 +28,10 @@ export type SupplierListing = {
   businessTypes?: string[];
   services?: string[];
   products?: string[];
+  /** ISO date the profile was created. */
+  memberSince?: string | null;
+  /** Category-based default cover image (relative CDN path). */
+  coverUrl?: string;
 };
 
 
