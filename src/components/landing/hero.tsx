@@ -16,7 +16,7 @@ function VerifiedBadge({ className = "" }: { className?: string }) {
 function HeroVisual({ suppliers }: { suppliers: SupplierListing[] }) {
   const rows = suppliers.slice(0, 3);
   return (
-    <div className="relative">
+    <div className="relative min-w-0">
       <div className="absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-tr from-brand/20 via-brand-glow/10 to-transparent blur-2xl" />
       <div className="rounded-2xl border border-border bg-card p-3 shadow-2xl shadow-brand/10">
         {/* browser-style top bar */}
@@ -87,8 +87,8 @@ export function Hero({ liveSuppliers = [] }: { liveSuppliers?: SupplierListing[]
   return (
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand/5 via-background to-background" />
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-10 lg:py-24 lg:px-8">
-        <div className="max-w-xl">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 [&>*]:min-w-0 items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-10 lg:py-24 lg:px-8">
+        <div className="min-w-0 max-w-xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-verified" />
             Verified suppliers across South Africa
