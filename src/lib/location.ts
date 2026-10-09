@@ -49,3 +49,8 @@ export function formatFullAddress(loc: LocationParts): string {
     .filter(Boolean)
     .join(", ");
 }
+
+/** Public location: "City, Province" (full province name). Never includes street or suburb. */
+export function formatCityProvince(loc: { city?: string | null; province?: string | null }): string {
+  return [clean(loc.city), clean(loc.province)].filter(Boolean).join(", ");
+}
