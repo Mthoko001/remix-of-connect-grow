@@ -58,7 +58,6 @@ function SuppliersListingPage() {
 
   const [province, setProvince] = useState("");
   const [city, setCity] = useState("");
-  const [suburb, setSuburb] = useState("");
   const uniq = (xs: (string | undefined)[]) =>
     Array.from(new Set(xs.filter((x): x is string => Boolean(x)))).sort((a, b) => a.localeCompare(b));
   const provinceOptions = useMemo(() => uniq(suppliers.map((s) => s.province)), [suppliers]);
@@ -66,16 +65,7 @@ function SuppliersListingPage() {
     () => uniq(suppliers.filter((s) => !province || s.province === province).map((s) => s.city)),
     [suppliers, province],
   );
-  const suburbOptions = useMemo(
-    () =>
-      uniq(
-        suppliers
-          .filter((s) => (!province || s.province === province) && (!city || s.city === city))
-          .map((s) => s.suburb),
-      ),
-    [suppliers, province, city],
-  );
-  const hasLocationFilter = Boolean(province || city || suburb);
+  const hasLocationFilter = Boolean(province || city);
 
   const trimmedQuery = query.trim().toLowerCase();
   const searchResults = useMemo(() => {
@@ -85,7 +75,6 @@ function SuppliersListingPage() {
         s.verified &&
         (!province || s.province === province) &&
         (!city || s.city === city) &&
-        (!suburb || s.suburb === suburb) &&
         (!trimmedQuery ||
           s.name.toLowerCase().includes(trimmedQuery) ||
           s.category.toLowerCase().includes(trimmedQuery) ||
@@ -94,7 +83,7 @@ function SuppliersListingPage() {
             t.toLowerCase().includes(trimmedQuery),
           )),
     );
-  }, [suppliers, trimmedQuery, hasLocationFilter, province, city, suburb]);
+  }, [suppliers, trimmedQuery, hasLocationFilter, province, city]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -122,12 +111,11 @@ function SuppliersListingPage() {
           {provinceOptions.length > 0 && (
             <div className="mt-3 flex flex-wrap items-center gap-2" aria-label="Filter by location">
               <LocationSelect label="Province" value={province} options={provinceOptions}
-                onChange={(v) => { setProvince(v); setCity(""); setSuburb(""); }} />
+                onChange={(v) => { setProvince(v); setCity(""); }} />
               <LocationSelect label="City / Town" value={city} options={cityOptions}
-                onChange={(v) => { setCity(v); setSuburb(""); }} />
-              <LocationSelect label="Suburb / Area" value={suburb} options={suburbOptions} onChange={setSuburb} />
+                onChange={setCity} />
               {hasLocationFilter && (
-                <button type="button" onClick={() => { setProvince(""); setCity(""); setSuburb(""); }}
+                <button type="button" onClick={() => { setProvince(""); setCity(""); }}
                   className="text-sm font-medium text-primary hover:underline">
                   Clear
                 </button>
