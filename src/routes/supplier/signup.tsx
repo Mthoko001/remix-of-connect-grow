@@ -6,8 +6,9 @@ import { Label } from "@/components/ui/label";
 import { signUpSupplierWithEmail } from "@/lib/supplier-auth";
 import { Logo } from "@/components/landing/logo";
 import { toast } from "sonner";
-import { Eye, EyeOff, ShieldCheck, Loader2 } from "lucide-react";
-import { isStrongPassword } from "@/lib/policies";
+import { Eye, EyeOff, ShieldCheck, Loader2, Check, X } from "lucide-react";
+import { firstPasswordError } from "@/lib/policies";
+import { PasswordRequirements } from "@/components/password-requirements";
 
 export const Route = createFileRoute("/supplier/signup")({
   head: () => ({
@@ -30,7 +31,6 @@ export const Route = createFileRoute("/supplier/signup")({
 });
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MIN_PASSWORD_LENGTH = 8;
 
 function SupplierSignupPage() {
   const navigate = useNavigate();
@@ -51,11 +51,9 @@ function SupplierSignupPage() {
     e.preventDefault();
     const next: typeof errors = {};
     if (!EMAIL_RE.test(email)) next.email = "Enter a valid email address.";
-    if (password.length < MIN_PASSWORD_LENGTH)
-      next.password = `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
-    else if (!isStrongPassword(password))
-      next.password = "Use upper and lower case letters and at least one number.";
-    if (confirmPassword !== password) next.confirmPassword = "Passwords don't match.";
+    const pwError = firstPasswordError(password);
+    if (pwError) next.password = pwError;
+    if (confirmPassword !== password) next.confirmPassword = "Passwords do not match.";
     setErrors(next);
     if (next.email || next.password || next.confirmPassword) return;
 
@@ -197,6 +195,7 @@ function SupplierSignupPage() {
                     </button>
                   </div>
                   {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+                  <PasswordRequirements password={password} />
                 </div>
 
                 <div className="space-y-1.5">
@@ -213,6 +212,19 @@ function SupplierSignupPage() {
                     aria-invalid={!!errors.confirmPassword}
                     className="h-10"
                   />
+                  {confirmPassword && (
+                    <p
+                      aria-live="polite"
+                      className={`flex items-center gap-1.5 text-xs ${confirmPassword === password ? "text-verified" : "text-destructive"}`}
+                    >
+                      {confirmPassword === password ? (
+                        <Check className="h-3.5 w-3.5" />
+                      ) : (
+                        <X className="h-3.5 w-3.5" />
+                      )}
+                      {confirmPassword === password ? "Passwords match" : "Passwords do not match"}
+                    </p>
+                  )}
                   {errors.confirmPassword && (
                     <p className="text-sm text-destructive">{errors.confirmPassword}</p>
                   )}
