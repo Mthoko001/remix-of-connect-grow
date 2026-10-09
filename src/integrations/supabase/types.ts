@@ -509,14 +509,10 @@ export type Database = {
           is_service_provider: boolean | null
           opening_time: string | null
           other_service: string | null
-          postal_code: string | null
           product_images: Json | null
           products_offered: string[] | null
           province: string | null
-          public_area: string | null
           service_categories: string[] | null
-          street_address: string | null
-          suburb: string | null
           supplier_account_id: string | null
           supplier_profile_id: number | null
         }

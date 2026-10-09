@@ -134,6 +134,13 @@
       "when": 1791445627129,
       "tag": "0018_public_listing_member_since",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1791530959612,
+      "tag": "0019_public_listing_hide_address",
+      "breakpoints": true
     }
   ]
 }
