@@ -31,7 +31,6 @@ export const Route = createFileRoute("/supplier/signup")({
 });
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MIN_PASSWORD_LENGTH = 8;
 
 function SupplierSignupPage() {
   const navigate = useNavigate();
