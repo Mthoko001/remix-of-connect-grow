@@ -112,12 +112,11 @@ function SupplierPublicProfilePage() {
     void recordProfileView(supplier.supplierAccountId);
   }, [supplier.supplierAccountId]);
 
-  // Only non-contact fields. Never phone, email or website; street address only if supplier provided one.
+  // Only non-contact fields. Never phone, email or website; never the street address.
   const info = [
     { label: "Industry", value: supplier.category, icon: Building2 },
     { label: "Business Type", value: businessTypes.join(" & "), icon: Briefcase },
     { label: "Location", value: supplier.location, icon: MapPin },
-    { label: "Business Address", value: supplier.fullAddress, icon: MapPin },
     { label: "Operating Hours", value: supplier.businessHours, icon: Clock },
   ].filter((i) => i.value && i.value.trim().length > 0);
 
@@ -146,44 +145,42 @@ function SupplierPublicProfilePage() {
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/10 to-transparent" />
           </div>
           <div className="px-5 pb-6 sm:px-8">
-            <div className="-mt-10 flex flex-col gap-4 sm:-mt-12 sm:flex-row sm:items-end sm:justify-between">
-              <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-end">
-                <div className="w-fit rounded-xl border-4 border-card bg-card shadow">
-                  <CompanyLogo
-                    src={supplier.logoUrl}
-                    name={supplier.name}
-                    initials={supplier.initials}
-                    fallbackClassName={`bg-gradient-to-br ${supplier.gradient}`}
-                  />
-                </div>
-                <div className="min-w-0 sm:pb-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
-                      {supplier.name}
-                    </h1>
-                    {supplier.verified && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-verified/10 px-2.5 py-1 text-xs font-semibold text-verified">
-                        <ShieldCheck className="h-3.5 w-3.5" />
-                        Verified Supplier
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {[supplier.category, ...businessTypes].join(" · ")}
-                  </p>
-                  <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    {supplier.location}
-                  </p>
-                  {memberSince && (
-                    <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
-                      <CalendarDays className="h-4 w-4" />
-                      Member since {memberSince}
-                    </p>
+            <div className="relative z-10 -mt-12 w-fit rounded-xl border-4 border-card bg-card shadow">
+              <CompanyLogo
+                src={supplier.logoUrl}
+                name={supplier.name}
+                initials={supplier.initials}
+                fallbackClassName={`bg-gradient-to-br ${supplier.gradient}`}
+              />
+            </div>
+            <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0 flex-1 space-y-1.5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="break-words text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+                    {supplier.name}
+                  </h1>
+                  {supplier.verified && (
+                    <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-verified/10 px-2.5 py-1 text-xs font-semibold text-verified">
+                      <ShieldCheck className="h-3.5 w-3.5" />
+                      Verified Supplier
+                    </span>
                   )}
                 </div>
+                <p className="break-words text-sm font-medium text-foreground/80">
+                  {[supplier.category, ...businessTypes].join(" · ")}
+                </p>
+                <p className="flex items-start gap-1 break-words text-sm text-muted-foreground">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
+                  {supplier.location}
+                </p>
+                {memberSince && (
+                  <p className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <CalendarDays className="h-4 w-4 shrink-0" />
+                    Member since {memberSince}
+                  </p>
+                )}
               </div>
-              <div className="sm:pb-1">{enquiryButton}</div>
+              <div className="shrink-0">{enquiryButton}</div>
             </div>
           </div>
         </div>

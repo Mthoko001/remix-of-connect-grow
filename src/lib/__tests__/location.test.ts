@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatFullAddress, formatShortLocation } from "../location";
+import { formatCityProvince, formatFullAddress, formatShortLocation } from "../location";
 
 describe("formatShortLocation", () => {
   it("shows suburb, city and province code", () => {
@@ -23,5 +23,17 @@ describe("formatShortLocation", () => {
 describe("formatFullAddress", () => {
   it("is empty when no street address was provided", () => {
     expect(formatFullAddress({ suburb: "Risecliff", city: "eThekwini" })).toBe("");
+  });
+});
+
+describe("formatCityProvince", () => {
+  it("shows only city and province", () => {
+    expect(formatCityProvince({ city: "Durban", province: "KwaZulu-Natal" })).toBe("Durban, KwaZulu-Natal");
+  });
+  it("drops municipality wording", () => {
+    expect(formatCityProvince({ city: "eThekwini Metropolitan Municipality", province: "KwaZulu-Natal" })).toBe("eThekwini, KwaZulu-Natal");
+  });
+  it("shows province alone when no city", () => {
+    expect(formatCityProvince({ province: "Gauteng" })).toBe("Gauteng");
   });
 });
