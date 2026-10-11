@@ -13,6 +13,8 @@ import {
   type SupplierReviewProfile,
 } from "@/lib/admin-review";
 import { MAX_PRODUCT_IMAGES } from "@/lib/supplier-profile";
+import { OnlinePresenceFields } from "@/components/supplier/online-presence-fields";
+import { linksFromJson, normalizeLinks, normalizeUrl } from "@/lib/online-presence";
 
 type Props = {
   supplierAccountId: string;
@@ -37,6 +39,16 @@ export function AdminProfileEditor({ supplierAccountId, profile, onSaved }: Prop
   const [logo, setLogo] = useState(profile.business_logo);
   const [cover, setCover] = useState(profile.cover_image);
   const [images, setImages] = useState(productImagePaths(profile.product_images));
+  const [name, setName] = useState(profile.business_name);
+  const [isService, setIsService] = useState(profile.is_service_provider);
+  const [isSeller, setIsSeller] = useState(profile.is_product_seller);
+  const [province, setProvince] = useState(profile.province ?? "");
+  const [city, setCity] = useState(profile.city ?? "");
+  const [suburb, setSuburb] = useState(profile.suburb ?? "");
+  const [street, setStreet] = useState(profile.street_address ?? "");
+  const [postal, setPostal] = useState(profile.postal_code ?? "");
+  const [website, setWebsite] = useState(profile.website_url ?? "");
+  const [socials, setSocials] = useState(linksFromJson(profile.social_media_links));
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
 
@@ -71,15 +83,36 @@ export function AdminProfileEditor({ supplierAccountId, profile, onSaved }: Prop
   }
 
   async function save() {
+    if (!name.trim()) {
+      toast.error("Business name is required.");
+      return;
+    }
+    const links = normalizeLinks(socials);
+    if ((website.trim() && !normalizeUrl(website)) || links.invalid.length > 0) {
+      toast.error("Fix the invalid website or social media links first.");
+      return;
+    }
+    const loc = { street: street.trim(), suburb: suburb.trim(), city: city.trim(), province: province.trim(), postal: postal.trim() };
     setSaving(true);
     try {
       await adminUpdateSupplierProfile(supplierAccountId, {
+        business_name: name.trim(),
+        is_service_provider: isService,
+        is_product_seller: isSeller,
+        province: loc.province || null,
+        city: loc.city || null,
+        suburb: loc.suburb || null,
+        street_address: loc.street || null,
+        postal_code: loc.postal || null,
+        address: [loc.street, loc.suburb, loc.city, loc.province, loc.postal].filter(Boolean).join(", ") || null,
+        website_url: normalizeUrl(website),
+        social_media_links: links.valid,
         category_id: categoryId,
         cell_no: cell.trim() || null,
         opening_time: open,
         closing_time: close,
-        service_categories: profile.is_service_provider ? toList(services) : [],
-        products_offered: profile.is_product_seller ? toList(products) : [],
+        service_categories: isService ? toList(services) : [],
+        products_offered: isSeller ? toList(products) : [],
         business_logo: logo,
         cover_image: cover,
         product_images: images,
@@ -95,7 +128,49 @@ export function AdminProfileEditor({ supplierAccountId, profile, onSaved }: Prop
 
   return (
     <div className="space-y-4 rounded-lg border p-4">
-      <p className="text-sm font-semibold text-foreground">Edit profile before approval</p>
+      <p className="text-sm font-semibold text-foreground">Edit supplier profile</p>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="admin_name">Business name</Label>
+        <Input id="admin_name" value={name} onChange={(e) => setName(e.target.value)} />
+      </div>
+
+      <div className="flex flex-wrap gap-4 text-sm">
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={isService} onChange={(e) => setIsService(e.target.checked)} />
+          Service Provider
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={isSeller} onChange={(e) => setIsSeller(e.target.checked)} />
+          Product Seller
+        </label>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        {([
+          ["admin_province", "Province", province, setProvince],
+          ["admin_city", "City / Town", city, setCity],
+          ["admin_suburb", "Suburb / Area", suburb, setSuburb],
+          ["admin_postal", "Postal code", postal, setPostal],
+        ] as const).map(([id, label, value, set]) => (
+          <div key={id} className="space-y-1.5">
+            <Label htmlFor={id}>{label}</Label>
+            <Input id={id} value={value} onChange={(e) => set(e.target.value)} />
+          </div>
+        ))}
+        <div className="space-y-1.5 sm:col-span-2">
+          <Label htmlFor="admin_street">Street address</Label>
+          <Input id="admin_street" value={street} onChange={(e) => setStreet(e.target.value)} />
+        </div>
+      </div>
+
+      <OnlinePresenceFields
+        idPrefix="admin"
+        website={website}
+        socials={socials}
+        onWebsiteChange={setWebsite}
+        onSocialsChange={setSocials}
+      />
 
       <div className="space-y-1.5">
         <Label htmlFor="admin_category">Category</Label>
@@ -120,13 +195,13 @@ export function AdminProfileEditor({ supplierAccountId, profile, onSaved }: Prop
         </div>
       </div>
 
-      {profile.is_service_provider && (
+      {isService && (
         <div className="space-y-1.5">
           <Label htmlFor="admin_services">Services offered (comma separated)</Label>
           <Input id="admin_services" value={services} onChange={(e) => setServices(e.target.value)} />
         </div>
       )}
-      {profile.is_product_seller && (
+      {isSeller && (
         <div className="space-y-1.5">
           <Label htmlFor="admin_products">Products offered (comma separated)</Label>
           <Input id="admin_products" value={products} onChange={(e) => setProducts(e.target.value)} />

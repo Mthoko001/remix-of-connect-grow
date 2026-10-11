@@ -33,6 +33,10 @@ export type SupplierReviewProfile = {
   province: string | null;
   city: string | null;
   suburb: string | null;
+  street_address: string | null;
+  postal_code: string | null;
+  website_url: string | null;
+  social_media_links: Json;
 };
 
 export type SupplierReviewRow = {
@@ -67,7 +71,7 @@ export async function fetchSupplierReviewRows(): Promise<SupplierReviewRow[]> {
       supabase
         .from("tb_supplier_profile")
         .select(
-          "supplier_profile_id, supplier_account_id, business_name, business_description, address, cell_no, business_logo, product_images, notes, status, rejection_reason, date_updated, is_service_provider, is_product_seller, service_categories, other_service, products_offered, opening_time, closing_time, category_id, cover_image, category_review_required, province, city, suburb",
+          "supplier_profile_id, supplier_account_id, business_name, business_description, address, cell_no, business_logo, product_images, notes, status, rejection_reason, date_updated, is_service_provider, is_product_seller, service_categories, other_service, products_offered, opening_time, closing_time, category_id, cover_image, category_review_required, province, city, suburb, street_address, postal_code, website_url, social_media_links",
         ),
     ]);
 
@@ -200,6 +204,17 @@ export type AdminProfilePatch = Partial<{
   cell_no: string | null;
   service_categories: string[];
   products_offered: string[];
+  business_name: string;
+  is_service_provider: boolean;
+  is_product_seller: boolean;
+  province: string | null;
+  city: string | null;
+  suburb: string | null;
+  street_address: string | null;
+  postal_code: string | null;
+  address: string | null;
+  website_url: string | null;
+  social_media_links: string[];
 }>;
 
 /** Admin edits to a supplier profile during review (admin UPDATE policy on tb_supplier_profile). */
