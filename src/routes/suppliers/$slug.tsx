@@ -17,6 +17,8 @@ import {
   Wrench,
 } from "lucide-react";
 import { FormattedText } from "@/components/customer/formatted-text";
+import { OnlinePresence } from "@/components/customer/online-presence";
+import { Globe } from "lucide-react";
 import { Navbar } from "@/components/landing/navbar";
 import { Footer } from "@/components/landing/footer";
 import { InAppEnquiryDialog } from "@/components/customer/in-app-enquiry-dialog";
@@ -190,6 +192,12 @@ function SupplierPublicProfilePage() {
             {supplier.description.trim() && (
               <Section title="About the Business" icon={Info}>
                 <FormattedText text={supplier.description} />
+              </Section>
+            )}
+
+            {(supplier.websiteUrl || (supplier.socialLinks ?? []).length > 0) && (
+              <Section title="Online Presence" icon={Globe}>
+                <OnlinePresence website={supplier.websiteUrl} socials={supplier.socialLinks ?? []} />
               </Section>
             )}
 

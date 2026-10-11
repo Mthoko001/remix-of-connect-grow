@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { linksFromJson, normalizeLinks, normalizeUrl } from "@/lib/online-presence";
 import type { Tables } from "@/integrations/supabase/types";
 
 export const SUPPLIER_MEDIA_BUCKET = "supplier-media";
@@ -27,6 +28,8 @@ export type SupplierProfileDraft = {
   opening_time: string;
   closing_time: string;
   category_id: number | null;
+  website_url: string;
+  social_media_links: string[];
 };
 
 export const SERVICE_CATEGORIES = [
@@ -54,6 +57,8 @@ export const EMPTY_DRAFT: SupplierProfileDraft = {
   opening_time: "09:00",
   closing_time: "17:00",
   category_id: null,
+  website_url: "",
+  social_media_links: [],
 };
 
 /** Required fields used by the completeness indicator. */
@@ -101,6 +106,8 @@ export function missingFields(draft: SupplierProfileDraft): string[] {
   if (draft.is_product_seller && draft.products_offered.length === 0)
     missing.push("At least one product offered");
   if (!draft.opening_time || !draft.closing_time) missing.push("Business hours");
+  if (draft.website_url.trim() && !normalizeUrl(draft.website_url)) missing.push("A valid website address");
+  if (normalizeLinks(draft.social_media_links).invalid.length > 0) missing.push("Valid social media links");
   return missing;
 }
 
@@ -126,6 +133,8 @@ export function toDraft(row: SupplierProfileRow | null): SupplierProfileDraft {
     opening_time: (row.opening_time ?? "09:00").slice(0, 5),
     closing_time: (row.closing_time ?? "17:00").slice(0, 5),
     category_id: row.category_id,
+    website_url: row.website_url ?? "",
+    social_media_links: linksFromJson(row.social_media_links),
   };
 }
 
@@ -200,6 +209,9 @@ export async function saveProfileDraft(draft: SupplierProfileDraft): Promise<Sup
         opening_time: draft.opening_time || "09:00",
         closing_time: draft.closing_time || "17:00",
         category_id: draft.category_id,
+        // Invalid links are never stored; the form flags them inline.
+        website_url: normalizeUrl(draft.website_url),
+        social_media_links: normalizeLinks(draft.social_media_links).valid,
         // Picking a category resolves any "Category Review Required" flag.
         ...(draft.category_id ? { category_review_required: false } : {}),
         updated_by: supplierAccountId,
