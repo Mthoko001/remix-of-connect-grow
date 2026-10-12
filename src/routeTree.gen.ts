@@ -25,6 +25,7 @@ import { Route as AdminLoginRouteImport } from './routes/admin/login'
 import { Route as AdminPackagesRouteImport } from './routes/admin/packages'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
 import { Route as AdminSuppliersRouteImport } from './routes/admin/suppliers'
+import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 import { Route as PaymentFailedRouteImport } from './routes/payment/failed'
 import { Route as PaymentSuccessRouteImport } from './routes/payment/success'
 import { Route as SupplierDashboardRouteImport } from './routes/supplier/dashboard'
@@ -122,6 +123,11 @@ const AdminSuppliersRoute = AdminSuppliersRouteImport.update({
   path: '/admin/suppliers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PaymentFailedRoute = PaymentFailedRouteImport.update({
   id: '/payment/failed',
   path: '/payment/failed',
@@ -216,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
@@ -249,6 +256,7 @@ export interface FileRoutesByTo {
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
@@ -283,6 +291,7 @@ export interface FileRoutesById {
   '/admin/packages': typeof AdminPackagesRoute
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
@@ -318,6 +327,7 @@ export interface FileRouteTypes {
     | '/admin/packages'
     | '/admin/subscriptions'
     | '/admin/suppliers'
+    | '/auth/callback'
     | '/payment/failed'
     | '/payment/success'
     | '/supplier/dashboard'
@@ -351,6 +361,7 @@ export interface FileRouteTypes {
     | '/admin/packages'
     | '/admin/subscriptions'
     | '/admin/suppliers'
+    | '/auth/callback'
     | '/payment/failed'
     | '/payment/success'
     | '/supplier/dashboard'
@@ -384,6 +395,7 @@ export interface FileRouteTypes {
     | '/admin/packages'
     | '/admin/subscriptions'
     | '/admin/suppliers'
+    | '/auth/callback'
     | '/payment/failed'
     | '/payment/success'
     | '/supplier/dashboard'
@@ -418,6 +430,7 @@ export interface RootRouteChildren {
   AdminPackagesRoute: typeof AdminPackagesRoute
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminSuppliersRoute: typeof AdminSuppliersRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
   SupplierDashboardRoute: typeof SupplierDashboardRoute
@@ -549,6 +562,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSuppliersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/payment/failed': {
       id: '/payment/failed'
       path: '/payment/failed'
@@ -675,6 +695,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminPackagesRoute: AdminPackagesRoute,
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminSuppliersRoute: AdminSuppliersRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
   SupplierDashboardRoute: SupplierDashboardRoute,
