@@ -5,10 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signUpSupplierWithEmail } from "@/lib/supplier-auth";
 import { Logo } from "@/components/landing/logo";
-import { toast } from "sonner";
 import { Eye, EyeOff, ShieldCheck, Loader2, Check, X } from "lucide-react";
 import { firstPasswordError } from "@/lib/policies";
 import { PasswordRequirements } from "@/components/password-requirements";
+import { googleAuthErrorMessage, signInWithGoogle } from "@/lib/supplier-auth";
 
 export const Route = createFileRoute("/supplier/signup")({
   head: () => ({
