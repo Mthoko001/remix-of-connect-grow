@@ -31,11 +31,34 @@ export async function signUpSupplierWithEmail({
   return { needsEmailConfirmation: !data.session };
 }
 
+/** sessionStorage key holding the same-origin path to visit after OAuth returns. */
+export const AUTH_NEXT_STORAGE_KEY = "gmo:auth-next";
+
+/** Only allows same-origin relative paths (never "//evil.com" or absolute URLs). */
+export function sanitizeNextPath(value: unknown): string | undefined {
+  return typeof value === "string" && value.startsWith("/") && !value.startsWith("//")
+    ? value
+    : undefined;
+}
+
+/** Maps a Google sign-in failure to a safe, user-facing message. */
+export function googleAuthErrorMessage(err: unknown): string {
+  const message = err instanceof Error ? err.message : String(err ?? "");
+  if (/unsupported provider|provider.*(not enabled|disabled|not found)/i.test(message)) {
+    return "Google sign-in isn't enabled yet. Please use email and password for now.";
+  }
+  return "Could not start Google sign-in. Please try again.";
+}
+
 /** Starts the Google OAuth flow for supplier sign-up / sign-in. */
-export async function signUpSupplierWithGoogle(): Promise<void> {
+export async function signInWithGoogle(nextPath?: string): Promise<void> {
+  const next = sanitizeNextPath(nextPath);
+  if (next) sessionStorage.setItem(AUTH_NEXT_STORAGE_KEY, next);
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
-    options: { redirectTo: `${window.location.origin}/supplier/dashboard` },
+    // Public same-origin callback route; it reads AUTH_NEXT_STORAGE_KEY and
+    // navigates to the intended destination only after the session is set.
+    options: { redirectTo: `${window.location.origin}/auth/callback` },
   });
   if (error) throw error;
 }
