@@ -46,6 +46,7 @@ function SupplierSignupPage() {
   }>({});
   const [submitting, setSubmitting] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -77,13 +78,18 @@ function SupplierSignupPage() {
     }
   }
 
-  // TODO: wire up Supabase Google OAuth here — replace this placeholder toast
-  // with supabase.auth.signInWithOAuth({ provider: "google", ... }) once the
-  // Google provider is configured on the backend.
-  function handleGoogleClick() {
-    toast("Google sign-up is coming soon.", {
-      description: "Email sign-up works today — continue below.",
-    });
+  // Real Google OAuth — uses the provider credentials configured in Lovable
+  // Cloud's auth settings; the redirect lands on the public /auth/callback
+  // route, which forwards to the supplier dashboard once signed in.
+  async function handleGoogleClick() {
+    setGoogleBusy(true);
+    try {
+      await signInWithGoogle("/supplier/dashboard");
+      // Browser navigates away to Google on success.
+    } catch (err) {
+      setErrors({ form: googleAuthErrorMessage(err) });
+      setGoogleBusy(false);
+    }
   }
 
   return (
@@ -136,10 +142,11 @@ function SupplierSignupPage() {
               <button
                 type="button"
                 onClick={handleGoogleClick}
-                className="mt-6 flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-muted/60 hover:shadow active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                disabled={googleBusy}
+                className="mt-6 flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-muted/60 hover:shadow active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-70"
               >
-                <GoogleGIcon />
-                Continue with Google
+                {googleBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleGIcon />}
+                {googleBusy ? "Redirecting to Google…" : "Continue with Google"}
               </button>
 
               {/* Divider */}
