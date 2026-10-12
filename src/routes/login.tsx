@@ -129,10 +129,11 @@ function LoginPage() {
           <button
             type="button"
             onClick={handleGoogleClick}
-            className="mt-6 flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-muted/60 hover:shadow active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            disabled={googleBusy}
+            className="mt-6 flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-muted/60 hover:shadow active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-70"
           >
-            <GoogleGIcon />
-            Continue with Google
+            {googleBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleGIcon />}
+            {googleBusy ? "Redirecting to Google…" : "Continue with Google"}
           </button>
 
           <div className="my-5 flex items-center gap-3">
