@@ -54,14 +54,20 @@ function LoginPage() {
     form?: string;
   }>({});
   const [submitting, setSubmitting] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
 
-  // TODO: wire up Supabase Google OAuth here — replace this placeholder toast
-  // with supabase.auth.signInWithOAuth({ provider: "google", ... }) once the
-  // Google provider is configured on the backend.
-  function handleGoogleClick() {
-    toast("Google sign-in is coming soon.", {
-      description: "Use your email and password below for now.",
-    });
+  // Real Google OAuth — uses the provider credentials configured in Lovable
+  // Cloud's auth settings; the redirect lands on the public /auth/callback
+  // route, which forwards to `next` (or the dashboard) once signed in.
+  async function handleGoogleClick() {
+    setGoogleBusy(true);
+    try {
+      await signInWithGoogle(redirectTo);
+      // Browser navigates away to Google on success.
+    } catch (err) {
+      setErrors({ form: googleAuthErrorMessage(err) });
+      setGoogleBusy(false);
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
