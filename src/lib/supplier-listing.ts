@@ -10,12 +10,9 @@ export type SupplierListing = {
   location: string;
   verified: boolean;
   description: string;
-  /** Full business address (only when the supplier provided a street address). */
-  fullAddress: string;
   province?: string;
   city?: string;
-  suburb?: string;
-  /** Suburb/city/postal code only — safe to show on the public profile. */
+  /** City and province only — safe to show on the public profile. */
   publicArea: string;
   cellNo: string;
   /** Shown to customers instead of a phone number they could call. */
@@ -28,6 +25,13 @@ export type SupplierListing = {
   businessTypes?: string[];
   services?: string[];
   products?: string[];
+  /** ISO date the profile was created. */
+  memberSince?: string | null;
+  /** Category-based default cover image (relative CDN path). */
+  coverUrl?: string;
+  /** Profile page only — never loaded for listings. */
+  websiteUrl?: string | null;
+  socialLinks?: string[];
 };
 
 

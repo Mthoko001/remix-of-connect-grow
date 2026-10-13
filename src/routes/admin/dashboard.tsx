@@ -20,6 +20,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { AdminProfileEditor } from "@/components/admin/admin-profile-editor";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { suggestBusinessDescription } from "@/lib/admin-description-ai.functions";
@@ -457,6 +458,17 @@ function AdminDashboardPage() {
                     </div>
                   </div>
                 )}
+
+                <AdminProfileEditor
+                  key={selected.supplier_account_id}
+                  supplierAccountId={selected.supplier_account_id}
+                  profile={selected.profile}
+                  onSaved={async () => {
+                    const fresh = await fetchSupplierReviewRows();
+                    setRows(fresh);
+                    setSelected(fresh.find((r) => r.supplier_account_id === selected.supplier_account_id) ?? null);
+                  }}
+                />
 
                 {selected.profile.status === "rejected" && selected.profile.rejection_reason && (
                   <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-3">

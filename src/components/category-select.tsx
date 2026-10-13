@@ -21,7 +21,7 @@ export function CategorySelect({
 
   return (
     <Select
-      value={value ? String(value) : undefined}
+      {...(value ? { value: String(value) } : {})}
       onValueChange={(v) => onChange(Number(v))}
       disabled={disabled ?? false}
     >

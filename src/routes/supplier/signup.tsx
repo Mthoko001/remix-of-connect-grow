@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signUpSupplierWithEmail } from "@/lib/supplier-auth";
 import { Logo } from "@/components/landing/logo";
-import { toast } from "sonner";
-import { Eye, EyeOff, ShieldCheck, Loader2 } from "lucide-react";
-import { isStrongPassword } from "@/lib/policies";
+import { Eye, EyeOff, ShieldCheck, Loader2, Check, X } from "lucide-react";
+import { firstPasswordError } from "@/lib/policies";
+import { PasswordRequirements } from "@/components/password-requirements";
+import { googleAuthErrorMessage, signInWithGoogle } from "@/lib/supplier-auth";
 
 export const Route = createFileRoute("/supplier/signup")({
   head: () => ({
@@ -30,7 +31,6 @@ export const Route = createFileRoute("/supplier/signup")({
 });
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MIN_PASSWORD_LENGTH = 8;
 
 function SupplierSignupPage() {
   const navigate = useNavigate();
@@ -46,16 +46,15 @@ function SupplierSignupPage() {
   }>({});
   const [submitting, setSubmitting] = useState(false);
   const [confirmEmail, setConfirmEmail] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const next: typeof errors = {};
     if (!EMAIL_RE.test(email)) next.email = "Enter a valid email address.";
-    if (password.length < MIN_PASSWORD_LENGTH)
-      next.password = `Password must be at least ${MIN_PASSWORD_LENGTH} characters.`;
-    else if (!isStrongPassword(password))
-      next.password = "Use upper and lower case letters and at least one number.";
-    if (confirmPassword !== password) next.confirmPassword = "Passwords don't match.";
+    const pwError = firstPasswordError(password);
+    if (pwError) next.password = pwError;
+    if (confirmPassword !== password) next.confirmPassword = "Passwords do not match.";
     setErrors(next);
     if (next.email || next.password || next.confirmPassword) return;
 
@@ -79,13 +78,18 @@ function SupplierSignupPage() {
     }
   }
 
-  // TODO: wire up Supabase Google OAuth here — replace this placeholder toast
-  // with supabase.auth.signInWithOAuth({ provider: "google", ... }) once the
-  // Google provider is configured on the backend.
-  function handleGoogleClick() {
-    toast("Google sign-up is coming soon.", {
-      description: "Email sign-up works today — continue below.",
-    });
+  // Real Google OAuth — uses the provider credentials configured in Lovable
+  // Cloud's auth settings; the redirect lands on the public /auth/callback
+  // route, which forwards to the supplier dashboard once signed in.
+  async function handleGoogleClick() {
+    setGoogleBusy(true);
+    try {
+      await signInWithGoogle("/supplier/dashboard");
+      // Browser navigates away to Google on success.
+    } catch (err) {
+      setErrors({ form: googleAuthErrorMessage(err) });
+      setGoogleBusy(false);
+    }
   }
 
   return (
@@ -138,10 +142,11 @@ function SupplierSignupPage() {
               <button
                 type="button"
                 onClick={handleGoogleClick}
-                className="mt-6 flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-muted/60 hover:shadow active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                disabled={googleBusy}
+                className="mt-6 flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-muted/60 hover:shadow active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-70"
               >
-                <GoogleGIcon />
-                Continue with Google
+                {googleBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleGIcon />}
+                {googleBusy ? "Redirecting to Google…" : "Continue with Google"}
               </button>
 
               {/* Divider */}
@@ -197,6 +202,7 @@ function SupplierSignupPage() {
                     </button>
                   </div>
                   {errors.password && <p className="text-sm text-destructive">{errors.password}</p>}
+                  <PasswordRequirements password={password} />
                 </div>
 
                 <div className="space-y-1.5">
@@ -213,6 +219,19 @@ function SupplierSignupPage() {
                     aria-invalid={!!errors.confirmPassword}
                     className="h-10"
                   />
+                  {confirmPassword && (
+                    <p
+                      aria-live="polite"
+                      className={`flex items-center gap-1.5 text-xs ${confirmPassword === password ? "text-verified" : "text-destructive"}`}
+                    >
+                      {confirmPassword === password ? (
+                        <Check className="h-3.5 w-3.5" />
+                      ) : (
+                        <X className="h-3.5 w-3.5" />
+                      )}
+                      {confirmPassword === password ? "Passwords match" : "Passwords do not match"}
+                    </p>
+                  )}
                   {errors.confirmPassword && (
                     <p className="text-sm text-destructive">{errors.confirmPassword}</p>
                   )}

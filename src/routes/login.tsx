@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Logo } from "@/components/landing/logo";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { googleAuthErrorMessage, signInWithGoogle } from "@/lib/supplier-auth";
 
 function safeNext(value: unknown): string | undefined {
   return typeof value === "string" && value.startsWith("/") && !value.startsWith("//")
@@ -54,14 +54,20 @@ function LoginPage() {
     form?: string;
   }>({});
   const [submitting, setSubmitting] = useState(false);
+  const [googleBusy, setGoogleBusy] = useState(false);
 
-  // TODO: wire up Supabase Google OAuth here — replace this placeholder toast
-  // with supabase.auth.signInWithOAuth({ provider: "google", ... }) once the
-  // Google provider is configured on the backend.
-  function handleGoogleClick() {
-    toast("Google sign-in is coming soon.", {
-      description: "Use your email and password below for now.",
-    });
+  // Real Google OAuth — uses the provider credentials configured in Lovable
+  // Cloud's auth settings; the redirect lands on the public /auth/callback
+  // route, which forwards to `next` (or the dashboard) once signed in.
+  async function handleGoogleClick() {
+    setGoogleBusy(true);
+    try {
+      await signInWithGoogle(redirectTo);
+      // Browser navigates away to Google on success.
+    } catch (err) {
+      setErrors({ form: googleAuthErrorMessage(err) });
+      setGoogleBusy(false);
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -123,10 +129,11 @@ function LoginPage() {
           <button
             type="button"
             onClick={handleGoogleClick}
-            className="mt-6 flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-muted/60 hover:shadow active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            disabled={googleBusy}
+            className="mt-6 flex w-full items-center justify-center gap-3 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-muted/60 hover:shadow active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-70"
           >
-            <GoogleGIcon />
-            Continue with Google
+            {googleBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleGIcon />}
+            {googleBusy ? "Redirecting to Google…" : "Continue with Google"}
           </button>
 
           <div className="my-5 flex items-center gap-3">

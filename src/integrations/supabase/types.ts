@@ -407,12 +407,14 @@ export type Database = {
           province: string | null
           rejection_reason: string | null
           service_categories: string[]
+          social_media_links: Json
           status: string
           street_address: string | null
           suburb: string | null
           supplier_account_id: string
           supplier_profile_id: number
           updated_by: string | null
+          website_url: string | null
         }
         Insert: {
           address?: string | null
@@ -438,12 +440,14 @@ export type Database = {
           province?: string | null
           rejection_reason?: string | null
           service_categories?: string[]
+          social_media_links?: Json
           status?: string
           street_address?: string | null
           suburb?: string | null
           supplier_account_id: string
           supplier_profile_id?: never
           updated_by?: string | null
+          website_url?: string | null
         }
         Update: {
           address?: string | null
@@ -469,12 +473,14 @@ export type Database = {
           province?: string | null
           rejection_reason?: string | null
           service_categories?: string[]
+          social_media_links?: Json
           status?: string
           street_address?: string | null
           suburb?: string | null
           supplier_account_id?: string
           supplier_profile_id?: never
           updated_by?: string | null
+          website_url?: string | null
         }
         Relationships: [
           {
@@ -504,20 +510,19 @@ export type Database = {
           city: string | null
           closing_time: string | null
           cover_image: string | null
+          date_created: string | null
           is_product_seller: boolean | null
           is_service_provider: boolean | null
           opening_time: string | null
           other_service: string | null
-          postal_code: string | null
           product_images: Json | null
           products_offered: string[] | null
           province: string | null
-          public_area: string | null
           service_categories: string[] | null
-          street_address: string | null
-          suburb: string | null
+          social_media_links: Json | null
           supplier_account_id: string | null
           supplier_profile_id: number | null
+          website_url: string | null
         }
         Relationships: [
           {

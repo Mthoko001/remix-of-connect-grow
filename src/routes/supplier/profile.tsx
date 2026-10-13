@@ -1,3 +1,4 @@
+import { OnlinePresenceFields } from "@/components/supplier/online-presence-fields";
 import { PROVINCES } from "@/lib/location";
 import { useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
@@ -400,6 +401,16 @@ function SupplierProfilePage() {
                 />
               </div>
             </div>
+          </Panel>
+
+          <Panel title="Online Presence">
+            <OnlinePresenceFields
+              idPrefix="supplier"
+              website={draft.website_url}
+              socials={draft.social_media_links}
+              onWebsiteChange={(v) => updateField("website_url", v)}
+              onSocialsChange={(v) => updateField("social_media_links", v)}
+            />
           </Panel>
 
           <BusinessTypeFields draft={draft} updateField={updateField} />
