@@ -67,7 +67,7 @@ export function Footer() {
               className="mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <Mail className="h-4 w-4 text-brand" aria-hidden="true" />
-              infor@growmeonline.co.za
+              info@growmeonline.co.za
             </a>
             <p className="mt-4 text-sm text-muted-foreground">Ready to reach more local customers?</p>
             <a
