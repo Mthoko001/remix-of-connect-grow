@@ -50,6 +50,7 @@ export type AdminSupplierRow = {
   supplier_account_id: string;
   email: string;
   business_name: string;
+  website_url: string | null;
   profile_status: SupplierProfileStatus;
   account_created_at: string;
   subscription: {
@@ -129,6 +130,7 @@ export async function fetchAdminSuppliers(): Promise<AdminSupplierRow[]> {
         supplier_account_id: row.supplier_account_id,
         email: row.email,
         business_name: profile.business_name,
+        website_url: profile.website_url,
         profile_status: profile.status,
         account_created_at: row.account_created_at,
         subscription: latestSubscriptionByAccount.get(row.supplier_account_id) ?? null,
