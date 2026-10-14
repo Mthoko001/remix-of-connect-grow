@@ -69,11 +69,11 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-foreground">Contact Us</h3>
             <a
-              href="mailto:support@growmeonline.co.za"
+              href="mailto:infor@growmeonline.co.za"
               className="mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <Mail className="h-4 w-4 text-brand" aria-hidden="true" />
-              support@growmeonline.co.za
+              infor@growmeonline.co.za
             </a>
             <p className="mt-4 text-sm text-muted-foreground">
               Ready to reach more local customers?
