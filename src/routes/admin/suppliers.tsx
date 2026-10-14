@@ -21,7 +21,15 @@ import { MonetizationBadge } from "@/components/supplier/lead-status";
 
 export const Route = createFileRoute("/admin/suppliers")({
   head: () => ({
-    meta: [{ title: "Live Suppliers — GrowMeOnline Admin" }, { name: "robots", content: "noindex" }],
+    meta: [
+      { title: "Live Suppliers — GrowMeOnline Admin" },
+      { name: "description", content: "Manage verified supplier profiles and subscriptions on GrowMeOnline." },
+      { property: "og:title", content: "Live Suppliers — GrowMeOnline Admin" },
+      { property: "og:description", content: "Manage verified supplier profiles and subscriptions on GrowMeOnline." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex" },
+    ],
   }),
   component: LiveSuppliersPage,
 });
@@ -176,6 +184,7 @@ function LiveSuppliersPage() {
                 <tr>
                   <th className="px-4 py-3">Business</th>
                   <th className="px-4 py-3">Supplier email</th>
+                  <th className="px-4 py-3">Website (Admin Only)</th>
                   <th className="px-4 py-3">Profile</th>
                   <th className="px-4 py-3">Subscription</th>
                   <th className="px-4 py-3">Qualified Leads</th>
@@ -189,6 +198,7 @@ function LiveSuppliersPage() {
                   <tr key={row.supplier_account_id} className="hover:bg-muted/30">
                     <td className="px-4 py-3 font-medium text-foreground">{row.business_name}</td>
                     <td className="px-4 py-3 text-muted-foreground">{row.email}</td>
+                    <td className="max-w-60 break-words px-4 py-3 text-muted-foreground">{row.website_url || "—"}</td>
                     <td className="px-4 py-3">
                       <ProfileStatusBadge status={row.profile_status} />
                     </td>

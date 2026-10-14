@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import type { SupplierListing } from "@/lib/supplier-listing";
 import { categoryCover } from "@/lib/category-cover";
-import { linksFromJson, normalizeUrl } from "@/lib/online-presence";
+import { publicSocialLinks } from "@/lib/online-presence";
 import { formatCityProvince } from "@/lib/location";
 
 const publicSupplierRowSchema = z.object({
@@ -23,7 +23,6 @@ const publicSupplierRowSchema = z.object({
   province: z.string().nullable().optional(),
   city: z.string().nullable().optional(),
   date_created: z.string().nullable().optional(),
-  website_url: z.string().nullable().optional(),
   social_media_links: z.unknown().optional(),
 });
 
@@ -179,7 +178,7 @@ export const fetchPublicSuppliers = createServerFn({ method: "GET" }).handler(as
     );
     const urls = await signMedia(profiles);
     const slugs = buildSlugs(profiles);
-    return profiles.map((p) => toSupplierListing(p, urls, slugs.get(p.supplier_profile_id)!));
+    return profiles.map((p) => toSupplierListing(p, urls, slugs.get(p.supplier_profile_id) ?? slugify(p.business_name)));
   } catch (error) {
     // Fail soft: show an empty directory rather than crash the page.
     console.error(error);
@@ -191,7 +190,7 @@ export const fetchPublicSupplierBySlug = createServerFn({ method: "GET" })
   .validator(z.string())
   .handler(async ({ data: slug }) => {
     const profiles = await fetchPublicSupplierRows(
-      "select=supplier_profile_id,supplier_account_id,business_name,business_description,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time,province,city,date_created,website_url,social_media_links",
+      "select=supplier_profile_id,supplier_account_id,business_name,business_description,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time,province,city,date_created,social_media_links",
     );
     const slugs = buildSlugs(profiles);
     // Legacy "live-<id>-name" links keep working.
@@ -201,10 +200,7 @@ export const fetchPublicSupplierBySlug = createServerFn({ method: "GET" })
     );
     if (!profile) return null;
     return {
-      ...toSupplierListing(profile, await signMedia([profile]), slugs.get(profile.supplier_profile_id)!),
-      websiteUrl: profile.website_url ? normalizeUrl(profile.website_url) : null,
-      socialLinks: linksFromJson(profile.social_media_links)
-        .map((l) => normalizeUrl(l))
-        .filter((l): l is string => Boolean(l)),
+      ...toSupplierListing(profile, await signMedia([profile]), slugs.get(profile.supplier_profile_id) ?? slugify(profile.business_name)),
+      socialLinks: publicSocialLinks(profile.social_media_links),
     };
   });

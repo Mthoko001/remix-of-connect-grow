@@ -38,13 +38,19 @@ export function detectPlatform(url: string): SocialPlatform {
   } catch {
     return "other";
   }
-  if (host.endsWith("facebook.com") || host === "fb.com") return "facebook";
-  if (host.endsWith("instagram.com")) return "instagram";
-  if (host.endsWith("linkedin.com")) return "linkedin";
-  if (host === "x.com" || host.endsWith("twitter.com")) return "x";
-  if (host.endsWith("youtube.com") || host === "youtu.be") return "youtube";
-  if (host.endsWith("tiktok.com")) return "tiktok";
+  const matches = (domain: string) => host === domain || host.endsWith(`.${domain}`);
+  if (matches("facebook.com") || host === "fb.com") return "facebook";
+  if (matches("instagram.com")) return "instagram";
+  if (matches("linkedin.com")) return "linkedin";
+  if (matches("x.com") || matches("twitter.com")) return "x";
+  if (matches("youtube.com") || host === "youtu.be") return "youtube";
+  if (matches("tiktok.com")) return "tiktok";
   return "other";
+}
+
+/** Public social links must never become a substitute for supplier website navigation. */
+export function publicSocialLinks(value: unknown): string[] {
+  return normalizeLinks(linksFromJson(value)).valid.filter((url) => detectPlatform(url) !== "other");
 }
 
 export const PLATFORM_LABEL: Record<SocialPlatform, string> = {

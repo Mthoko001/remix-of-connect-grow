@@ -195,9 +195,9 @@ function SupplierPublicProfilePage() {
               </Section>
             )}
 
-            {(supplier.websiteUrl || (supplier.socialLinks ?? []).length > 0) && (
-              <Section title="Online Presence" icon={Globe}>
-                <OnlinePresence website={supplier.websiteUrl} socials={supplier.socialLinks ?? []} />
+            {(supplier.socialLinks ?? []).length > 0 && (
+              <Section title="Social Links" icon={Globe}>
+                <OnlinePresence socials={supplier.socialLinks ?? []} />
               </Section>
             )}
 

@@ -148,6 +148,13 @@
       "when": 1791724554415,
       "tag": "0020_supplier_online_presence",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1791975511928,
+      "tag": "0021_hide_public_supplier_websites",
+      "breakpoints": true
     }
   ]
 }
