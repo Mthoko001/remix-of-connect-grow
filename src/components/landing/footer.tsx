@@ -29,8 +29,8 @@ export function Footer() {
               <Logo />
             </Link>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              GrowMeOnline connects customers with verified South African
-              suppliers, service providers, and product sellers.
+              GrowMeOnline connects customers with verified South African suppliers, service providers, and product
+              sellers.
             </p>
           </div>
 
@@ -39,10 +39,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2.5">
               {QUICK_LINKS.map((l) => (
                 <li key={l.label}>
-                  <a
-                    href={l.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
+                  <a href={l.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
                     {l.label}
                   </a>
                 </li>
@@ -55,10 +52,7 @@ export function Footer() {
             <ul className="mt-4 space-y-2.5">
               {LEGAL_LINKS.map((l) => (
                 <li key={l.label}>
-                  <a
-                    href={l.href}
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
+                  <a href={l.href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
                     {l.label}
                   </a>
                 </li>
@@ -69,15 +63,13 @@ export function Footer() {
           <div>
             <h3 className="text-sm font-semibold text-foreground">Contact Us</h3>
             <a
-              href="mailto:infor@growmeonline.co.za"
+              href="mailto:info@growmeonline.co.za"
               className="mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <Mail className="h-4 w-4 text-brand" aria-hidden="true" />
               infor@growmeonline.co.za
             </a>
-            <p className="mt-4 text-sm text-muted-foreground">
-              Ready to reach more local customers?
-            </p>
+            <p className="mt-4 text-sm text-muted-foreground">Ready to reach more local customers?</p>
             <a
               href="/supplier/signup"
               className="mt-3 inline-flex items-center justify-center rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30"
