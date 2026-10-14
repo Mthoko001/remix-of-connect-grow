@@ -6,11 +6,9 @@ import { normalizeUrl } from "@/lib/online-presence";
 
 type Props = {
   idPrefix: string;
-  website: string;
   socials: string[];
-  onWebsiteChange: (v: string) => void;
   onSocialsChange: (v: string[]) => void;
-};
+} & ({ website: string; onWebsiteChange: (v: string) => void } | { website?: never; onWebsiteChange?: never });
 
 function invalid(v: string) {
   return v.trim() !== "" && !normalizeUrl(v);
@@ -20,7 +18,7 @@ function invalid(v: string) {
 export function OnlinePresenceFields({ idPrefix, website, socials, onWebsiteChange, onSocialsChange }: Props) {
   return (
     <div className="space-y-4">
-      <div className="space-y-1.5">
+      {website !== undefined && onWebsiteChange && <div className="space-y-1.5">
         <Label htmlFor={`${idPrefix}_website`}>Website (optional)</Label>
         <Input
           id={`${idPrefix}_website`}
@@ -32,7 +30,7 @@ export function OnlinePresenceFields({ idPrefix, website, socials, onWebsiteChan
           aria-invalid={invalid(website)}
         />
         {invalid(website) && <p className="text-xs text-destructive">Enter a valid website address.</p>}
-      </div>
+      </div>}
       <div className="space-y-2">
         <Label>Social Media Links (optional)</Label>
         {socials.map((link, i) => (

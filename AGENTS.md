@@ -14,3 +14,4 @@
 - Public supplier product galleries use the shared full-screen lightbox and contained image scaling. Why: uploaded work samples must remain uncropped and browsable in place.
 - Subscriptions become 'paid' only in the signature-verified Yoco webhook (src/routes/api/public/yoco-webhook.ts); suppliers cannot insert subscription rows. Why: payment status must never rely on frontend logic.
 - Customer enquiries are saved through the createEnquiry server function, which then forwards them to Chatwoot best-effort. Why: Chatwoot credentials stay server-side and a Chatwoot outage never loses an enquiry.
+- Public supplier DTOs omit website fields and allow only recognized social-network URLs; supplier autosaves omit website writes while admin editors retain them. Why: administrative website data must not leak through public profiles or be overwritten by hidden supplier inputs.

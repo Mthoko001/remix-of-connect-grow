@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { detectPlatform, normalizeLinks, normalizeUrl } from "../online-presence";
+import { detectPlatform, normalizeLinks, normalizeUrl, publicSocialLinks } from "../online-presence";
 
 describe("online presence links", () => {
   it("adds https:// when omitted", () => {
@@ -15,5 +15,13 @@ describe("online presence links", () => {
   it("detects the platform for icons", () => {
     expect(detectPlatform("https://x.com/biz")).toBe("x");
     expect(detectPlatform("https://www.tiktok.com/@biz")).toBe("tiktok");
+  });
+  it("never exposes supplier websites through public social links", () => {
+    expect(publicSocialLinks(["https://supplier.co.za", "https://facebook.com/supplier", "https://instagram.com/supplier"])).toEqual([
+      "https://facebook.com/supplier", "https://instagram.com/supplier",
+    ]);
+  });
+  it("does not treat lookalike website domains as social networks", () => {
+    expect(publicSocialLinks(["https://supplierfacebook.com", "https://fakeinstagram.com", "https://linkedin.com.supplier.co.za"])).toEqual([]);
   });
 });

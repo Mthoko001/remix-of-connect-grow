@@ -403,12 +403,10 @@ function SupplierProfilePage() {
             </div>
           </Panel>
 
-          <Panel title="Online Presence">
+          <Panel title="Social Links">
             <OnlinePresenceFields
               idPrefix="supplier"
-              website={draft.website_url}
               socials={draft.social_media_links}
-              onWebsiteChange={(v) => updateField("website_url", v)}
               onSocialsChange={(v) => updateField("social_media_links", v)}
             />
           </Panel>
