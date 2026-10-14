@@ -1,8 +1,8 @@
 # Roadmap
 
-- [ ] Change footer contact email to infor@growmeonline.co.za
+- [x] Change footer contact email to infor@growmeonline.co.za
 
-- [ ] Remove customer/supplier website visibility; preserve data and admin management access; verify public profiles and enquiries
+- [x] Remove customer/supplier website visibility; preserve data and admin management access; verify public profiles and enquiries
 
 - [x] Yoco payments: checkout, webhook, success/failed pages, package selection, dashboard plan + history, admin subscriptions + revenue KPIs, payment emails
 - [ ] Go live with Yoco — blocked: user needs a Yoco account (secret key + webhook registration)
