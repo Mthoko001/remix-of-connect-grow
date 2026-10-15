@@ -15,7 +15,7 @@ const NAV_LINKS: NavLink[] = [
   { label: "How It Works", href: "/#how-it-works" },
   { label: "Pricing", to: "/pricing" },
   { label: "About Us", href: "/#about" },
-  { label: "Contact Us", href: "/#contact" },
+  { label: "Contact Us", href: "/#contact-form" },
 ];
 
 export function Navbar() {
