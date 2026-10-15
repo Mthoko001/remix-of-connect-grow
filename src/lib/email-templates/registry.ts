@@ -26,6 +26,7 @@ import { template as enquiryReceived } from './enquiry-received'
 import { template as enquiryPendingReview } from './enquiry-pending-review'
 import { template as leadQualified } from './lead-qualified'
 import { template as enquiryRejected } from './enquiry-rejected'
+import { template as contactMessage } from './contact-message'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'profile-submitted': profileSubmitted,
@@ -37,6 +38,7 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'enquiry-pending-review': enquiryPendingReview,
   'lead-qualified': leadQualified,
   'enquiry-rejected': enquiryRejected,
+  'contact-message': contactMessage,
   // Add templates here as they are created, e.g.:
   // 'welcome': welcomeTemplate,
 }

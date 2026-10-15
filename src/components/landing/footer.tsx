@@ -9,7 +9,7 @@ const QUICK_LINKS = [
   { label: "Browse Suppliers", href: "/suppliers" },
   { label: "Pricing", href: "/pricing" },
   { label: "List My Business", href: "/supplier/signup" },
-  { label: "Contact Us", href: "/#contact" },
+  { label: "Contact Us", href: "/#contact-form" },
 ] as const;
 
 const LEGAL_LINKS = [

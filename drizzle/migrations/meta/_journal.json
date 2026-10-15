@@ -155,6 +155,13 @@
       "when": 1791975511928,
       "tag": "0021_hide_public_supplier_websites",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1792053648169,
+      "tag": "0022_create_contact_messages",
+      "breakpoints": true
     }
   ]
 }
