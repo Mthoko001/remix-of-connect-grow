@@ -68,6 +68,8 @@
   --color-logo-surface: var(--logo-surface);
   --color-gallery: var(--gallery);
   --color-gallery-foreground: var(--gallery-foreground);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-foreground: var(--whatsapp-foreground);
 }
 
 :root {
@@ -78,6 +80,9 @@
   --brand-glow: oklch(0.76 0.163 124);
   --verified: oklch(0.62 0.15 155);
   --logo-surface: oklch(1 0 0);
+  /* WhatsApp brand green for the click-to-chat bubble. */
+  --whatsapp: oklch(0.78 0.19 152);
+  --whatsapp-foreground: oklch(1 0 0);
   --gallery: oklch(0.12 0.02 260);
   --gallery-foreground: oklch(0.98 0.005 250);
   --background: oklch(1 0 0);
