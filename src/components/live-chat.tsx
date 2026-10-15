@@ -11,11 +11,14 @@ type ChatwootWindow = Window & {
   $chatwoot?: { toggle: (s?: "open" | "close") => void };
 };
 
-/** Opens the live chat if loaded, otherwise falls back to email. */
+// WhatsApp click-to-chat link (same number as the WhatsAppChat bubble).
+const WHATSAPP_CHAT_URL = `https://wa.me/27818680007?text=${encodeURIComponent("Hi GrowMeOnline, I have a question.")}`;
+
+/** Opens the live chat if loaded, otherwise falls back to WhatsApp. */
 export function openLiveChat() {
   const w = window as ChatwootWindow;
   if (w.$chatwoot) w.$chatwoot.toggle("open");
-  else window.location.href = "mailto:info@growmeonline.co.za";
+  else window.open(WHATSAPP_CHAT_URL, "_blank", "noopener,noreferrer");
 }
 
 /** Loads the Chatwoot live-chat bubble on public pages (client only). */

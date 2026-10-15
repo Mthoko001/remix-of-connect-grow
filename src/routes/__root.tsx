@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { LiveChat } from "@/components/live-chat";
+import { WhatsAppChat } from "@/components/whatsapp-chat";
 
 function NotFoundComponent() {
   return (
@@ -132,6 +133,7 @@ function RootComponent() {
       <Outlet />
       <Toaster position="top-center" richColors />
       <LiveChat />
+      <WhatsAppChat />
     </QueryClientProvider>
   );
 }
