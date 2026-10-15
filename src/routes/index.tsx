@@ -8,6 +8,7 @@ import { CategoriesSection } from "@/components/landing/categories-section";
 import { PricingCta } from "@/components/landing/pricing-cta";
 import { About } from "@/components/landing/about";
 import { Footer } from "@/components/landing/footer";
+import { ContactSection } from "@/components/landing/contact-section";
 import { fetchPublicSuppliers } from "@/lib/public-suppliers.functions";
 
 const META_DESCRIPTION =
@@ -42,6 +43,7 @@ function LandingPage() {
         <PricingCta />
         <About verifiedCount={liveSuppliers.length} />
       </main>
+      <ContactSection />
       <Footer />
     </div>
   );
