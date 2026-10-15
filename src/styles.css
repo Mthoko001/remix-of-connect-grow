@@ -125,6 +125,8 @@
   --brand-glow: oklch(0.8 0.17 125);
   --verified: oklch(0.7 0.15 155);
   --logo-surface: oklch(1 0 0);
+  --whatsapp: oklch(0.78 0.19 152);
+  --whatsapp-foreground: oklch(1 0 0);
   --gallery: oklch(0.1 0.02 260);
   --gallery-foreground: oklch(0.98 0.005 250);
   --background: oklch(0.129 0.042 264.695);
