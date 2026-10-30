@@ -27,6 +27,7 @@ export function SupplierCard({ supplier }: { supplier: SupplierListing }) {
       <div className="flex items-center justify-between">
         <CompanyLogo
           src={supplier.logoUrl}
+          fallbackPhoto={supplier.coverUrl}
           name={supplier.name}
           initials={supplier.initials}
           fallbackClassName={`bg-gradient-to-br ${supplier.gradient}`}
