@@ -102,7 +102,12 @@ function toSupplierListing(
   return {
     slug,
     memberSince: profile.date_created ?? null,
-    coverUrl: categoryCover(profile.category_name),
+    coverUrl: categoryCover(
+      profile.category_name,
+      ...(profile.service_categories ?? []),
+      profile.other_service,
+      ...(profile.products_offered ?? []),
+    ),
     supplierAccountId: profile.supplier_account_id,
     name,
     initials: initials(name),

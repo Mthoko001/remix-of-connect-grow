@@ -5,6 +5,8 @@ type CompanyLogoProps = {
   name: string;
   initials?: string | undefined;
   fallbackClassName?: string | undefined;
+  /** Industry photo shown when no logo is uploaded (cover-fit). */
+  fallbackPhoto?: string | null | undefined;
 };
 
 /** Consistent, uncropped company-logo presentation across the app. */
@@ -13,6 +15,7 @@ export function CompanyLogo({
   name,
   initials,
   fallbackClassName,
+  fallbackPhoto,
 }: CompanyLogoProps) {
   return (
     <span
@@ -24,6 +27,13 @@ export function CompanyLogo({
           alt={`${name} logo`}
           loading="lazy"
           className="h-full w-full object-contain p-1"
+        />
+      ) : fallbackPhoto ? (
+        <img
+          src={fallbackPhoto}
+          alt={`${name} industry photo`}
+          loading="lazy"
+          className="h-full w-full object-cover"
         />
       ) : (
         <span
