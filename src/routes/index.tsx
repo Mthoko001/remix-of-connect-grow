@@ -40,6 +40,7 @@ function LandingPage() {
         <WhyGrowMe />
         <HowItWorks />
         <FeaturedListings liveSuppliers={liveSuppliers} />
+        <AudienceCta verifiedCount={liveSuppliers.length} />
         <CategoriesSection />
         <PricingCta />
         <About verifiedCount={liveSuppliers.length} />
