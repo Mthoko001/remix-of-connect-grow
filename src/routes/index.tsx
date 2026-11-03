@@ -4,6 +4,7 @@ import { Hero } from "@/components/landing/hero";
 import { WhyGrowMe } from "@/components/landing/why-growme";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { FeaturedListings } from "@/components/landing/featured-listings";
+import { AudienceCta } from "@/components/landing/audience-cta";
 import { CategoriesSection } from "@/components/landing/categories-section";
 import { PricingCta } from "@/components/landing/pricing-cta";
 import { About } from "@/components/landing/about";
@@ -39,6 +40,7 @@ function LandingPage() {
         <WhyGrowMe />
         <HowItWorks />
         <FeaturedListings liveSuppliers={liveSuppliers} />
+        <AudienceCta verifiedCount={liveSuppliers.length} />
         <CategoriesSection />
         <PricingCta />
         <About verifiedCount={liveSuppliers.length} />
