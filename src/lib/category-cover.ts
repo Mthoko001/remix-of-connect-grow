@@ -13,6 +13,7 @@ import plumbing from "@/assets/covers/cover-plumbing.jpg.asset.json";
 import salon from "@/assets/covers/cover-salon.jpg.asset.json";
 import restaurant from "@/assets/covers/cover-restaurant.jpg.asset.json";
 import catering from "@/assets/covers/cover-catering.jpg.asset.json";
+import transport from "@/assets/covers/cover-transport.jpg.asset.json";
 import auto from "@/assets/covers/cover-auto.jpg.asset.json";
 import gardening from "@/assets/covers/cover-gardening.jpg.asset.json";
 import realestate from "@/assets/covers/cover-realestate.jpg.asset.json";
@@ -28,6 +29,7 @@ const RULES: [RegExp, string][] = [
   [/hair|salon|barber|beauty|nail/i, salon.url],
   [/cater/i, catering.url],
   [/restaurant|food|cafe|bakery|chef|takeaway/i, restaurant.url],
+  [/shuttle|transport|transfer|airport|taxi|chauffeur|logistic|courier|travel|tour|bus\b|coach|mobility|passenger/i, transport.url],
   [/auto|mechanic|motor|vehicle|panel ?beat|tyre/i, auto.url],
   [/garden|landscap|lawn/i, gardening.url],
   [/real ?estate|property|letting/i, realestate.url],
