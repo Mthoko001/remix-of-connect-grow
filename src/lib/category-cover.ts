@@ -22,6 +22,9 @@ import business from "@/assets/covers/cover-business.jpg.asset.json";
 
 export const SITE_URL = "https://growmeonline.co.za";
 
+/** Passenger transport beats the broad "Vehicle Services" → mechanic match. */
+const TRANSPORT = /shuttle|transport|transfer|airport|taxi|chauffeur|travel|tour|\bbus\b|coach|mobility|passenger/i;
+
 /** Keyword → cover, first match wins. */
 const RULES: [RegExp, string][] = [
   // Specific industries first
@@ -29,7 +32,6 @@ const RULES: [RegExp, string][] = [
   [/hair|salon|barber|beauty|nail/i, salon.url],
   [/cater/i, catering.url],
   [/restaurant|food|cafe|bakery|chef|takeaway/i, restaurant.url],
-  [/shuttle|transport|transfer|airport|taxi|chauffeur|logistic|courier|travel|tour|bus\b|coach|mobility|passenger/i, transport.url],
   [/auto|mechanic|motor|vehicle|panel ?beat|tyre/i, auto.url],
   [/garden|landscap|lawn/i, gardening.url],
   [/real ?estate|property|letting/i, realestate.url],
@@ -50,7 +52,9 @@ const RULES: [RegExp, string][] = [
 
 /** Default category-based cover (relative CDN path). */
 export function categoryCover(category?: string | null, ...extra: (string | null | undefined)[]): string {
-  for (const c of [category, ...extra]) {
+  const all = [category, ...extra];
+  if (all.some((c) => c && TRANSPORT.test(c))) return transport.url;
+  for (const c of all) {
     const hit = c ? RULES.find(([re]) => re.test(c))?.[1] : undefined;
     if (hit) return hit;
   }

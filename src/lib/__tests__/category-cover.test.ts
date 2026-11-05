@@ -15,3 +15,9 @@ describe("categoryCover industry matches", () => {
   it("uses service categories when main category is generic", () =>
     expect(categoryCover("Other", "Gardening")).toMatch(/gardening/));
 });
+
+describe("transport cover", () => {
+  it("shuttle under Vehicle Services gets transport, not mechanic", () =>
+    expect(categoryCover("Vehicle Services", "Shuttle Services", "Airport Transfers")).toMatch(/transport/));
+  it("plain Vehicle Services stays mechanic", () => expect(categoryCover("Vehicle Services")).toMatch(/auto/));
+});
