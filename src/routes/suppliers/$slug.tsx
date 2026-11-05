@@ -136,13 +136,13 @@ function SupplierPublicProfilePage() {
       <main className="mx-auto max-w-5xl px-4 py-6 sm:px-6 lg:py-10">
         {/* Hero */}
         <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <div className="relative h-40 sm:h-56 lg:h-64">
+          <div className="relative h-[180px] sm:h-[260px] lg:h-[320px]">
             <img
               src={supplier.coverUrl ?? categoryCover(supplier.category)}
               alt={`${supplier.category} cover`}
               width={1600}
               height={640}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover object-center"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/10 to-transparent" />
           </div>
