@@ -30,7 +30,6 @@ export type SupplierListing = {
   /** Category-based default cover image (relative CDN path). */
   coverUrl?: string;
   /** Profile page only — never loaded for listings. */
-  websiteUrl?: string | null;
   socialLinks?: string[];
 };
 

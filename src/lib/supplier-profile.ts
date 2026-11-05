@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { linksFromJson, normalizeLinks, normalizeUrl } from "@/lib/online-presence";
+import { linksFromJson, normalizeLinks } from "@/lib/online-presence";
 import type { Tables } from "@/integrations/supabase/types";
 
 export const SUPPLIER_MEDIA_BUCKET = "supplier-media";
@@ -106,7 +106,6 @@ export function missingFields(draft: SupplierProfileDraft): string[] {
   if (draft.is_product_seller && draft.products_offered.length === 0)
     missing.push("At least one product offered");
   if (!draft.opening_time || !draft.closing_time) missing.push("Business hours");
-  if (draft.website_url.trim() && !normalizeUrl(draft.website_url)) missing.push("A valid website address");
   if (normalizeLinks(draft.social_media_links).invalid.length > 0) missing.push("Valid social media links");
   return missing;
 }
@@ -210,7 +209,6 @@ export async function saveProfileDraft(draft: SupplierProfileDraft): Promise<Sup
         closing_time: draft.closing_time || "17:00",
         category_id: draft.category_id,
         // Invalid links are never stored; the form flags them inline.
-        website_url: normalizeUrl(draft.website_url),
         social_media_links: normalizeLinks(draft.social_media_links).valid,
         // Picking a category resolves any "Category Review Required" flag.
         ...(draft.category_id ? { category_review_required: false } : {}),

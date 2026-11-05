@@ -441,6 +441,10 @@ function AdminDashboardPage() {
                     }
                   />
                   <ReviewField
+                    label="Website (Admin Only)"
+                    value={selected.profile.website_url || "—"}
+                  />
+                  <ReviewField
                     label="Products Offered"
                     value={selected.profile.products_offered?.join(", ") || "—"}
                   />

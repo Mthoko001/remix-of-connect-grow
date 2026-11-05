@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.17"
   }
   public: {
     Tables: {
@@ -78,6 +78,36 @@ export type Database = {
             referencedColumns: ["category_id"]
           },
         ]
+      }
+      tb_contact_message: {
+        Row: {
+          contact_message_id: number
+          date_created: string
+          email: string
+          full_name: string
+          message: string
+          phone: string | null
+          subject: string
+        }
+        Insert: {
+          contact_message_id?: never
+          date_created?: string
+          email: string
+          full_name: string
+          message: string
+          phone?: string | null
+          subject: string
+        }
+        Update: {
+          contact_message_id?: never
+          date_created?: string
+          email?: string
+          full_name?: string
+          message?: string
+          phone?: string | null
+          subject?: string
+        }
+        Relationships: []
       }
       tb_enquiry: {
         Row: {

@@ -1,5 +1,5 @@
-import { Facebook, Globe, Instagram, Link2, Linkedin, Youtube } from "lucide-react";
-import { detectPlatform, PLATFORM_LABEL, type SocialPlatform } from "@/lib/online-presence";
+import { Facebook, Instagram, Link2, Linkedin, Youtube } from "lucide-react";
+import { detectPlatform, PLATFORM_LABEL, publicSocialLinks, type SocialPlatform } from "@/lib/online-presence";
 
 function XIcon({ className }: { className?: string }) {
   return (
@@ -27,24 +27,16 @@ const ICONS: Record<SocialPlatform, React.ComponentType<{ className?: string }>>
   other: Link2,
 };
 
-/** Public profile "Online Presence" body: website button + icons for existing social links. */
-export function OnlinePresence({ website, socials }: { website?: string | null; socials: string[] }) {
+/** Public profiles expose supported social networks only, never supplier websites. */
+export function OnlinePresence({ socials }: { socials: string[] }) {
+  const links = publicSocialLinks(socials);
+  if (links.length === 0) return null;
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      {website && (
-        <a
-          href={website}
-          target="_blank"
-          rel="noopener noreferrer nofollow"
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:brightness-110"
-        >
-          <Globe className="h-4 w-4" /> Visit Website
-        </a>
-      )}
-      {socials.length > 0 && (
+      {links.length > 0 && (
         <div className="flex flex-wrap items-center gap-2">
           <span className="mr-1 text-sm font-medium text-muted-foreground">Follow Us:</span>
-          {socials.map((url) => {
+          {links.map((url) => {
             const p = detectPlatform(url);
             const Icon = ICONS[p];
             return (

@@ -150,6 +150,7 @@ function SupplierPublicProfilePage() {
             <div className="relative z-10 -mt-12 w-fit rounded-xl border-4 border-card bg-card shadow">
               <CompanyLogo
                 src={supplier.logoUrl}
+                fallbackPhoto={supplier.coverUrl}
                 name={supplier.name}
                 initials={supplier.initials}
                 fallbackClassName={`bg-gradient-to-br ${supplier.gradient}`}
@@ -195,9 +196,9 @@ function SupplierPublicProfilePage() {
               </Section>
             )}
 
-            {(supplier.websiteUrl || (supplier.socialLinks ?? []).length > 0) && (
-              <Section title="Online Presence" icon={Globe}>
-                <OnlinePresence website={supplier.websiteUrl} socials={supplier.socialLinks ?? []} />
+            {(supplier.socialLinks ?? []).length > 0 && (
+              <Section title="Social Links" icon={Globe}>
+                <OnlinePresence socials={supplier.socialLinks ?? []} />
               </Section>
             )}
 

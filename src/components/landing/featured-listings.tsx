@@ -81,6 +81,7 @@ export function FeaturedListings({ liveSuppliers = [] }: { liveSuppliers?: Suppl
               <div className="flex items-center justify-between">
                 <CompanyLogo
                   src={s.logoUrl}
+                  fallbackPhoto={s.coverUrl}
                   name={s.name}
                   initials={s.initials}
                   fallbackClassName={`bg-gradient-to-br ${s.gradient}`}
