@@ -23,7 +23,7 @@ import business from "@/assets/covers/cover-business.jpg.asset.json";
 export const SITE_URL = "https://growmeonline.co.za";
 
 /** Passenger transport beats the broad "Vehicle Services" → mechanic match. */
-const TRANSPORT = /shuttle|transport|transfer|airport|taxi|chauffeur|travel|tour|\bbus\b|coach|mobility|passenger/i;
+export const TRANSPORT = /shuttle|transport|transfer|airport|taxi|chauffeur|travel|tour|\bbus\b|coach|mobility|passenger/i;
 
 /** Keyword → cover, first match wins. */
 const RULES: [RegExp, string][] = [

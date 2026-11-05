@@ -15,6 +15,14 @@ import {
   ShieldCheck,
   Star,
   Wrench,
+  Bus,
+  Plane,
+  Users,
+  Route as RouteIcon,
+  BriefcaseBusiness,
+  Hotel,
+  CarFront,
+  type LucideIcon,
 } from "lucide-react";
 import { FormattedText } from "@/components/customer/formatted-text";
 import { OnlinePresence } from "@/components/customer/online-presence";
@@ -26,7 +34,7 @@ import { ImageGalleryLightbox } from "@/components/customer/image-gallery-lightb
 import { CompanyLogo } from "@/components/company-logo";
 import { Button } from "@/components/ui/button";
 import { ShareBusiness } from "@/components/customer/share-business";
-import { absoluteUrl, categoryCover, SITE_URL } from "@/lib/category-cover";
+import { absoluteUrl, categoryCover, SITE_URL, TRANSPORT } from "@/lib/category-cover";
 import { fetchPublicSupplierBySlug } from "@/lib/public-suppliers.functions";
 
 export const Route = createFileRoute("/suppliers/$slug")({
@@ -96,6 +104,17 @@ function Section({
   );
 }
 
+/** Transport-themed icon per service name (display only). */
+function transportIcon(service: string): LucideIcon {
+  if (/airport|flight/i.test(service)) return Plane;
+  if (/corporate|business|staff/i.test(service)) return BriefcaseBusiness;
+  if (/group|event|school|passenger/i.test(service)) return Users;
+  if (/long distance|point to point/i.test(service)) return RouteIcon;
+  if (/hotel/i.test(service)) return Hotel;
+  if (/private|chauffeur|executive/i.test(service)) return CarFront;
+  return Bus;
+}
+
 function SupplierPublicProfilePage() {
   const supplier = Route.useLoaderData();
   const [enquiryOpen, setEnquiryOpen] = useState(false);
@@ -104,6 +123,9 @@ function SupplierPublicProfilePage() {
   const services = supplier.services ?? [];
   const products = supplier.products ?? [];
   const businessTypes = supplier.businessTypes ?? [];
+  // Display-only: shuttle suppliers filed under "Vehicle Services" read as transport, not repairs.
+  const isTransport = [supplier.category, ...services].some((v) => v && TRANSPORT.test(v));
+  const industry = isTransport ? "Shuttle & Transport Services" : supplier.category;
 
   const profileUrl = `${SITE_URL}/suppliers/${supplier.slug}`;
   const memberSince = supplier.memberSince
@@ -116,7 +138,7 @@ function SupplierPublicProfilePage() {
 
   // Only non-contact fields. Never phone, email or website; never the street address.
   const info = [
-    { label: "Industry", value: supplier.category, icon: Building2 },
+    { label: "Industry", value: industry, icon: Building2 },
     { label: "Business Type", value: businessTypes.join(" & "), icon: Briefcase },
     { label: "Location", value: supplier.location, icon: MapPin },
     { label: "Operating Hours", value: supplier.businessHours, icon: Clock },
@@ -139,7 +161,7 @@ function SupplierPublicProfilePage() {
           <div className="relative h-[180px] sm:h-[260px] lg:h-[320px]">
             <img
               src={supplier.coverUrl ?? categoryCover(supplier.category)}
-              alt={`${supplier.category} cover`}
+              alt={`${industry} cover`}
               width={1600}
               height={640}
               className="h-full w-full object-cover object-center"
@@ -170,7 +192,7 @@ function SupplierPublicProfilePage() {
                   )}
                 </div>
                 <p className="break-words text-sm font-medium text-foreground/80">
-                  {[supplier.category, ...businessTypes].join(" · ")}
+                  {[industry, ...businessTypes].join(" · ")}
                 </p>
                 <p className="flex items-start gap-1 break-words text-sm text-muted-foreground">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0" />
@@ -221,21 +243,24 @@ function SupplierPublicProfilePage() {
             )}
 
             {services.length > 0 && (
-              <Section title="Services" icon={Wrench}>
+              <Section title="Services" icon={isTransport ? Bus : Wrench}>
                 <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  {services.map((s) => (
+                  {services.map((s) => {
+                    const Icon = isTransport ? transportIcon(s) : CheckCircle2;
+                    return (
                     <li key={s} className="flex items-center gap-2 text-sm text-foreground">
-                      <CheckCircle2 className="h-4 w-4 shrink-0 text-verified" />
+                      <Icon className="h-4 w-4 shrink-0 text-verified" />
                       {s}
                     </li>
-                  ))}
+                    );
+                  })}
                 </ul>
               </Section>
             )}
 
             {productImages.length > 0 && (
               <Section title="Gallery" icon={Images}>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {productImages.map((src, index) => (
                     <Button
                       key={src}
@@ -243,13 +268,13 @@ function SupplierPublicProfilePage() {
                       variant="outline"
                       onClick={() => setSelectedImageIndex(index)}
                       aria-label={`Open ${supplier.name} image ${index + 1}`}
-                      className="group aspect-[4/3] h-auto w-full overflow-hidden rounded-lg bg-muted/20 p-2 shadow-none"
+                      className="group aspect-[4/3] h-auto w-full overflow-hidden rounded-xl border-border bg-muted p-0 shadow-sm transition-shadow hover:shadow-md"
                     >
                       <img
                         src={src}
                         alt={`${supplier.name} work sample ${index + 1}`}
                         loading="lazy"
-                        className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+                        className="h-full w-full object-cover object-center transition-transform duration-300 ease-out group-hover:scale-[1.03]"
                       />
                     </Button>
                   ))}
