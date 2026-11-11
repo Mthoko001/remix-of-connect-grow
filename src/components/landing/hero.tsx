@@ -11,7 +11,7 @@ export function Hero(_props: { liveSuppliers?: SupplierListing[] }) {
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-brand/5 via-background to-background" />
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-12 lg:py-16 lg:px-8 [&>*]:min-w-0">
         <div className="max-w-xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-[3.4rem]">
+          <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-[3rem]">
             Find <span className="text-brand">Trusted Suppliers</span>. Get{" "}
             <span className="text-brand">More Customers</span>. Grow Online.
           </h1>
