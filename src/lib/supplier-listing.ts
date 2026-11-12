@@ -1,3 +1,5 @@
+import type { SupplierFaq } from "@/lib/supplier-faq";
+
 /** Public supplier listing shape, built from validated database records only. */
 export type SupplierListing = {
   slug: string;
@@ -31,6 +33,8 @@ export type SupplierListing = {
   coverUrl?: string;
   /** Profile page only — never loaded for listings. */
   socialLinks?: string[];
+  /** Profile page only — questions and answers shown below the profile. */
+  faqs?: SupplierFaq[];
 };
 
 

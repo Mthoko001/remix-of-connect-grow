@@ -67,6 +67,14 @@
        <priority>0.6400</priority>
   </url>
   <url>
+       <loc>https://growmeonline.co.za/suppliers/khalanga-shuttle-services</loc>
+       <priority>0.8000</priority>
+  </url>
+  <url>
+       <loc>https://growmeonline.co.za/suppliers/oura-fragrances</loc>
+       <priority>0.8000</priority>
+  </url>
+  <url>
        <loc>https://growmeonline.co.za/forgot-password</loc>
        <priority>0.6400</priority>
   </url>

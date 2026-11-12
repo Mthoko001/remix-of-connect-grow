@@ -426,6 +426,7 @@ export type Database = {
           cover_image: string | null
           date_created: string
           date_updated: string
+          faq: Json
           is_product_seller: boolean
           is_service_provider: boolean
           notes: string | null
@@ -459,6 +460,7 @@ export type Database = {
           cover_image?: string | null
           date_created?: string
           date_updated?: string
+          faq?: Json
           is_product_seller?: boolean
           is_service_provider?: boolean
           notes?: string | null
@@ -492,6 +494,7 @@ export type Database = {
           cover_image?: string | null
           date_created?: string
           date_updated?: string
+          faq?: Json
           is_product_seller?: boolean
           is_service_provider?: boolean
           notes?: string | null
@@ -541,6 +544,7 @@ export type Database = {
           closing_time: string | null
           cover_image: string | null
           date_created: string | null
+          faq: Json | null
           is_product_seller: boolean | null
           is_service_provider: boolean | null
           opening_time: string | null

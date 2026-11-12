@@ -162,6 +162,13 @@
       "when": 1792053648169,
       "tag": "0022_create_contact_messages",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1794474761098,
+      "tag": "0023_supplier_profile_faq_and_oura_seo_content",
+      "breakpoints": true
     }
   ]
 }

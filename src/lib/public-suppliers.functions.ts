@@ -4,6 +4,7 @@ import type { SupplierListing } from "@/lib/supplier-listing";
 import { categoryCover } from "@/lib/category-cover";
 import { publicSocialLinks } from "@/lib/online-presence";
 import { formatCityProvince } from "@/lib/location";
+import { parseFaqs } from "@/lib/supplier-faq";
 
 const publicSupplierRowSchema = z.object({
   supplier_profile_id: z.number(),
@@ -25,6 +26,7 @@ const publicSupplierRowSchema = z.object({
   date_created: z.string().nullable().optional(),
   cover_image: z.string().nullable().optional(),
   social_media_links: z.unknown().optional(),
+  faq: z.unknown().optional(),
 });
 
 type PublicSupplierRow = z.infer<typeof publicSupplierRowSchema>;
@@ -146,6 +148,7 @@ function toSupplierListing(
           .filter(Boolean)
       : [],
     products: profile.is_product_seller ? (profile.products_offered ?? []) : [],
+    faqs: parseFaqs(profile.faq),
   };
 }
 
@@ -181,7 +184,7 @@ async function fetchPublicSupplierRows(query: string): Promise<PublicSupplierRow
 export const fetchPublicSuppliers = createServerFn({ method: "GET" }).handler(async () => {
   try {
     const profiles = await fetchPublicSupplierRows(
-      "select=supplier_profile_id,supplier_account_id,business_name,business_description,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time,province,city,date_created,cover_image&order=business_name.asc",
+      "select=supplier_profile_id,supplier_account_id,business_name,business_description,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time,province,city,date_created,cover_image,faq&order=business_name.asc",
     );
     const urls = await signMedia(profiles);
     const slugs = buildSlugs(profiles);
@@ -197,7 +200,7 @@ export const fetchPublicSupplierBySlug = createServerFn({ method: "GET" })
   .validator(z.string())
   .handler(async ({ data: slug }) => {
     const profiles = await fetchPublicSupplierRows(
-      "select=supplier_profile_id,supplier_account_id,business_name,business_description,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time,province,city,date_created,cover_image,social_media_links",
+      "select=supplier_profile_id,supplier_account_id,business_name,business_description,category_name,business_logo,product_images,is_service_provider,is_product_seller,service_categories,other_service,products_offered,opening_time,closing_time,province,city,date_created,cover_image,social_media_links,faq",
     );
     const slugs = buildSlugs(profiles);
     // Legacy "live-<id>-name" links keep working.

@@ -22,6 +22,8 @@ import {
   BriefcaseBusiness,
   Hotel,
   CarFront,
+  CircleHelp,
+  ChevronDown,
   type LucideIcon,
 } from "lucide-react";
 import { FormattedText } from "@/components/customer/formatted-text";
@@ -122,6 +124,7 @@ function SupplierPublicProfilePage() {
   const productImages = supplier.productImages ?? [];
   const services = supplier.services ?? [];
   const products = supplier.products ?? [];
+  const faqs = supplier.faqs ?? [];
   const businessTypes = supplier.businessTypes ?? [];
   // Display-only: shuttle suppliers filed under "Vehicle Services" read as transport, not repairs.
   const isTransport = [supplier.category, ...services].some((v) => v && TRANSPORT.test(v));
@@ -255,6 +258,37 @@ function SupplierPublicProfilePage() {
                     );
                   })}
                 </ul>
+              </Section>
+            )}
+
+            {faqs.length > 0 && (
+              <Section title="Frequently Asked Questions" icon={CircleHelp}>
+                <div className="space-y-2">
+                  {faqs.map((f) => (
+                    <details
+                      key={f.question}
+                      className="group rounded-lg border border-border bg-background"
+                    >
+                      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-foreground [&::-webkit-details-marker]:hidden">
+                        {f.question}
+                        <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+                      </summary>
+                      <p className="border-t border-border px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+                        {f.answer}
+                      </p>
+                    </details>
+                  ))}
+                </div>
+                <p className="pt-4 text-sm text-muted-foreground">
+                  Looking for more options?{" "}
+                  <Link
+                    to="/suppliers"
+                    search={{ q: supplier.category }}
+                    className="font-semibold text-primary hover:underline"
+                  >
+                    Browse {industry} suppliers on GrowMeOnline
+                  </Link>
+                </p>
               </Section>
             )}
 

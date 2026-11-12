@@ -254,7 +254,7 @@ function SupplierProfilePage() {
                     updateField("business_description", e.target.value);
                     setSuggestedDescription("");
                   }}
-                  maxLength={1000}
+                  maxLength={8000}
                   className="min-h-[100px]"
                   disabled={suggestingDescription}
                 />
@@ -263,7 +263,7 @@ function SupplierProfilePage() {
                     Gemini suggestions are based on your description. Review before applying.
                   </p>
                   <span className="shrink-0 text-xs text-muted-foreground">
-                    {draft.business_description.length}/1000
+                    {draft.business_description.length}/8000
                   </span>
                 </div>
                 <Button
