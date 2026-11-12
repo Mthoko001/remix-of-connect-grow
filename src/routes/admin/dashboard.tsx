@@ -323,7 +323,7 @@ function AdminDashboardPage() {
                     value={businessDescription}
                     onChange={(e) => setBusinessDescription(e.target.value)}
                     placeholder="Describe the supplier's services, experience, and what makes their business stand out."
-                    maxLength={1000}
+                    maxLength={8000}
                     className="min-h-[120px]"
                     disabled={acting || suggestingDescription}
                   />
@@ -333,7 +333,7 @@ function AdminDashboardPage() {
                       suggestion; review it before applying.
                     </p>
                     <span className="shrink-0 text-xs text-muted-foreground">
-                      {businessDescription.length}/1000
+                      {businessDescription.length}/8000
                     </span>
                   </div>
                   <Button
