@@ -20,6 +20,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { AdminFaqEditor } from "@/components/admin/admin-faq-editor";
 import { AdminProfileEditor } from "@/components/admin/admin-profile-editor";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
@@ -403,6 +404,8 @@ function AdminDashboardPage() {
                     Save Description
                   </Button>
                 </div>
+
+                <AdminFaqEditor supplierAccountId={selected.supplier_account_id} />
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
