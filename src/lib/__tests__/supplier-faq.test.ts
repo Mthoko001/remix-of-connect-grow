@@ -15,8 +15,9 @@ describe("parseFaqs", () => {
     ]);
 
     expect(faqs).toHaveLength(2);
-    expect(faqs[0].question).toBe("Do you supply perfumes throughout South Africa?");
-    expect(faqs[1].answer).toBe("Yes, wholesale pricing is based on order volume.");
+    const [first, second] = faqs;
+    expect(first?.question).toBe("Do you supply perfumes throughout South Africa?");
+    expect(second?.answer).toBe("Yes, wholesale pricing is based on order volume.");
   });
 
   it("trims surrounding whitespace from stored questions and answers", () => {
