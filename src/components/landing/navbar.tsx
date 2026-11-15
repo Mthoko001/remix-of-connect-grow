@@ -15,6 +15,7 @@ const NAV_LINKS: NavLink[] = [
   { label: "How It Works", href: "/#how-it-works" },
   { label: "Pricing", to: "/pricing" },
   { label: "About Us", href: "/#about" },
+  { label: "Blog", to: "/blog" },
   { label: "Contact Us", href: "/#contact-form" },
 ];
 
@@ -52,7 +53,7 @@ export function Navbar() {
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex xl:gap-8">
+        <nav className="hidden items-center gap-4 xl:flex xl:gap-5">
           {NAV_LINKS.slice(0, 2).map((l) => renderLink(l, undefined, desktopLinkClass))}
           <CategoriesDesktopMenu categories={categoryTree} />
           {NAV_LINKS.slice(2).map((l) => renderLink(l, undefined, desktopLinkClass))}
@@ -76,7 +77,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-foreground hover:bg-accent md:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-foreground hover:bg-accent xl:hidden"
           aria-label="Toggle menu"
           aria-expanded={open}
         >
@@ -113,7 +114,7 @@ export function Navbar() {
       </div>
 
       {open && (
-        <div className="border-t border-border bg-background md:hidden">
+        <div className="border-t border-border bg-background xl:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 sm:px-6">
             {NAV_LINKS.slice(0, 2).map((l) => renderLink(l, () => setOpen(false), mobileLinkClass))}
             <CategoriesMobileMenu categories={categoryTree} onNavigate={() => setOpen(false)} />

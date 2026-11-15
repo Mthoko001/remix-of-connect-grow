@@ -1,6 +1,7 @@
 # Roadmap
 
 - [ ] Public blog: read-only published posts, four sample articles, list and post pages, SEO, navigation, homepage cards, and verification
+- [ ] Production-quality blog checks: real public data, privacy and write-denial checks, article navigation, responsive layouts, and error-free preview
 
 - [x] Change footer contact email to infor@growmeonline.co.za
 
