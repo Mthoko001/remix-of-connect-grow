@@ -44,6 +44,51 @@ export type Database = {
         }
         Relationships: []
       }
+      tb_blog_post: {
+        Row: {
+          author_name: string
+          blog_post_id: number
+          category: string
+          content: string
+          cover_image: string | null
+          date_created: string
+          date_updated: string
+          excerpt: string
+          published_at: string | null
+          slug: string
+          status: string
+          title: string
+        }
+        Insert: {
+          author_name?: string
+          blog_post_id?: never
+          category?: string
+          content: string
+          cover_image?: string | null
+          date_created?: string
+          date_updated?: string
+          excerpt: string
+          published_at?: string | null
+          slug: string
+          status?: string
+          title: string
+        }
+        Update: {
+          author_name?: string
+          blog_post_id?: never
+          category?: string
+          content?: string
+          cover_image?: string | null
+          date_created?: string
+          date_updated?: string
+          excerpt?: string
+          published_at?: string | null
+          slug?: string
+          status?: string
+          title?: string
+        }
+        Relationships: []
+      }
       tb_category: {
         Row: {
           category_id: number

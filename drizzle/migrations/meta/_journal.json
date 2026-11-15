@@ -169,6 +169,13 @@
       "when": 1794474761098,
       "tag": "0023_supplier_profile_faq_and_oura_seo_content",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1794771458538,
+      "tag": "0024_create_public_blog",
+      "breakpoints": true
     }
   ]
 }
