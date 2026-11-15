@@ -9,7 +9,7 @@ import { blogQuery } from "@/lib/blog-queries";
 const title = "The GrowMeOnline Blog | GrowMeOnline";
 const description = "Practical guides for South African businesses to get more enquiries, build stronger profiles, and help customers find trustworthy suppliers.";
 export const Route = createFileRoute("/blog/")({
-  validateSearch: (search: Record<string, unknown>): { category?: string } => ({ category: typeof search.category === "string" ? search.category : undefined }),
+  validateSearch: (search: Record<string, unknown>): { category?: string | undefined } => ({ category: typeof search["category"] === "string" ? search["category"] : undefined }),
   loader: ({ context }) => context.queryClient.ensureQueryData(blogQuery),
   head: ({ loaderData }) => ({
     meta: [{ title }, { name: "description", content: description }, { property: "og:title", content: title }, { property: "og:description", content: description }, { property: "og:type", content: "website" }, { property: "og:url", content: "https://growmeonline.co.za/blog" }, { name: "twitter:card", content: "summary_large_image" }, { name: "twitter:title", content: title }, { name: "twitter:description", content: description }, ...(loaderData?.[0]?.cover_image?.startsWith("https://") ? [{ property: "og:image", content: loaderData[0].cover_image }, { name: "twitter:image", content: loaderData[0].cover_image }] : [])],
