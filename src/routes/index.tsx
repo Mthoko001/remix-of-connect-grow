@@ -11,12 +11,20 @@ import { About } from "@/components/landing/about";
 import { Footer } from "@/components/landing/footer";
 import { ContactSection } from "@/components/landing/contact-section";
 import { fetchPublicSuppliers } from "@/lib/public-suppliers.functions";
+import { LatestPosts } from "@/components/blog/latest-posts";
+import { blogQuery } from "@/lib/blog-queries";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 const META_DESCRIPTION =
   "GrowMeOnline connects customers with verified suppliers, service providers, and product sellers across South Africa. List your business and receive qualified customer leads.";
 
 export const Route = createFileRoute("/")({
-  loader: () => fetchPublicSuppliers(),
+  loader: async ({ context }) => {
+    const [suppliers] = await Promise.all([fetchPublicSuppliers(), context.queryClient.ensureQueryData(blogQuery)]);
+    return suppliers;
+  },
+  errorComponent: () => <div role="alert" className="p-12 text-center">This page couldn’t load. Please refresh and try again.</div>,
+  notFoundComponent: () => <div className="p-12 text-center">Page not found.</div>,
   head: () => ({
     meta: [
       { title: "GrowMeOnline — Grow Your Business Online" },
@@ -32,6 +40,7 @@ export const Route = createFileRoute("/")({
 
 function LandingPage() {
   const liveSuppliers = Route.useLoaderData();
+  const { data: posts } = useSuspenseQuery(blogQuery);
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Navbar />
@@ -44,6 +53,7 @@ function LandingPage() {
         <CategoriesSection />
         <PricingCta />
         <About verifiedCount={liveSuppliers.length} />
+        <LatestPosts posts={posts} />
       </main>
       <ContactSection />
       <Footer />

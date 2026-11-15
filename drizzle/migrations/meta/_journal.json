@@ -176,6 +176,13 @@
       "when": 1794771458538,
       "tag": "0024_create_public_blog",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1794771787024,
+      "tag": "0025_tighten_blog_client_grants",
+      "breakpoints": true
     }
   ]
 }

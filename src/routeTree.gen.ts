@@ -16,6 +16,7 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AdminCategoriesRouteImport } from './routes/admin/categories'
@@ -26,6 +27,8 @@ import { Route as AdminPackagesRouteImport } from './routes/admin/packages'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
 import { Route as AdminSuppliersRouteImport } from './routes/admin/suppliers'
 import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as PaymentFailedRouteImport } from './routes/payment/failed'
 import { Route as PaymentSuccessRouteImport } from './routes/payment/success'
 import { Route as SupplierDashboardRouteImport } from './routes/supplier/dashboard'
@@ -77,6 +80,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
   id: '/terms-and-conditions',
   path: '/terms-and-conditions',
@@ -126,6 +134,16 @@ const AdminSuppliersRoute = AdminSuppliersRouteImport.update({
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PaymentFailedRoute = PaymentFailedRouteImport.update({
@@ -213,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/search': typeof SearchRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -223,6 +242,7 @@ export interface FileRoutesByFullPath {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
@@ -232,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
   '/suppliers/$slug': typeof SuppliersSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/suppliers/': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/yoco-webhook': typeof ApiPublicYocoWebhookRoute
@@ -247,6 +268,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/search': typeof SearchRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -257,6 +279,7 @@ export interface FileRoutesByTo {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
@@ -266,6 +289,7 @@ export interface FileRoutesByTo {
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
   '/suppliers/$slug': typeof SuppliersSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/suppliers': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/yoco-webhook': typeof ApiPublicYocoWebhookRoute
@@ -282,6 +306,7 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/search': typeof SearchRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -292,6 +317,7 @@ export interface FileRoutesById {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/suppliers': typeof AdminSuppliersRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/payment/failed': typeof PaymentFailedRoute
   '/payment/success': typeof PaymentSuccessRoute
   '/supplier/dashboard': typeof SupplierDashboardRoute
@@ -301,6 +327,7 @@ export interface FileRoutesById {
   '/supplier/signup': typeof SupplierSignupRoute
   '/supplier/subscription': typeof SupplierSubscriptionRoute
   '/suppliers/$slug': typeof SuppliersSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/suppliers/': typeof SuppliersIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/api/public/yoco-webhook': typeof ApiPublicYocoWebhookRoute
@@ -318,6 +345,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/privacy-policy'
     | '/reset-password'
+    | '/search'
     | '/terms-and-conditions'
     | '/.well-known/oauth-protected-resource'
     | '/admin/categories'
@@ -328,6 +356,7 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/suppliers'
     | '/auth/callback'
+    | '/blog/$slug'
     | '/payment/failed'
     | '/payment/success'
     | '/supplier/dashboard'
@@ -337,6 +366,7 @@ export interface FileRouteTypes {
     | '/supplier/signup'
     | '/supplier/subscription'
     | '/suppliers/$slug'
+    | '/blog/'
     | '/suppliers/'
     | '/.lovable/oauth/consent'
     | '/api/public/yoco-webhook'
@@ -352,6 +382,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/privacy-policy'
     | '/reset-password'
+    | '/search'
     | '/terms-and-conditions'
     | '/.well-known/oauth-protected-resource'
     | '/admin/categories'
@@ -362,6 +393,7 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/suppliers'
     | '/auth/callback'
+    | '/blog/$slug'
     | '/payment/failed'
     | '/payment/success'
     | '/supplier/dashboard'
@@ -371,6 +403,7 @@ export interface FileRouteTypes {
     | '/supplier/signup'
     | '/supplier/subscription'
     | '/suppliers/$slug'
+    | '/blog'
     | '/suppliers'
     | '/.lovable/oauth/consent'
     | '/api/public/yoco-webhook'
@@ -386,6 +419,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/privacy-policy'
     | '/reset-password'
+    | '/search'
     | '/terms-and-conditions'
     | '/.well-known/oauth-protected-resource'
     | '/admin/categories'
@@ -396,6 +430,7 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/suppliers'
     | '/auth/callback'
+    | '/blog/$slug'
     | '/payment/failed'
     | '/payment/success'
     | '/supplier/dashboard'
@@ -405,6 +440,7 @@ export interface FileRouteTypes {
     | '/supplier/signup'
     | '/supplier/subscription'
     | '/suppliers/$slug'
+    | '/blog/'
     | '/suppliers/'
     | '/.lovable/oauth/consent'
     | '/api/public/yoco-webhook'
@@ -421,6 +457,7 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SearchRoute: typeof SearchRoute
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
@@ -431,6 +468,7 @@ export interface RootRouteChildren {
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminSuppliersRoute: typeof AdminSuppliersRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   PaymentFailedRoute: typeof PaymentFailedRoute
   PaymentSuccessRoute: typeof PaymentSuccessRoute
   SupplierDashboardRoute: typeof SupplierDashboardRoute
@@ -440,6 +478,7 @@ export interface RootRouteChildren {
   SupplierSignupRoute: typeof SupplierSignupRoute
   SupplierSubscriptionRoute: typeof SupplierSubscriptionRoute
   SuppliersSlugRoute: typeof SuppliersSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   SuppliersIndexRoute: typeof SuppliersIndexRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   ApiPublicYocoWebhookRoute: typeof ApiPublicYocoWebhookRoute
@@ -497,6 +536,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/terms-and-conditions': {
@@ -567,6 +613,20 @@ declare module '@tanstack/react-router' {
       path: '/auth/callback'
       fullPath: '/auth/callback'
       preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/payment/failed': {
@@ -685,6 +745,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SearchRoute: SearchRoute,
   TermsAndConditionsRoute: TermsAndConditionsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
@@ -696,6 +757,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminSuppliersRoute: AdminSuppliersRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  BlogSlugRoute: BlogSlugRoute,
   PaymentFailedRoute: PaymentFailedRoute,
   PaymentSuccessRoute: PaymentSuccessRoute,
   SupplierDashboardRoute: SupplierDashboardRoute,
@@ -705,6 +767,7 @@ const rootRouteChildren: RootRouteChildren = {
   SupplierSignupRoute: SupplierSignupRoute,
   SupplierSubscriptionRoute: SupplierSubscriptionRoute,
   SuppliersSlugRoute: SuppliersSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
   SuppliersIndexRoute: SuppliersIndexRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   ApiPublicYocoWebhookRoute: ApiPublicYocoWebhookRoute,
