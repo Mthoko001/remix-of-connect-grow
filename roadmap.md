@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Public blog: read-only published posts, four sample articles, list and post pages, SEO, navigation, homepage cards, and verification
+
 - [x] Change footer contact email to infor@growmeonline.co.za
 
 - [x] Remove customer/supplier website visibility; preserve data and admin management access; verify public profiles and enquiries
