@@ -183,6 +183,13 @@
       "when": 1794771787024,
       "tag": "0025_tighten_blog_client_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1794941624754,
+      "tag": "0026_remove_open_enquiry_media_upload",
+      "breakpoints": true
     }
   ]
 }
