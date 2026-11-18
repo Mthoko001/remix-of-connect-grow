@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Update Uzoefu’s description, existing offerings and photos from its adventure activity page; verify the public profile
+
 - [x] Public blog: read-only published posts, four sample articles, list and post pages, SEO, navigation, homepage cards, and verification
 - [x] Production-quality blog checks: real public data, privacy and write-denial checks, article navigation, responsive layouts, and error-free preview
 
