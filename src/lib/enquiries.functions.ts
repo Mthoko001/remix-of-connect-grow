@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { enquirySchema } from "@/lib/enquiry-schema";
+import { z } from "zod";
 
 
 /**
@@ -73,4 +74,33 @@ export const createEnquiry = createServerFn({ method: "POST" })
       console.error("Enquiry emails failed", err);
     }
     return { ok: true as const, quotaExhausted: false };
+  });
+
+const uploadInput = z.object({
+  supplierAccountId: z.string().uuid(),
+  fileName: z.string().min(1).max(200),
+  contentType: z.string().regex(/^image\/(jpeg|png|webp|gif)$/),
+});
+
+/**
+ * Public: issues a one-time signed upload URL for an enquiry photo. Direct
+ * client uploads to enquiry-media are not allowed; the server picks the path.
+ */
+export const createEnquiryUploadUrl = createServerFn({ method: "POST" })
+  .inputValidator((d) => uploadInput.parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: profile } = await supabaseAdmin
+      .from("tb_supplier_profile")
+      .select("status")
+      .eq("supplier_account_id", data.supplierAccountId)
+      .maybeSingle();
+    if (profile?.status !== "validated") throw new Error("This supplier isn't accepting enquiries.");
+    const safeName = data.fileName.replace(/[^a-zA-Z0-9.\-_]/g, "_").slice(-100);
+    const path = `${data.supplierAccountId}/${Date.now()}-${crypto.randomUUID()}-${safeName}`;
+    const { data: signed, error } = await supabaseAdmin.storage
+      .from("enquiry-media")
+      .createSignedUploadUrl(path);
+    if (error || !signed) throw new Error("Upload unavailable.");
+    return { path: signed.path, token: signed.token };
   });

@@ -162,6 +162,34 @@
       "when": 1792053648169,
       "tag": "0022_create_contact_messages",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1794474761098,
+      "tag": "0023_supplier_profile_faq_and_oura_seo_content",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1794771458538,
+      "tag": "0024_create_public_blog",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1794771787024,
+      "tag": "0025_tighten_blog_client_grants",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1794941624754,
+      "tag": "0026_remove_open_enquiry_media_upload",
+      "breakpoints": true
     }
   ]
 }

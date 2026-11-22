@@ -44,6 +44,51 @@ export type Database = {
         }
         Relationships: []
       }
+      tb_blog_post: {
+        Row: {
+          author_name: string
+          blog_post_id: number
+          category: string
+          content: string
+          cover_image: string | null
+          date_created: string
+          date_updated: string
+          excerpt: string
+          published_at: string | null
+          slug: string
+          status: string
+          title: string
+        }
+        Insert: {
+          author_name?: string
+          blog_post_id?: never
+          category?: string
+          content: string
+          cover_image?: string | null
+          date_created?: string
+          date_updated?: string
+          excerpt: string
+          published_at?: string | null
+          slug: string
+          status?: string
+          title: string
+        }
+        Update: {
+          author_name?: string
+          blog_post_id?: never
+          category?: string
+          content?: string
+          cover_image?: string | null
+          date_created?: string
+          date_updated?: string
+          excerpt?: string
+          published_at?: string | null
+          slug?: string
+          status?: string
+          title?: string
+        }
+        Relationships: []
+      }
       tb_category: {
         Row: {
           category_id: number
@@ -426,6 +471,7 @@ export type Database = {
           cover_image: string | null
           date_created: string
           date_updated: string
+          faq: Json
           is_product_seller: boolean
           is_service_provider: boolean
           notes: string | null
@@ -459,6 +505,7 @@ export type Database = {
           cover_image?: string | null
           date_created?: string
           date_updated?: string
+          faq?: Json
           is_product_seller?: boolean
           is_service_provider?: boolean
           notes?: string | null
@@ -492,6 +539,7 @@ export type Database = {
           cover_image?: string | null
           date_created?: string
           date_updated?: string
+          faq?: Json
           is_product_seller?: boolean
           is_service_provider?: boolean
           notes?: string | null
@@ -541,6 +589,7 @@ export type Database = {
           closing_time: string | null
           cover_image: string | null
           date_created: string | null
+          faq: Json | null
           is_product_seller: boolean | null
           is_service_provider: boolean | null
           opening_time: string | null

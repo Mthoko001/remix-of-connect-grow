@@ -1,7 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { SupplierQuotaExhaustedError } from "@/lib/lead-quota";
-import { createEnquiry } from "@/lib/enquiries.functions";
+import { createEnquiry, createEnquiryUploadUrl } from "@/lib/enquiries.functions";
 import type { LeadStatus } from "@/lib/lead-review";
 
 const ENQUIRY_MEDIA_BUCKET = "enquiry-media";
@@ -39,12 +39,17 @@ export async function submitEnquiry(input: SubmitEnquiryInput): Promise<void> {
   let imagePath: string | null = null;
 
   if (input.image) {
-    const safeName = input.image.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-    const path = `${input.supplierAccountId}/${Date.now()}-${safeName}`;
-    const { error: uploadError } = await supabase.storage
-      .from(ENQUIRY_MEDIA_BUCKET)
-      .upload(path, input.image);
-    if (!uploadError) imagePath = path;
+    try {
+      const { path, token } = await createEnquiryUploadUrl({
+        data: { supplierAccountId: input.supplierAccountId, fileName: input.image.name, contentType: input.image.type },
+      });
+      const { error: uploadError } = await supabase.storage
+        .from(ENQUIRY_MEDIA_BUCKET)
+        .uploadToSignedUrl(path, token, input.image);
+      if (!uploadError) imagePath = path;
+    } catch {
+      // Photo is optional; the enquiry is still sent.
+    }
   }
 
   // Saved server-side so it can also be forwarded to Chatwoot; the DB quota trigger still applies.

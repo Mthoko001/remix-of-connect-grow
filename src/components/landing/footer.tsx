@@ -8,6 +8,7 @@ const QUICK_LINKS = [
   { label: "How It Works", href: "/#how-it-works" },
   { label: "Browse Suppliers", href: "/suppliers" },
   { label: "Pricing", href: "/pricing" },
+  { label: "Blog", href: "/blog" },
   { label: "List My Business", href: "/supplier/signup" },
   { label: "Contact Us", href: "/#contact-form" },
 ] as const;

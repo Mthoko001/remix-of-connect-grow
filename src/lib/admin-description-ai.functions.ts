@@ -5,7 +5,7 @@ import type { Database } from "@/integrations/supabase/types";
 
 const suggestionInputSchema = z.object({
   accessToken: z.string().min(1),
-  description: z.string().trim().min(1).max(1000),
+  description: z.string().trim().min(1).max(8000),
 });
 
 export const suggestBusinessDescription = createServerFn({ method: "POST" })
@@ -58,7 +58,7 @@ export const suggestBusinessDescription = createServerFn({ method: "POST" })
       "Rewrite the supplier business description below as a polished, persuasive single paragraph that helps potential customers understand the business.",
       "Aim for 6-7 complete sentences and roughly 100-150 words. Use relevant details and concrete benefits already supported by the original.",
       "Do not invent or imply services, credentials, locations, guarantees, results, or experience that the original does not state. Do not add filler to reach the target length; if the source lacks detail, keep the rewrite shorter and factual.",
-      "Keep the meaning and language of the original. Return only the paragraph, with no heading, bullets, quotation marks, or line breaks. Maximum 1000 characters.",
+      "Keep the meaning and language of the original. Return only the paragraph, with no heading, bullets, quotation marks, or line breaks. Maximum 1000 characters. If the original is long, write a concise summary of its strongest points instead of trying to cover everything.",
       "",
       "Original description:",
       data.description,

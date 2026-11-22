@@ -20,6 +20,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { AdminFaqEditor } from "@/components/admin/admin-faq-editor";
 import { AdminProfileEditor } from "@/components/admin/admin-profile-editor";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
@@ -323,7 +324,7 @@ function AdminDashboardPage() {
                     value={businessDescription}
                     onChange={(e) => setBusinessDescription(e.target.value)}
                     placeholder="Describe the supplier's services, experience, and what makes their business stand out."
-                    maxLength={1000}
+                    maxLength={8000}
                     className="min-h-[120px]"
                     disabled={acting || suggestingDescription}
                   />
@@ -333,7 +334,7 @@ function AdminDashboardPage() {
                       suggestion; review it before applying.
                     </p>
                     <span className="shrink-0 text-xs text-muted-foreground">
-                      {businessDescription.length}/1000
+                      {businessDescription.length}/8000
                     </span>
                   </div>
                   <Button
@@ -403,6 +404,8 @@ function AdminDashboardPage() {
                     Save Description
                   </Button>
                 </div>
+
+                <AdminFaqEditor supplierAccountId={selected.supplier_account_id} />
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
